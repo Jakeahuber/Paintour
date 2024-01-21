@@ -1,20 +1,41 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import Home from './components/home'
+import Profile from './components/profile'
+import Search from './components/search'
+
+const homeName = 'Home';
+const profileName = 'Profile';
+const searchName = 'Search';
+const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Daily Sketch!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+        <Tab.Navigator initialRouteName={homeName} screenOptions={({route}) => ({
+            tabBarIcon: ({focused, color, size}) => {
+                let iconName;
+                if (route.name === homeName) {
+                    iconName = focused ? 'home' : 'home-outline'
+                }
+                else if (route.name === profileName) {
+                    iconName = focused ? 'list' : 'list-outline'
+                }
+                else if (route.name === searchName) {
+                    iconName = focused ? 'settings' : 'settings-outline'
+                }
+                return <Ionicons name={iconName} size={size} color={color}/>
+            },
+            tabBarActiveTintColor: '#000000',
+            tabBarInactiveTintColor: 'gray',
+        })}
+        >
+            <Tab.Screen name={homeName} component={Home}/>
+            <Tab.Screen name={profileName} component={Profile}/>
+            <Tab.Screen name={searchName} component={Search}/>
+        </Tab.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
