@@ -37,7 +37,6 @@ export default function App() {
                 tabBarStyle: {
                     backgroundColor: 'black',
                 },
-                headerTitle: 'Daily Sketch',
                 headerTitleStyle: {
                     color: 'white',
                     fontSize: 28
@@ -45,9 +44,9 @@ export default function App() {
                 headerTitleAlign: 'left',
             })}
             >
-                <Tab.Screen name={homeName} component={Home}/>
-                <Tab.Screen name={profileName} component={Profile} options={{ headerShown: false}}/>
-                <Tab.Screen name={searchName} component={Search} />
+                <Tab.Screen name={homeName} component={Home} options={{headerTitle: 'Daily Sketch'}}/>
+                <Tab.Screen name={profileName} component={Profile} options={{headerTitle: 'My Profile'}}/>
+                <Tab.Screen name={searchName} component={Search} options={{headerTitle: 'Search'}}/>
             </Tab.Navigator>
         </NavigationContainer>
     </>
