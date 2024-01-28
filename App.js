@@ -7,12 +7,11 @@ import Home from './components/home'
 import Profile from './components/profile'
 import Search from './components/search'
 
-
 const homeName = 'Home';
 const profileName = 'Profile';
 const searchName = 'Search';
+const postName = 'Post';
 const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (

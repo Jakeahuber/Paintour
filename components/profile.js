@@ -1,7 +1,8 @@
-import React from "react";
-import {View, Text, Image, StyleSheet, ScrollView, FlatList, SafeAreaView } from 'react-native';
+import React, {useState} from "react";
+import {Modal, View, Text, Image, StyleSheet, ScrollView, FlatList, SafeAreaView, TouchableHighlight, Touchable } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-export default function Profile({navbar}) {
+export default function Profile({ navigation }) {
 
     const data = [{id:1, url:'https://2.bp.blogspot.com/_SiA_UGC8DNw/TMHWIv94ZFI/AAAAAAAABAM/xqRkzP1BQgQ/s1600/m-220dg.jpg'},
     {id:2, url:'https://2.bp.blogspot.com/_SiA_UGC8DNw/TMHWIv94ZFI/AAAAAAAABAM/xqRkzP1BQgQ/s1600/m-220dg.jpg'},
@@ -35,59 +36,83 @@ export default function Profile({navbar}) {
 
     const pfpUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN5CYL8eA2hthmc4cShuQ_y3DovqpV4-i8-g&usqp=CAU';
     const numberOfCols = 3;
+    const [postDisplay, setPostDisplay] = useState('none');
 
-    return(
-        <SafeAreaView style={{flex: 1}}>
-            <FlatList
-            data={data}
-            ListHeaderComponent={
-                <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-                    <View style={styles.contentContainer}>
-                        <View style={styles.userInfoContainer}>
-                            <Image
-                                style={styles.profilePicture}
-                                source={{ uri: pfpUrl}}
-                            />
-                            <Text style={{marginLeft: 3, marginTop: 10, fontSize: 22, color: 'white'}}>Jakeahuber</Text>  
-                            <Text style={{marginLeft: 3, marginTop: 10, fontSize: 14, color: 'white'}}>Edit Profile</Text>  
+    const getProfileInfo = () => {
+        return                 <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+        <View style={styles.contentContainer}>
+            <View style={styles.userInfoContainer}>
+                <Image
+                    style={styles.profilePicture}
+                    source={{ uri: pfpUrl}}
+                />
+                <Text style={{marginLeft: 3, marginTop: 10, fontSize: 22, color: 'white'}}>Jakeahuber</Text>  
+                <Text style={{marginLeft: 3, marginTop: 10, fontSize: 14, color: 'white'}}>Edit Profile</Text>  
 
+            </View>
+            <View style={{width: '100%', marginTop: 15}}>
+                <View>
+                    <View style={{flexDirection:"row"}}>
+                        <View style={{flex:1, alignItems: 'center'}}>
+                            <Text style={{justifyContent: 'flex-start',fontSize: 24, color: 'white'}}>20</Text>
+                            <Text style={{justifyContent: 'flex-start',fontSize: 14, color: 'white'}}>Friends</Text>
                         </View>
-                        <View style={{width: '100%', marginTop: 15}}>
-                            <View>
-                                <View style={{flexDirection:"row"}}>
-                                    <View style={{flex:1, alignItems: 'center'}}>
-                                        <Text style={{justifyContent: 'flex-start',fontSize: 24, color: 'white'}}>20</Text>
-                                        <Text style={{justifyContent: 'flex-start',fontSize: 14, color: 'white'}}>Friends</Text>
-                                    </View>
-                                    <View style={{flex:1, alignItems: 'center'}}>
-                                        <Text style={{justifyContent: 'flex-end',fontSize: 24, color: 'white'}}>27</Text>
-                                        <Text style={{justifyContent: 'flex-start',fontSize: 14, color: 'white'}}>Sketches</Text>
-                                    </View>
-                                    <View style={{flex:1, alignItems: 'center'}}>
-                                        <Text style={{justifyContent: 'flex-end',fontSize: 24, color: 'white'}}>7</Text>
-                                        <Text style={{justifyContent: 'flex-start',fontSize: 14, color: 'white'}}>Day Streak</Text>
-                                    </View>
-                                </View>
-                            </View>
-
+                        <View style={{flex:1, alignItems: 'center'}}>
+                            <Text style={{justifyContent: 'flex-end',fontSize: 24, color: 'white'}}>27</Text>
+                            <Text style={{justifyContent: 'flex-start',fontSize: 14, color: 'white'}}>Sketches</Text>
+                        </View>
+                        <View style={{flex:1, alignItems: 'center'}}>
+                            <Text style={{justifyContent: 'flex-end',fontSize: 24, color: 'white'}}>7</Text>
+                            <Text style={{justifyContent: 'flex-start',fontSize: 14, color: 'white'}}>Day Streak</Text>
                         </View>
                     </View>
-                </ScrollView>
-                
-            }
-            ListFooterComponent={
-                <FlatList
-                    style={styles.sketchGrid}
-                    data={data}
-                    numColumns={numberOfCols}
-                    renderItem={({item})=>(
-                        <View style={styles.sketchContainer}>
-                            <Image style={styles.sketch} source={{uri:item.url}} />
-                        </View>
-                    )}
-                />              
-            } 
+                </View>
+
+            </View>
+        </View>
+        </ScrollView>    
+    };
+
+    const getPosts = () => {
+        return <FlatList
+            style={styles.sketchGrid}
+            data={data}
+            numColumns={numberOfCols}
+            renderItem={({item})=>(
+                <TouchableHighlight style={styles.sketchContainer} onPress={() => {
+                    navigation.setOptions({headerTitle: () => (
+                        <Ionicons name="arrow-back" size={24} color="white" />
+                      ),})
+                    //setModalVisible(true);
+                    setPostDisplay('flex');
+                }}>
+                    <Image style={styles.sketch} source={{uri:item.url}} />
+                </TouchableHighlight>
+            )}
+        />       
+    };
+
+    return(
+        <SafeAreaView style={{flex: 1, backgroundColor: 'black'}}>   
+            <FlatList
+            data={data}
+            ListHeaderComponent={getProfileInfo}
+            ListFooterComponent={getPosts}
             />
+        
+        
+          <View style={{backgroundColor: 'black', height: '100%', display: postDisplay}}>
+            <View>
+              <TouchableHighlight
+                onPress={() => {
+                  setPostDisplay('none')
+                  navigation.setOptions({ headerTitle: "My Profile"})
+                }}>
+                <Text style={{color: 'white', fontSize: 25}}>Hide Modal</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+
         </SafeAreaView>
     )
 }
