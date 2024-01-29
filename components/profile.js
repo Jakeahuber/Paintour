@@ -1,6 +1,11 @@
 import React, {useState} from "react";
 import {Modal, View, Text, Image, StyleSheet, ScrollView, FlatList, SafeAreaView, TouchableHighlight, Touchable } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Dimensions } from 'react-native';
+
+const win = Dimensions.get('window');
+const sketchSize = 400;
+const ratio = win.width/sketchSize; 
 
 export default function Profile({ navigation }) {
 
@@ -36,6 +41,7 @@ export default function Profile({ navigation }) {
 
     const pfpUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN5CYL8eA2hthmc4cShuQ_y3DovqpV4-i8-g&usqp=CAU';
     const numberOfCols = 3;
+    const [focusedSketchUrl, setFocusedSketchUrl] = useState('');
     const [postDisplay, setPostDisplay] = useState('none');
 
     const getProfileInfo = () => {
@@ -79,13 +85,22 @@ export default function Profile({ navigation }) {
             data={data}
             numColumns={numberOfCols}
             renderItem={({item})=>(
-                <TouchableHighlight style={styles.sketchContainer} onPress={() => {
-                    navigation.setOptions({headerTitle: () => (
-                        <Ionicons name="arrow-back" size={24} color="white" />
-                      ),})
-                    //setModalVisible(true);
-                    setPostDisplay('flex');
-                }}>
+                <TouchableHighlight 
+                    style={styles.sketchContainer} 
+                    onPress={() => {
+                        navigation.setOptions({headerTitle: () => (
+                            <TouchableHighlight
+                                onPress={() => {
+                                setPostDisplay('none')
+                                navigation.setOptions({ headerTitle: "My Profile"})
+                            }}>
+                                <Ionicons name="arrow-back" size={24} color="white" />
+                            </TouchableHighlight>
+                        )})
+                        setFocusedSketchUrl(item.url)
+                        setPostDisplay('flex')
+                    }}
+                >
                     <Image style={styles.sketch} source={{uri:item.url}} />
                 </TouchableHighlight>
             )}
@@ -102,14 +117,12 @@ export default function Profile({ navigation }) {
         
         
           <View style={{backgroundColor: 'black', height: '100%', display: postDisplay}}>
-            <View>
-              <TouchableHighlight
-                onPress={() => {
-                  setPostDisplay('none')
-                  navigation.setOptions({ headerTitle: "My Profile"})
-                }}>
-                <Text style={{color: 'white', fontSize: 25}}>Hide Modal</Text>
-              </TouchableHighlight>
+            <View style={{backgroundColor: 'green'}}>
+                <Text>Posted on January 28, 2024</Text>
+                <Image
+                    style={styles.focusedSketch}
+                    source={{uri:focusedSketchUrl}}
+                />
             </View>
           </View>
 
@@ -152,6 +165,13 @@ const styles = StyleSheet.create({
         width: '100%',
         borderColor: 'black',
         borderWidth: 1,
+      },
+    focusedSketch: {
+        width: '95%',
+        height: sketchSize * ratio,
+        borderWidth: 1,
+        borderColor: 'white',
+        borderRadius: 10,
       },
     sketchGrid: {
         marginLeft: 0,
