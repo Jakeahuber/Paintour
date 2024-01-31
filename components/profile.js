@@ -53,7 +53,13 @@ export default function Profile({ navigation }) {
                     source={{ uri: pfpUrl}}
                 />
                 <Text style={{marginLeft: 3, marginTop: 10, fontSize: 22, color: 'white'}}>Jakeahuber</Text>  
-                <Text style={{marginLeft: 3, marginTop: 10, fontSize: 14, color: 'white'}}>Edit Profile</Text>  
+                <TouchableHighlight onPress={() => {
+                        navigation.setOptions({headerTitle: () => (
+                            navigation.setOptions({ headerTitle: "Edit Profile"})
+                        )})
+                    }}>
+                    <Text style={{marginLeft: 3, marginTop: 10, fontSize: 14, color: 'white'}}>Edit Profile</Text>  
+                </TouchableHighlight>
 
             </View>
             <View style={{width: '100%', marginTop: 15}}>
@@ -113,19 +119,16 @@ export default function Profile({ navigation }) {
             data={data}
             ListHeaderComponent={getProfileInfo}
             ListFooterComponent={getPosts}
-            />
-        
-        
-          <View style={{backgroundColor: 'black', height: '100%', display: postDisplay}}>
-            <View style={{backgroundColor: 'green'}}>
-                <Text>Posted on January 28, 2024</Text>
+            />        
+          <View style={{backgroundColor: 'black', width: '100%', height: '100%', display: postDisplay}}>
+            <View style={{alignItems: 'center'}}>
+                <Text style={{color: 'white', fontSize: 24, marginBottom: 10}}>January 28, 2024</Text>
                 <Image
                     style={styles.focusedSketch}
                     source={{uri:focusedSketchUrl}}
                 />
             </View>
           </View>
-
         </SafeAreaView>
     )
 }
@@ -171,7 +174,6 @@ const styles = StyleSheet.create({
         height: sketchSize * ratio,
         borderWidth: 1,
         borderColor: 'white',
-        borderRadius: 10,
       },
     sketchGrid: {
         marginLeft: 0,
