@@ -1,12 +1,16 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import { Dimensions } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 const win = Dimensions.get('window');
 const sketchSize = 400;
 const ratio = win.width/sketchSize; 
 
 function Sketch(props) {
+
+    const [heartName, setHeartName] = useState("heart-outline")
+
     return (
         <View style={styles.postContainer}>           
             <View style={styles.authorContainer}>
@@ -17,10 +21,20 @@ function Sketch(props) {
                 <Text style={styles.uploader}>{props.uploader}</Text>        
                 <Text style={styles.uploadTime}>{props.uploadAgoTime}</Text>                         
             </View>
+
             <Image
                 style={styles.sketch}
                 source={{ uri: props.sketch}}
             />
+
+            <View style={styles.authorContainer}>
+                {5 == 5? (
+                    <Ionicons name={"heart-outline"} size={30} color={"white"} style={{paddingTop: 8}}/>
+                ) : (
+                    <Ionicons name={"heart"} size={20} color={"white"} style={{}}/>
+                )}
+                <Text style={styles.uploader}>2 Likes</Text>
+            </View>
         </View>
     );
 }
