@@ -2,10 +2,10 @@ import React from "react";
 import {StyleSheet, ScrollView} from 'react-native';
 import Sketches from './Sketches'
 
-function Home({sketches}) {
+function Home(props) {
     return(
         <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-            <Sketches sketches={sketches} />
+            <Sketches sketches={props.sketches} />
         </ScrollView>
     );
 }

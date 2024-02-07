@@ -31,7 +31,6 @@ function MyProfile(props) {
                         <TouchableHighlight 
                             style={styles.sketchContainer} 
                             onPress={() => {
-                                console.log(item)
                                 navigation.setOptions({headerTitle: () => (
                                     <TouchableHighlight
                                         onPress={() => {
@@ -69,9 +68,7 @@ function MyProfile(props) {
                         />
                         <Text style={{marginLeft: 3, marginTop: 10, fontSize: 22, color: 'white'}}>{props.username}</Text>  
                         <TouchableHighlight onPress={() => {
-                                navigation.setOptions({headerTitle: () => (
-                                    navigation.setOptions({ headerTitle: "Edit Profile"})
-                                )})
+                                navigation.navigate('EditProfileScreen')
                             }}>
                             <Text style={{marginLeft: 3, marginTop: 10, fontSize: 14, color: 'white'}}>Edit Profile</Text>  
                         </TouchableHighlight>

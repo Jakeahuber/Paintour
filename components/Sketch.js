@@ -9,7 +9,8 @@ const ratio = win.width/sketchSize;
 
 function Sketch(props) {
 
-    const [heartName, setHeartName] = useState("heart-outline")
+    var liked = props.liked;
+    const numLikes = props.numLikes + " likes"
 
     return (
         <View style={styles.postContainer}>           
@@ -28,12 +29,12 @@ function Sketch(props) {
             />
 
             <View style={styles.authorContainer}>
-                {5 == 5? (
-                    <Ionicons name={"heart-outline"} size={30} color={"white"} style={{paddingTop: 8}}/>
+                {liked? (
+                    <Ionicons name={"heart"} size={30} color={"white"}/>
                 ) : (
-                    <Ionicons name={"heart"} size={20} color={"white"} style={{}}/>
+                    <Ionicons name={"heart-outline"} size={30} color={"white"} style={{}}/>
                 )}
-                <Text style={styles.uploader}>2 Likes</Text>
+                <Text style={styles.likes}>{numLikes}</Text>        
             </View>
         </View>
     );
@@ -47,8 +48,8 @@ const styles = StyleSheet.create({
       borderColor: 'white',
     },
     postContainer: {
-        marginBottom: 20,
-        marginTop: 20,
+        marginBottom: 15,
+        marginTop: 15,
         width: '100%',
         alignItems: 'center',
     },
@@ -65,10 +66,18 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingLeft: '5%',
         marginBottom: 5,
+        marginTop: 5,
     },
     uploader: {
         marginLeft: 3, 
         paddingTop: 8, 
+        fontSize: 18, 
+        color: 'white', 
+        justifyContent: 'flex-start'
+    },
+    likes: {
+        marginLeft: 3, 
+        paddingTop: 4, 
         fontSize: 18, 
         color: 'white', 
         justifyContent: 'flex-start'

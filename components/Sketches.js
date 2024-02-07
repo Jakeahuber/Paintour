@@ -11,6 +11,8 @@ function Sketches({sketches}) {
                 uploader={sketch.uploader}
                 uploadAgoTime={sketch.uploadAgoTime}
                 sketch={sketch.sketch}
+                liked={sketch.liked}
+                numLikes={sketch.numLikes}
             />
         )
     }
