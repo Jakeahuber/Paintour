@@ -5,6 +5,7 @@ import ProfileStats from './ProfileStats';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Sketch from './Sketch'
+import SketchGallery from './SketchGallery'
 
 const win = Dimensions.get('window');
 const sketchSize = 400;
@@ -18,44 +19,6 @@ function MyProfile(props) {
     const [focusedSketch, setFocusedSketch] = useState('example')
     const [focusedSketchDisplay, setFocusedSketchDisplay] = useState('none')
     const navigation = useNavigation();
-
-    const getSketchGallery = () => {
-        const numCols = 3;
-        return (
-            <>
-                <FlatList
-                    style={styles.sketchGrid}
-                    data={props.sketches}
-                    numColumns={numCols}
-                    renderItem={({item}) => (
-                        <TouchableHighlight 
-                            style={styles.sketchContainer} 
-                            onPress={() => {
-                                navigation.setOptions({headerTitle: () => (
-                                    <TouchableHighlight
-                                        onPress={() => {
-                                            setFocusedSketchDisplay('none')
-                                            navigation.setOptions({ headerTitle: "My Profile"})
-                                        }}
-                                    >
-                                        <Ionicons name="arrow-back" size={24} color="white" />
-                                    </TouchableHighlight>
-                                )})
-                                setFocusedProfilePicture(item.profilePicture)
-                                setFocusedUploader(item.uploader)
-                                setFocusedUploadAgoTime(item.uploadAgoTime)
-                                setFocusedSketch(item.sketch)
-                                setFocusedSketchDisplay('flex')
-                            }}
-                        >
-                            <Image style={styles.sketch} source={{uri: 'https://www.dryeco.com/wp-content/uploads/2015/10/400x4005.png'}} />
-                        </TouchableHighlight>
-                    )}
-                />
-            </>
-        );
-    };
-
 
     const getProfileInfo = () => {
         return (
@@ -89,16 +52,8 @@ function MyProfile(props) {
         <SafeAreaView style={{flex: 1, backgroundColor: 'black'}}>   
             <FlatList
                 ListHeaderComponent={getProfileInfo}
-                ListFooterComponent={getSketchGallery}
-            />  
-            <View style={{width: '100%', height: '100%', display: focusedSketchDisplay}}>
-                <Sketch
-                    profilePicture={focusedProfilePicture}
-                    uploader={focusedUploader}
-                    uploadAgoTime={focusedUploadAgoTime}
-                    sketch={focusedSketch}
-                />
-            </View>      
+                ListFooterComponent={<SketchGallery sketches={props.sketches}/>}
+            />    
         </SafeAreaView>
     )
 }
@@ -170,13 +125,7 @@ const styles = StyleSheet.create({
         width: '100%',
         borderColor: 'black',
         borderWidth: 1,
-      },
-    sketchGrid: {
-        marginLeft: 0,
-        marginRight: 0,
-        width: '100%',
-        backgroundColor: 'green'
-    }
+      }
 });
 
 export default MyProfile;

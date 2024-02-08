@@ -8,22 +8,18 @@ import Home from './components/Home'
 import MyProfile from './components/MyProfile'
 import Friends from './components/Friends'
 import EditProfile from './components/EditProfile'
+import FocusedSketch from './components/FocusedSketch'
 
 const data = {
     friendSketches: [
-        {
-            id: 2, 
-            uploader: 'MonkiMonke', 
-            profilePicture: 'https://pics.craiyon.com/2023-11-23/tHv-Fa34Ru6OnUfm35WJ4g.webp', 
-            sketch: 'https://www.dryeco.com/wp-content/uploads/2015/10/400x4005.png',
-            uploadAgoTime: '4h',
-        },
         {
             id: 3, 
             uploader: 'MacbookPro', 
             profilePicture: 'https://specials-images.forbesimg.com/imageserve/62b3234d9c87d569507a1f0d/Apple-MacBook-Pro-13-inch-/960x0.jpg?fit=scale', 
             sketch: 'https://www.dryeco.com/wp-content/uploads/2015/10/400x4005.png',
             uploadAgoTime: '9h',
+            liked: false,
+            numLikes: 20,
         },
         {
             id: 4, 
@@ -31,7 +27,18 @@ const data = {
             profilePicture: 'https://static.wikia.nocookie.net/fortnite_gamepedia/images/d/dd/RecruitJonesy_Chapter_1.png/revision/latest/smart/width/250/height/250?cb=20191028202138', 
             sketch: 'https://www.dryeco.com/wp-content/uploads/2015/10/400x4005.png',
             uploadAgoTime: '23h',
-        }
+            liked: true,
+            numLikes: 20,
+        },
+        {
+            id: 2, 
+            uploader: 'MonkiMonke', 
+            profilePicture: 'https://pics.craiyon.com/2023-11-23/tHv-Fa34Ru6OnUfm35WJ4g.webp', 
+            sketch: 'https://www.dryeco.com/wp-content/uploads/2015/10/400x4005.png',
+            uploadAgoTime: '4h',
+            liked: true,
+            numLikes: 20,
+        },
     ],
     mySketches: [
         {
@@ -40,6 +47,8 @@ const data = {
             profilePicture: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN5CYL8eA2hthmc4cShuQ_y3DovqpV4-i8-g&usqp=CAU', 
             sketch: 'https://www.dryeco.com/wp-content/uploads/2015/10/400x4005.png',
             uploadAgoTime: '2h',
+            liked: true,
+            numLikes: 20,
         },
         {
             id: 6, 
@@ -47,6 +56,8 @@ const data = {
             profilePicture: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN5CYL8eA2hthmc4cShuQ_y3DovqpV4-i8-g&usqp=CAU', 
             sketch: 'https://www.dryeco.com/wp-content/uploads/2015/10/400x4005.png',
             uploadAgoTime: '2h',
+            liked: true,
+            numLikes: 20,
         },
         {
             id: 7, 
@@ -54,6 +65,8 @@ const data = {
             profilePicture: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN5CYL8eA2hthmc4cShuQ_y3DovqpV4-i8-g&usqp=CAU', 
             sketch: 'https://www.dryeco.com/wp-content/uploads/2015/10/400x4005.png',
             uploadAgoTime: '2h',
+            liked: true,
+            numLikes: 20,
         },
         {
             id: 8, 
@@ -61,6 +74,8 @@ const data = {
             profilePicture: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN5CYL8eA2hthmc4cShuQ_y3DovqpV4-i8-g&usqp=CAU', 
             sketch: 'https://www.dryeco.com/wp-content/uploads/2015/10/400x4005.png',
             uploadAgoTime: '2h',
+            liked: true,
+            numLikes: 20,
         }
     ],
     username: 'jakeahuber',
@@ -70,18 +85,25 @@ const data = {
     profilePicture: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN5CYL8eA2hthmc4cShuQ_y3DovqpV4-i8-g&usqp=CAU'
 }   
 
-const homeName = 'Home';
-const myProfileName = 'MyProfile';
-const friendsName = 'Friends';
-const editProfileName = 'EditProfile'
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator()
 
+const screenOptions = () => {
+    return {
+        headerTitleStyle: {
+            color: 'white',
+            fontSize: 28,
+        },
+        headerTitleAlign: 'left',
+    };
+};
+
 const HomeStack = () => {
     return (
-        <Stack.Navigator initialRouteName={homeName}>
-            <Stack.Screen   name={homeName} 
+        <Stack.Navigator initialRouteName={"HomeScreen"} screenOptions={screenOptions()}>
+            <Stack.Screen   name={"HomeScreen"} 
                             children={()=><Home sketches={data.friendSketches}/>}        
+                            options={{headerTitle: 'Home'}}
             />
         </Stack.Navigator>
     )
@@ -89,7 +111,7 @@ const HomeStack = () => {
 
 const MyProfileStack = () => {
     return (
-        <Stack.Navigator initialRouteName={homeName}>
+        <Stack.Navigator initialRouteName={"MyProfileScreen"} screenOptions={screenOptions()}>
             <Stack.Screen name={'MyProfileScreen'} 
             options={{headerTitle: 'My Profile'}}
             children={()=> <MyProfile   username={data.username} 
@@ -101,25 +123,42 @@ const MyProfileStack = () => {
                             />}   
             />
             <Stack.Screen name={'EditProfileScreen'}
-                          options={{headerTitle: 'Edit Profile'}}
+                          options={{headerTitle: ''}}
                           children = {() => <EditProfile />}
+            />
+            <Stack.Screen name={'FocusedSketchScreen'}
+                          options={{headerTitle: ''}}
+                          initialParams={{ uploader: 'he' }}
+                          component={FocusedSketch}
             />
         </Stack.Navigator>
     ) 
 }
 
+const FriendsStack = () => {
+    return (
+        <Stack.Navigator initialRouteName={"FriendsScreen"} screenOptions={screenOptions()}>
+            <Stack.Screen   name={"FriendsScreen"} 
+                            children={()=><Friends />}        
+                            options={{headerTitle: 'Friends'}}
+            />
+        </Stack.Navigator>
+    )
+}
+
+
 export function TabNavigator() {
     return (
-        <Tab.Navigator initialRouteName={homeName} screenOptions={({route}) => ({
+        <Tab.Navigator initialRouteName={"Home"} screenOptions={({route}) => ({
             tabBarIcon: ({focused, color, size}) => {
                 let iconName;
-                if (route.name === homeName) {
+                if (route.name === "Home") {
                     iconName = focused ? 'home' : 'home-outline'
                 }
-                else if (route.name === myProfileName) {
+                else if (route.name === "MyProfile") {
                     iconName = focused ? 'person' : 'person-outline'
                 }
-                else if (route.name === friendsName) {
+                else if (route.name === "Friends") {
                     iconName = focused ? 'people' : 'people-outline'
                 }
                 return <Ionicons name={iconName} size={size} color={color}/>
@@ -129,21 +168,18 @@ export function TabNavigator() {
             tabBarStyle: {
                 backgroundColor: 'black',
             },
-            headerTitleStyle: {
-                color: 'white',
-                fontSize: 28
-            },
-            headerTitleAlign: 'left',
             headerShown: false,
         })}
         >
-            <Tab.Screen name={homeName} 
+            <Tab.Screen name={"Home"} 
                         component={HomeStack}     
             />
-            <Tab.Screen name={myProfileName} 
+            <Tab.Screen name={"MyProfile"} 
                         component={MyProfileStack}
                         />
-            <Tab.Screen name={friendsName} component={Friends} options={{headerTitle: 'Friends'}}/>
+            <Tab.Screen name={"Friends"}
+                        component={FriendsStack}
+                        />
         </Tab.Navigator>
      )
   }

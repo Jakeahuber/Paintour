@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 import { Dimensions } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -8,7 +8,6 @@ const sketchSize = 400;
 const ratio = win.width/sketchSize; 
 
 function Sketch(props) {
-
     var liked = props.liked;
     const numLikes = props.numLikes + " likes"
 
