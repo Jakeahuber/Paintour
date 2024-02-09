@@ -9,17 +9,23 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@benjeau/react-native-draw": "^0.8.3",
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
     "@react-navigation/stack": "^6.3.20",
-    "@shopify/react-native-skia": "^0.1.234",
+    "@shopify/react-native-skia": "^0.1.238",
+    "@terrylinla/react-native-sketch-canvas": "^0.8.0",
     "expo": "~50.0.2",
     "expo-status-bar": "~1.11.1",
+    "express": "^4.18.2",
     "react": "18.2.0",
     "react-native": "0.73.2",
     "react-native-gesture-handler": "~2.14.0",
-    "react-navigation-stack": "^2.10.4"
+    "react-navigation-stack": "^2.10.4",
+    "rn-perfect-sketch-canvas": "^0.3.0",
+    "typescript": "^5.3.0",
+    "@types/react": "~18.2.45"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

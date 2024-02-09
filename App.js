@@ -146,7 +146,6 @@ const FriendsStack = () => {
     )
 }
 
-
 export function TabNavigator() {
     return (
         <Tab.Navigator initialRouteName={"Home"} screenOptions={({route}) => ({

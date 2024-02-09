@@ -2,7 +2,7 @@ import React from "react";
 import {View, SafeAreaView} from 'react-native';
 import Sketch from './Sketch'
 
-function FocusedSketch({route, navigation}) {
+function FocusedSketch({route}) {
     const { profilePicture, uploader, uploadAgoTime, sketch } = route.params;
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: 'black'}}>   
