@@ -1,28 +1,82 @@
-import React, { useRef } from 'react';
-import { StyleSheet, SafeAreaView, Button } from 'react-native';
+import * as React from 'react';
+import { useRef } from 'react';
+import {
+  StyleSheet,
+  SafeAreaView,
+  View,
+  useWindowDimensions,
+  Text
+} from 'react-native';
+ 
 import { SketchCanvas, SketchCanvasRef } from 'rn-perfect-sketch-canvas';
+import { useSnapshot } from 'valtio';
+import Header from './Header';
+import Toolbar from './Toolbar';
+import { state } from '../state';
 
-export default function Canvas() {
-    const canvasRef = useRef<SketchCanvasRef>(null);
-
-    return (
-      <SafeAreaView style={{flex: 1}}>
+const GetSketchCanvas = ({canvasRef}) => {
+  const snap = useSnapshot(state);
+  return (
+    <>
+      {snap.forceReloadToggle ?           
         <SketchCanvas
+          strokeColor={"red"}
+          strokeWidth={snap.strokeWidth + 1e-10}
           ref={canvasRef}
-          strokeColor={'black'}
-          strokeWidth={8}
           containerStyle={styles.container}
         />
-        <Button onPress={canvasRef.current?.reset} title="Reset" />
-        <Button onPress={canvasRef.current?.undo} title="Undo" />
-      </SafeAreaView>
-    );
+      :           
+      <SketchCanvas
+        strokeColor={"red"}
+        strokeWidth={snap.strokeWidth - 1e-10}
+        ref={canvasRef}
+        containerStyle={styles.container}
+      />
+     }
+   </>
+  );
+
+};
+
+export default function Canvas() {
+  const { width } = useWindowDimensions();
+  const canvasRef = useRef<SketchCanvasRef>(null);
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent:"space-between"
+        }}
+      >
+        <Header canvasRef={canvasRef} />
+        <View
+          style={{
+            width: 375,
+            height: 375,
+            backgroundColor: '#ffffff',
+            borderRadius: 10,
+            overflow: 'hidden',
+            elevation: 1,
+          }}
+        >
+          <GetSketchCanvas canvasRef={canvasRef}/>
+        </View>
+        <Toolbar />
+      </View>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
-    height: 400,
-    width: 400,
+    flex: 1,
+  },
+  box: {
+    width: 60,
+    height: 60,
+    marginVertical: 20,
   },
 });

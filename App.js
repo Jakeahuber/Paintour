@@ -9,6 +9,7 @@ import MyProfile from './components/MyProfile'
 import Friends from './components/Friends'
 import EditProfile from './components/EditProfile'
 import FocusedSketch from './components/FocusedSketch'
+import Canvas from './components/Canvas'
 
 const data = {
     friendSketches: [
@@ -103,7 +104,7 @@ const HomeStack = () => {
         <Stack.Navigator initialRouteName={"HomeScreen"} screenOptions={screenOptions()}>
             <Stack.Screen   name={"HomeScreen"} 
                             children={()=><Home sketches={data.friendSketches}/>}        
-                            options={{headerTitle: 'Home'}}
+                            options={{headerTitle: 'doolee'}}
             />
         </Stack.Navigator>
     )
@@ -139,7 +140,7 @@ const FriendsStack = () => {
     return (
         <Stack.Navigator initialRouteName={"FriendsScreen"} screenOptions={screenOptions()}>
             <Stack.Screen   name={"FriendsScreen"} 
-                            children={()=><Friends />}        
+                            children={()=><Canvas />}        
                             options={{headerTitle: 'Friends'}}
             />
         </Stack.Navigator>

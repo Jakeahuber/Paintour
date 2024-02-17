@@ -26,15 +26,6 @@ function Sketch(props) {
                 style={styles.sketch}
                 source={{ uri: props.sketch}}
             />
-
-            <View style={styles.authorContainer}>
-                {liked? (
-                    <Ionicons name={"heart"} size={30} color={"white"}/>
-                ) : (
-                    <Ionicons name={"heart-outline"} size={30} color={"white"} style={{}}/>
-                )}
-                <Text style={styles.likes}>{numLikes}</Text>        
-            </View>
         </View>
     );
 }
