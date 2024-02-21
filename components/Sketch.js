@@ -33,7 +33,8 @@ function Sketch(props) {
 const styles = StyleSheet.create({
     sketch: {
       width: '90%',
-      height: sketchSize * ratio,
+      height: undefined,
+      aspectRatio: 1,
       borderWidth: 1,
       borderColor: 'white',
     },
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
     authorContainer: {
         flexDirection: 'row',
         width: '100%',
-        paddingLeft: '5%',
+        marginRight: 'auto',
         marginBottom: 5,
         marginTop: 5,
     },

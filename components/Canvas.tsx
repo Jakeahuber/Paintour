@@ -39,9 +39,9 @@ const GetSketchCanvas = ({canvasRef}) => {
 };
 
 export default function Canvas() {
-  const { width } = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
   const canvasRef = useRef<SketchCanvasRef>(null);
-
+  console.log("rerender")
   return (
     <SafeAreaView style={styles.container}>
       <View
@@ -54,8 +54,8 @@ export default function Canvas() {
         <Header canvasRef={canvasRef} />
         <View
           style={{
-            width: 375,
-            height: 375,
+            width: Math.min(height, width) - 50,
+            height: Math.min(height, width) - 50,
             backgroundColor: '#ffffff',
             borderRadius: 10,
             overflow: 'hidden',

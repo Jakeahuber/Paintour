@@ -37,11 +37,13 @@ function MyProfile(props) {
     };
 
     return (
-        <SafeAreaView style={{flex: 1, backgroundColor: 'black'}}>   
+        <SafeAreaView style={{flex: 1, alignItems: 'center'}}>  
+            <View style={{aspectRatio: 9/16}}>
             <FlatList
                 ListHeaderComponent={getProfileInfo}
                 ListFooterComponent={<SketchGallery sketches={props.sketches}/>}
             />    
+            </View>
         </SafeAreaView>
     )
 }
@@ -49,6 +51,7 @@ function MyProfile(props) {
 const styles = StyleSheet.create({
     scrollViewContainer: {
         flexGrow: 1, 
+
     },
     contentContainer: {
         alignItems: 'center',

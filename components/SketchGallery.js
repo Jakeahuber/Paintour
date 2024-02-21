@@ -1,6 +1,10 @@
 import React from "react";
-import {StyleSheet, FlatList, TouchableHighlight, Image} from 'react-native';
+import {StyleSheet, FlatList, TouchableHighlight, Image, Dimensions} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+
+const {width, height} = Dimensions.get('window');
+const actualImageHeight = 400;
+const actualImageWidth = 400;
 
 function SketchGallery(props) {
     const navigation = useNavigation();
@@ -44,8 +48,8 @@ const styles = StyleSheet.create({
     },
     sketch: {
         justifyContent: 'center',
-        height: 120,
-        width: '100%',
+        height: actualImageHeight * (width / (3*actualImageWidth)),
+        width: width / 3,
         borderColor: 'black',
         borderWidth: 1,
     },
