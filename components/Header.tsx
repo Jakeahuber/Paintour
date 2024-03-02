@@ -2,25 +2,22 @@ import React, { MutableRefObject } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import type { SketchCanvasRef } from 'rn-perfect-sketch-canvas';
 import { state } from '../state';
+import {ParamListBase, useNavigation } from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
 interface Props {
   canvasRef: MutableRefObject<SketchCanvasRef | null>;
 }
-
 const Header: React.FC<Props> = ({ canvasRef }) => {
+
   /**
    * Reset the canvas & draw state
    */
+  const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+
   const reset = () => {
     canvasRef.current?.reset();
     state.forceReloadToggle = !state.forceReloadToggle;
-  };
-
-  const save = () => {
-    const image = canvasRef.current?.toSvg(375, 375)
-    if (image) {
-      console.log('SVG', image);
-    }
   };
 
   const undo = () => {
@@ -33,6 +30,14 @@ const Header: React.FC<Props> = ({ canvasRef }) => {
     state.forceReloadToggle = !state.forceReloadToggle;
   };
 
+  const upload = () => {
+    const image = canvasRef.current?.toSvg(375, 375)
+    if (image) {
+      console.log('SVG', image);
+    }
+    state.uploadedToday = true;
+    navigation.navigate('HomeScreen');
+  };
 
   return (
     <View
@@ -82,10 +87,10 @@ const Header: React.FC<Props> = ({ canvasRef }) => {
 
         <TouchableOpacity
           activeOpacity={0.6}
-          onPress={save}
+          onPress={upload}
           style={[styles.button, { marginLeft: 10 }]}
         >
-          <Text style={styles.buttonText}>Save</Text>
+          <Text style={styles.buttonText}>Upload</Text>
         </TouchableOpacity>
       </View>
     </View>

@@ -13,9 +13,24 @@ import { useSnapshot } from 'valtio';
 import Header from './Header';
 import Toolbar from './Toolbar';
 import { state } from '../state';
+import {ParamListBase, useNavigation } from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+
 
 const GetSketchCanvas = ({canvasRef}) => {
   const snap = useSnapshot(state);
+
+  const upload = () => {
+    const image = canvasRef.current?.toSvg(375, 375)
+    if (image) {
+      console.log('SVG', image);
+    }
+    state.uploadedToday = true;
+    const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+    navigation.navigate('HomeScreen');
+  };
+
+
   return (
     <>
       {snap.forceReloadToggle ?           

@@ -10,6 +10,12 @@ import Friends from './components/Friends'
 import EditProfile from './components/EditProfile'
 import FocusedSketch from './components/FocusedSketch'
 import Canvas from './components/Canvas'
+import PhoneVerificationScreen from './components/PhoneVerificationScreen'
+import PhoneNumberScreen from './components/PhoneNumberScreen'
+import { state } from './state';
+import { useSnapshot } from 'valtio';
+
+//import { FIREBASE_AUTH } from './FirebaseConfig';
 
 const data = {
     friendSketches: [
@@ -106,6 +112,8 @@ const HomeStack = () => {
                             children={()=><Home sketches={data.friendSketches}/>}        
                             options={{headerTitle: 'doolee'}}
             />
+            <Stack.Screen name={"Canvas"} component={Canvas}
+            />
         </Stack.Navigator>
     )
 }
@@ -140,7 +148,7 @@ const FriendsStack = () => {
     return (
         <Stack.Navigator initialRouteName={"FriendsScreen"} screenOptions={screenOptions()}>
             <Stack.Screen   name={"FriendsScreen"} 
-                            children={()=><Canvas />}        
+                            children={()=><Friends />}        
                             options={{headerTitle: 'Friends'}}
             />
         </Stack.Navigator>
@@ -184,12 +192,23 @@ export function TabNavigator() {
      )
   }
 
-export default function App() {
-  return (
-    <>
-        <NavigationContainer theme={{colors: {background: 'black'}}}>
-            <TabNavigator />
-        </NavigationContainer>
-    </>
-  )
+export default function App() { 
+
+    const snap = useSnapshot(state);
+    return (
+        <>
+        {snap.isSignedIn ?  
+            <NavigationContainer theme={{colors: {background: 'black'}}}>
+                <TabNavigator />
+            </NavigationContainer>
+        :           
+            <NavigationContainer theme={{colors: {background: 'black'}}}>
+                <Stack.Navigator initialRouteName="PhoneNumberScreen">
+                    <Stack.Screen name="PhoneNumberScreen" component={PhoneNumberScreen} />
+                    <Stack.Screen name="PhoneVerificationScreen" component={PhoneVerificationScreen} />
+                </Stack.Navigator>
+            </NavigationContainer>
+        }
+        </>
+    )
 }
