@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
     sketchContainer: {
         flex: 1,
         flexWrap:'wrap',
-        justifyContent: 'center',
         flexDirection: 'row',
       },
     sketchGrid: {
@@ -47,7 +46,6 @@ const styles = StyleSheet.create({
         marginRight: 0,
     },
     sketch: {
-        justifyContent: 'center',
         height: actualImageHeight * (width / (3*actualImageWidth)),
         width: width / 3,
         borderColor: 'black',

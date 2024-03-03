@@ -12,86 +12,10 @@ import FocusedSketch from './components/FocusedSketch'
 import Canvas from './components/Canvas'
 import PhoneVerificationScreen from './components/PhoneVerificationScreen'
 import PhoneNumberScreen from './components/PhoneNumberScreen'
+import Profile from './components/Profile'
 import { state } from './state';
 import { useSnapshot } from 'valtio';
-
-//import { FIREBASE_AUTH } from './FirebaseConfig';
-
-const data = {
-    friendSketches: [
-        {
-            id: 3, 
-            uploader: 'MacbookPro', 
-            profilePicture: 'https://specials-images.forbesimg.com/imageserve/62b3234d9c87d569507a1f0d/Apple-MacBook-Pro-13-inch-/960x0.jpg?fit=scale', 
-            sketch: 'https://www.dryeco.com/wp-content/uploads/2015/10/400x4005.png',
-            uploadAgoTime: '9h',
-            liked: false,
-            numLikes: 20,
-        },
-        {
-            id: 4, 
-            uploader: 'FortniteFella', 
-            profilePicture: 'https://static.wikia.nocookie.net/fortnite_gamepedia/images/d/dd/RecruitJonesy_Chapter_1.png/revision/latest/smart/width/250/height/250?cb=20191028202138', 
-            sketch: 'https://www.dryeco.com/wp-content/uploads/2015/10/400x4005.png',
-            uploadAgoTime: '23h',
-            liked: true,
-            numLikes: 20,
-        },
-        {
-            id: 2, 
-            uploader: 'MonkiMonke', 
-            profilePicture: 'https://pics.craiyon.com/2023-11-23/tHv-Fa34Ru6OnUfm35WJ4g.webp', 
-            sketch: 'https://www.dryeco.com/wp-content/uploads/2015/10/400x4005.png',
-            uploadAgoTime: '4h',
-            liked: true,
-            numLikes: 20,
-        },
-    ],
-    mySketches: [
-        {
-            id: 5, 
-            uploader: 'Jakeahuber', 
-            profilePicture: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN5CYL8eA2hthmc4cShuQ_y3DovqpV4-i8-g&usqp=CAU', 
-            sketch: 'https://www.dryeco.com/wp-content/uploads/2015/10/400x4005.png',
-            uploadAgoTime: '2h',
-            liked: true,
-            numLikes: 20,
-        },
-        {
-            id: 6, 
-            uploader: 'Jakeahuber', 
-            profilePicture: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN5CYL8eA2hthmc4cShuQ_y3DovqpV4-i8-g&usqp=CAU', 
-            sketch: 'https://www.dryeco.com/wp-content/uploads/2015/10/400x4005.png',
-            uploadAgoTime: '2h',
-            liked: true,
-            numLikes: 20,
-        },
-        {
-            id: 7, 
-            uploader: 'Jakeahuber', 
-            profilePicture: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN5CYL8eA2hthmc4cShuQ_y3DovqpV4-i8-g&usqp=CAU', 
-            sketch: 'https://www.dryeco.com/wp-content/uploads/2015/10/400x4005.png',
-            uploadAgoTime: '2h',
-            liked: true,
-            numLikes: 20,
-        },
-        {
-            id: 8, 
-            uploader: 'Jakeahuber', 
-            profilePicture: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN5CYL8eA2hthmc4cShuQ_y3DovqpV4-i8-g&usqp=CAU', 
-            sketch: 'https://www.dryeco.com/wp-content/uploads/2015/10/400x4005.png',
-            uploadAgoTime: '2h',
-            liked: true,
-            numLikes: 20,
-        }
-    ],
-    username: 'jakeahuber',
-    numFriends: 20,
-    numSketches: 4,
-    streak: 4,
-    profilePicture: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN5CYL8eA2hthmc4cShuQ_y3DovqpV4-i8-g&usqp=CAU'
-}   
-
+import dummyData from './dummydata';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator()
 
@@ -102,6 +26,8 @@ const screenOptions = () => {
             fontSize: 28,
         },
         headerTitleAlign: 'left',
+        headerTintColor: 'white',
+        headerBackTitle: null,
     };
 };
 
@@ -109,11 +35,12 @@ const HomeStack = () => {
     return (
         <Stack.Navigator initialRouteName={"HomeScreen"} screenOptions={screenOptions()}>
             <Stack.Screen   name={"HomeScreen"} 
-                            children={()=><Home sketches={data.friendSketches}/>}        
+                            children={()=><Home sketches={dummyData.friendSketches}/>}        
                             options={{headerTitle: 'doolee'}}
             />
-            <Stack.Screen name={"Canvas"} component={Canvas}
-            />
+            <Stack.Screen name={"Canvas"} component={Canvas} />
+            <Stack.Screen name={"Profile"} component={Profile} options={{headerTitle: ''}}/>
+            <Stack.Screen name={"FocusedSketchScreen"} component={FocusedSketch} options={{headerTitle: ''}}/>
         </Stack.Navigator>
     )
 }
@@ -123,23 +50,19 @@ const MyProfileStack = () => {
         <Stack.Navigator initialRouteName={"MyProfileScreen"} screenOptions={screenOptions()}>
             <Stack.Screen name={'MyProfileScreen'} 
             options={{headerTitle: 'My Profile'}}
-            children={()=> <MyProfile   username={data.username} 
-                                        profilePicture={data.profilePicture}
-                                        numFriends={data.numFriends}
-                                        numSketches={data.numSketches}
-                                        streak={data.streak}
-                                        sketches={data.mySketches}
+            children={()=> <MyProfile   username={dummyData.username} 
+                                        profilePicture={dummyData.profilePicture}
+                                        numFriends={dummyData.numFriends}
+                                        numSketches={dummyData.numSketches}
+                                        streak={dummyData.streak}
+                                        sketches={dummyData.mySketches}
                             />}   
             />
             <Stack.Screen name={'EditProfileScreen'}
                           options={{headerTitle: ''}}
                           children = {() => <EditProfile />}
             />
-            <Stack.Screen name={'FocusedSketchScreen'}
-                          options={{headerTitle: ''}}
-                          initialParams={{ uploader: 'he' }}
-                          component={FocusedSketch}
-            />
+            <Stack.Screen name={"FocusedSketchScreen"} component={FocusedSketch} options={{headerTitle: ''}}/>
         </Stack.Navigator>
     ) 
 }
@@ -203,7 +126,8 @@ export default function App() {
             </NavigationContainer>
         :           
             <NavigationContainer theme={{colors: {background: 'black'}}}>
-                <Stack.Navigator initialRouteName="PhoneNumberScreen">
+                <Stack.Navigator initialRouteName="PhoneNumberScreen" screenOptions={{headerTitle: 'doolee', headerTransparent: true, headerTintColor: 'white', 
+                headerTitleStyle: {fontSize: 28}}}>
                     <Stack.Screen name="PhoneNumberScreen" component={PhoneNumberScreen} />
                     <Stack.Screen name="PhoneVerificationScreen" component={PhoneVerificationScreen} />
                 </Stack.Navigator>

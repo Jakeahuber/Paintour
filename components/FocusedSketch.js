@@ -4,6 +4,8 @@ import Sketch from './Sketch'
 
 function FocusedSketch({route}) {
     const { profilePicture, uploader, uploadAgoTime, sketch } = route.params;
+    console.log(uploader)
+    console.log(profilePicture)
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: 'black'}}>   
             <View style={{width: '100%', height: '100%'}}>

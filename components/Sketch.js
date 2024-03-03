@@ -1,27 +1,27 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
-import { Dimensions } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons'
-
-const win = Dimensions.get('window');
-const sketchSize = 400;
-const ratio = win.width/sketchSize; 
+import {View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import dummyData from '../dummydata';
 
 function Sketch(props) {
-    var liked = props.liked;
-    const numLikes = props.numLikes + " likes"
+    const navigation = useNavigation();
+
+    const handleUsernameClick = () => {
+        navigation.navigate('Profile', { username: dummyData.username2, profilePicture: 
+            dummyData.profilePicture2, numFriends: dummyData.numFriends2, numSketches: dummyData.numSketches2, 
+            streak: dummyData.streak2, sketches: dummyData.mySketches2});
+    };
 
     return (
         <View style={styles.postContainer}>           
-            <View style={styles.authorContainer}>
+            <TouchableOpacity onPress={handleUsernameClick} style={styles.authorContainer}>
                 <Image
                     style={styles.profilePicture}
                     source={{ uri: props.profilePicture}}
                 />
-                <Text style={styles.uploader}>{props.uploader}</Text>        
-                <Text style={styles.uploadTime}>{props.uploadAgoTime}</Text>                         
-            </View>
-
+                <Text style={styles.uploader}>{props.uploader}</Text> 
+                <Text style={styles.uploadTime}>{props.uploadAgoTime}</Text>     
+            </TouchableOpacity>                     
             <Image
                 style={styles.sketch}
                 source={{ uri: props.sketch}}
