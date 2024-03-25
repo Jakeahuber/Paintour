@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React from "react";
+import React, {useRef} from "react";
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -16,6 +16,10 @@ import Profile from './components/Profile'
 import { state } from './state';
 import { useSnapshot } from 'valtio';
 import dummyData from './dummydata';
+import { SketchCanvasRef } from 'rn-perfect-sketch-canvas';
+
+
+
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator()
 
@@ -38,7 +42,7 @@ const HomeStack = () => {
                             children={()=><Home sketches={dummyData.friendSketches}/>}        
                             options={{headerTitle: 'doolee'}}
             />
-            <Stack.Screen name={"Canvas"} component={Canvas} />
+            <Stack.Screen name={"Canvas"} component={Canvas} options={{headerTitle: '', gestureEnabled: false}}/>
             <Stack.Screen name={"Profile"} component={Profile} options={{headerTitle: ''}}/>
             <Stack.Screen name={"FocusedSketchScreen"} component={FocusedSketch} options={{headerTitle: ''}}/>
         </Stack.Navigator>

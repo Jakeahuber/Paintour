@@ -2,14 +2,22 @@ import React from 'react';
 import {View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import dummyData from '../dummydata';
+import { state } from '../state';
+import { useSnapshot } from 'valtio';
 
 function Sketch(props) {
     const navigation = useNavigation();
+    const snap = useSnapshot(state);
 
     const handleUsernameClick = () => {
-        navigation.navigate('Profile', { username: dummyData.username2, profilePicture: 
-            dummyData.profilePicture2, numFriends: dummyData.numFriends2, numSketches: dummyData.numSketches2, 
-            streak: dummyData.streak2, sketches: dummyData.mySketches2});
+        if (props.uploader == snap.username) {
+            navigation.goBack();
+        }
+        else {
+            navigation.navigate('Profile', { username: dummyData.username2, profilePicture: 
+                dummyData.profilePicture2, numFriends: dummyData.numFriends2, numSketches: dummyData.numSketches2, 
+                streak: dummyData.streak2, sketches: dummyData.mySketches2});
+        }
     };
 
     return (

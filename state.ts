@@ -6,4 +6,9 @@ export const state = proxy({
   forceReloadToggle: true,
   isSignedIn: false,
   uploadedToday: false,
+  username: 'Jakeahuber',
+  zoomableCanvas: false,
+  offsetX: 0,
+  offsetY: 0,
+  scale: 1
 });

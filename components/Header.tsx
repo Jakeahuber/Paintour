@@ -1,5 +1,5 @@
-import React, { MutableRefObject } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { MutableRefObject, useState } from 'react';
+import { Text, View, TouchableOpacity, StyleSheet, useWindowDimensions } from 'react-native';
 import type { SketchCanvasRef } from 'rn-perfect-sketch-canvas';
 import { state } from '../state';
 import {ParamListBase, useNavigation } from '@react-navigation/native';
@@ -8,12 +8,15 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 interface Props {
   canvasRef: MutableRefObject<SketchCanvasRef | null>;
 }
-const Header: React.FC<Props> = ({ canvasRef }) => {
 
+const Header: React.FC<Props> = ({ canvasRef }) => {
+  const { height, width } = useWindowDimensions();
   /**
    * Reset the canvas & draw state
    */
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+  const [zoomText, setZoomText] = useState("Zoom");
+  const [prevStrokeWidth, setPrevStrokeWidth] = useState(0);
 
   const reset = () => {
     canvasRef.current?.reset();
@@ -31,12 +34,26 @@ const Header: React.FC<Props> = ({ canvasRef }) => {
   };
 
   const upload = () => {
-    const image = canvasRef.current?.toSvg(375, 375)
+    const image = canvasRef.current?.toBase64(0, 0.5);
     if (image) {
       console.log('SVG', image);
     }
     state.uploadedToday = true;
     navigation.navigate('HomeScreen');
+  };
+
+  const zoom = () => {
+//    console.log(state.strokeWidth);
+    if (zoomText == 'Zoom') {
+      setZoomText("Draw");
+      setPrevStrokeWidth(state.strokeWidth);
+      state.strokeWidth = 0;
+    }
+    else {
+      setZoomText("Zoom");
+      state.strokeWidth = prevStrokeWidth;
+    }
+    state.zoomableCanvas = !state.zoomableCanvas;
   };
 
   return (
@@ -47,7 +64,10 @@ const Header: React.FC<Props> = ({ canvasRef }) => {
         paddingHorizontal: 12,
         flexDirection: 'row',
         justifyContent: 'space-between',
+        backgroundColor: 'black',
         alignItems: 'center',
+        paddingRight: 25,
+        paddingLeft: 25,
       }}
     >
       <View
@@ -66,29 +86,21 @@ const Header: React.FC<Props> = ({ canvasRef }) => {
         <TouchableOpacity
           onPress={redo}
           activeOpacity={0.6}
-          style={styles.button}
+          style={[styles.button, { marginRight: 10 }]}
         >
           <Text style={styles.buttonText}>Redo</Text>
         </TouchableOpacity>
-      </View>
-
-      <View
-        style={{
-          flexDirection: 'row',
-        }}
-      >
         <TouchableOpacity
           onPress={reset}
           activeOpacity={0.6}
-          style={styles.button}
+          style={[styles.button, { marginRight: 10 }]}
         >
           <Text style={styles.buttonText}>Reset</Text>
         </TouchableOpacity>
-
         <TouchableOpacity
           activeOpacity={0.6}
           onPress={upload}
-          style={[styles.button, { marginLeft: 10 }]}
+          style={[styles.upload, { marginRight: 10 }]}
         >
           <Text style={styles.buttonText}>Upload</Text>
         </TouchableOpacity>
@@ -98,10 +110,20 @@ const Header: React.FC<Props> = ({ canvasRef }) => {
 };
 
 const styles = StyleSheet.create({
+  
   button: {
-    paddingHorizontal: 12,
+    paddingHorizontal: 20,
     backgroundColor: 'white',
-    height: 30,
+    height: 40,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  upload: {
+    paddingHorizontal: 20,
+    backgroundColor: '#E0E0E0',
+    height: 40,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },

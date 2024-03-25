@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { StyleSheet, View, Text, TouchableWithoutFeedback, Image, Keyboard } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 
 const PhoneNumberScreen = ({ navigation }) => {
@@ -30,6 +30,7 @@ const PhoneNumberScreen = ({ navigation }) => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={styles.container}>
         <View style={styles.content}>
+          <Image source={require('../signup.gif')} style={styles.image}/>
           <Input
             label=""
             placeholder="Enter your phone number"
@@ -76,4 +77,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  image: {
+    width: 300,
+    height: 300,
+  }
 });

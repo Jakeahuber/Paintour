@@ -4,6 +4,8 @@ import { useSnapshot } from 'valtio';
 import constants from '../constants';
 import { state } from '../state';
 import Stroke from './Stroke';
+import ColorPicker from 'react-native-wheel-color-picker'
+
 
 const Toolbar = () => {
   const [showStrokes, setShowStrokes] = useState(false);
@@ -14,65 +16,28 @@ const Toolbar = () => {
     setShowStrokes(false);
   };
 
+  const handleColorChange = (color) => { 
+    state.strokeColor = color;
+}; 
+
   return (
     <>
-      {showStrokes && (
-        <View
-          style={[
-            styles.toolbar,
-            {
-              bottom: 80,
-              position: 'absolute',
-            },
-          ]}
-        >
-          {constants.strokes.map((stroke) => (
-            <Stroke
-              key={stroke}
-              stroke={stroke}
-              onPress={() => handleStrokeChange(stroke)}
-            />
-          ))}
-        </View>
-      )}
-
-      <View
-        style={[styles.toolbar, { position: 'relative', marginVertical: 12 }]}
-      >
-        <View
-          style={{
-            backgroundColor: '#f7f7f7',
-            borderRadius: 5,
-          }}
-        >
-          {showStrokes && (
-            <View
-              style={{
-                width: 5,
-                height: 5,
-                borderRadius: 100,
-                backgroundColor: 'black',
-                alignSelf: 'center',
-                position: 'absolute',
-              }}
-            />
-          )}
-
-          <Stroke
-            stroke={snap.strokeWidth}
-            onPress={() => setShowStrokes(!showStrokes)}
+      <View style={styles.toolbar}>
+          <ColorPicker
+            color={snap.strokeColor}
+            onColorChange={handleColorChange} 
+            thumbSize={30}
+            gapSize={20}
+            sliderSize={30}
+            noSnap={true}
+            useNativeDriver={false}
+            useNativeLayout={false}
+            swatches={true}
+            row={true}
+            shadeSliderThumb={true}
+            
+            palette={['white', '#ed1c24','#d11cd5','#1633e6','#00c85d', '#ffde17', '#f26522']}
           />
-        </View>
-
-        <View
-          style={{
-            height: 30,
-            borderWidth: 1,
-            borderColor: '#f0f0f0',
-            marginHorizontal: 10,
-          }}
-        />
-
       </View>
     </>
   );
@@ -82,23 +47,14 @@ export default Toolbar;
 
 const styles = StyleSheet.create({
   toolbar: {
-    backgroundColor: '#ffffff',
-    height: 50,
-    width: 300,
-    borderRadius: 100,
-    flexDirection: 'row',
-    paddingHorizontal: 12,
+    backgroundColor: 'black',
+    width: '100%',
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  color: {
-    width: 35,
-    height: 35,
-    marginRight: 10,
-    borderRadius: 100,
-    borderWidth: 2,
-    borderColor: '#f0f0f0',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+    paddingTop: 25,
+    paddingBottom: 10,
+    paddingRight: 40,
+    marginRight: 0,
+  }
 });
