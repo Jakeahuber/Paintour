@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text} from 'react-native';
 import { useSnapshot } from 'valtio';
 import constants from '../constants';
 import { state } from '../state';
 import Stroke from './Stroke';
-import ColorPicker from 'react-native-wheel-color-picker'
-
+import ColorPicker, { Panel1, Panel3, Swatches, Preview, OpacitySlider, HueSlider } from 'reanimated-color-picker';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {Slider} from '@miblanchard/react-native-slider';
 
 const Toolbar = () => {
   const [showStrokes, setShowStrokes] = useState(false);
+  const [brushIconStyle, setBrushIconStyle] = useState("brush-outline")
+  const [paletteIconStyle, setPaletteIconStyle] = useState("color-palette-outline")
+  const [paletteVisibility, setPaletteVisibility] = useState("none");
+  const [brushVisibility, setBrushVisibility] = useState("none");
+
+  const [value, setValue] = useState(0.2);
+
   const snap = useSnapshot(state);
 
   const handleStrokeChange = (stroke: number) => {
@@ -17,31 +25,72 @@ const Toolbar = () => {
   };
 
   const handleColorChange = (color) => { 
-    state.strokeColor = color;
-}; 
+    state.strokeColor = color['hex'];
+  }; 
+
+  const handleSliderChange = (value) => {
+    state.strokeWidth = value[0] * 50;
+    setValue(value[0]);
+  }
+
+  const handleBrushPress = () => { 
+    if (brushIconStyle == 'brush') {
+      setBrushIconStyle("brush-outline");
+      setBrushVisibility('none');
+    }
+    else {
+      setBrushIconStyle("brush");
+      setBrushVisibility("flex");
+      setPaletteIconStyle("color-palette-outline");
+      setPaletteVisibility("none");
+
+    }
+  }; 
+
+  const handlePalettePress = () => { 
+    if (paletteIconStyle == 'color-palette') {
+      setPaletteIconStyle("color-palette-outline")
+      setPaletteVisibility("none");
+    }
+    else {
+      setBrushIconStyle("brush-outline")
+      setPaletteIconStyle("color-palette")
+      setPaletteVisibility("flex");
+      setBrushVisibility("none")
+    }
+  }; 
+
 
   return (
     <>
-      <View style={styles.toolbar}>
-          <ColorPicker
-            color={snap.strokeColor}
-            onColorChange={handleColorChange} 
-            thumbSize={30}
-            gapSize={20}
-            sliderSize={30}
-            noSnap={true}
-            useNativeDriver={false}
-            useNativeLayout={false}
-            swatches={true}
-            row={true}
-            shadeSliderThumb={true}
-            
-            palette={['white', '#ed1c24','#d11cd5','#1633e6','#00c85d', '#ffde17', '#f26522']}
-          />
-      </View>
+        <View style={{flexDirection: 'row', justifyContent: 'center', paddingTop: 10}}>
+          <Ionicons name={brushIconStyle} size={35} color="white" style={{marginRight: 50}} onPress={handleBrushPress}/>
+          <Ionicons name={paletteIconStyle} size={35} color="white" onPress={handlePalettePress} />
+        </View>
+        <View style={{alignItems: 'center', justifyContent: 'center', padding: 10 }}>
+          
+          <ColorPicker style={{ width: '70%', display: paletteVisibility, flexDirection: 'row'}} value={state.strokeColor} onComplete={handleColorChange}>
+            <Panel1 style={{ flex: 1, marginRight: 20}}/>
+            <HueSlider vertical />
+          </ColorPicker>
+
+          <View style={[styles.sliderContainer, {display: brushVisibility}]}>
+            <Slider
+              value={value}
+              onSlidingComplete={handleSliderChange}
+            />
+          </View>
+        </View>
     </>
   );
 };
+
+/*
+        <ColorPicker style={{ width: '55%'}} value='red' onComplete={onSelectColor}>
+          <Panel1 style={{marginBottom: 10}}/>
+          <HueSlider />
+        </ColorPicker>
+*/
 
 export default Toolbar;
 
@@ -52,9 +101,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 25,
+    paddingTop: 0,
     paddingBottom: 10,
     paddingRight: 40,
     marginRight: 0,
+  },
+  sliderContainer: {
+    marginLeft: 10,
+    marginRight: 10,
+    alignItems: 'stretch',
+    width: '90%'
   }
 });

@@ -62,7 +62,7 @@ export default function Canvas({ route }) {
     <SafeAreaView style={styles.container}>
       <View style={{flex: 1}}>
         <Header canvasRef={canvasRef}/>
-        <View style={{width: '100%', height: 400, zIndex: -1, marginTop: 10}}>
+        <View style={{width: '100%', zIndex: -1, marginTop: 10}}>
           <ScrollView 
             bounces={false}
             bouncesZoom={false}
