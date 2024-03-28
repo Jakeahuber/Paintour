@@ -1,5 +1,5 @@
 import React, {useRef} from "react";
-import {StyleSheet, ScrollView, View, Text} from 'react-native';
+import {StyleSheet, ScrollView, View, Text, SafeAreaView } from 'react-native';
 import Sketches from './Sketches'
 import { state } from '../state';
 import { useSnapshot } from 'valtio';
@@ -11,19 +11,15 @@ import { SketchCanvas, SketchCanvasRef } from 'rn-perfect-sketch-canvas';
 function Home(props) {
     const navigation = useNavigation();
     const snap = useSnapshot(state);
-
     const img = require('../nofriends.gif');
     const video = React.useRef(null);
     const [status, setStatus] = React.useState({});
     const canvasRef = useRef<SketchCanvasRef>(null);
+
     return(
         <>
             {snap.uploadedToday ?
-                <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-                    <View style={{maxWidth: 750}}>
-                        <Sketches sketches={props.sketches} />
-                    </View>
-                </ScrollView>
+                <Sketches sketches={props.sketches} />
             :
                 <ScrollView contentContainerStyle={styles.scrollViewContainer}>
                     <View style={styles.container}>

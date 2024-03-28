@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import {View, Text, Image, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import dummyData from '../dummydata';
 import { state } from '../state';
@@ -8,6 +8,8 @@ import { useSnapshot } from 'valtio';
 function Sketch(props) {
     const navigation = useNavigation();
     const snap = useSnapshot(state);
+    const { height, width } = useWindowDimensions();
+
 
     const handleUsernameClick = () => {
         if (props.uploader == snap.username) {
@@ -21,7 +23,7 @@ function Sketch(props) {
     };
 
     return (
-        <View style={styles.postContainer}>           
+        <View style={[styles.postContainer, {width: width}]}>           
             <TouchableOpacity onPress={handleUsernameClick} style={styles.authorContainer}>
                 <Image
                     style={styles.profilePicture}
