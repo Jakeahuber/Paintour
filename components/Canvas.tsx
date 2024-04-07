@@ -60,7 +60,10 @@ export default function Canvas({ route }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={{flex: 1}}>
+      <View style={{flex: 1, alignItems: 'center'}}>
+        <View style={{width: '90%', alignItems: 'center'}}>
+          <Text style={{color: 'white', fontSize: 24, textAlign: 'center'}}>An astronaut floating in space with Earth in the background.</Text>
+        </View>
         <Header canvasRef={canvasRef}/>
         <View style={{width: '100%', zIndex: -1, marginTop: 10}}>
           <ScrollView 
@@ -78,6 +81,7 @@ export default function Canvas({ route }) {
                 <GetSketchCanvas canvasRef={canvasRef}/>
               </View>   
             </ScrollView>
+          
         </View>
         <Toolbar />
       </View>

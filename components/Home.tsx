@@ -19,7 +19,9 @@ function Home(props) {
     return(
         <>
             {snap.uploadedToday ?
-                <Sketches sketches={props.sketches} />
+                <View style={{flex: 1, alignContent: 'center', justifyContent: 'center'}}>  
+                    <Sketches sketches={props.sketches} />
+                </View>
             :
                 <ScrollView contentContainerStyle={styles.scrollViewContainer}>
                     <View style={styles.container}>
@@ -32,7 +34,7 @@ function Home(props) {
                                     resizeMode={ResizeMode.CONTAIN}
                                     isLooping={true}
                                     isMuted={true}
-                                    shouldPlay={false} // toggle between true and false on page switches maybe
+                                    shouldPlay={true} // toggle between true and false on page switches maybe
                                     onPlaybackStatusUpdate={status => setStatus(() => status)}
                             />
                             

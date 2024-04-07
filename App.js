@@ -11,14 +11,32 @@ import EditProfile from './components/EditProfile'
 import FocusedSketch from './components/FocusedSketch'
 import Canvas from './components/Canvas'
 import PhoneVerificationScreen from './components/PhoneVerificationScreen'
-import PhoneNumberScreen from './components/PhoneNumberScreen'
+import SignIn from './components/SignIn'
+import SignUp from './components/SignUp'
 import Profile from './components/Profile'
 import { state } from './state';
 import { useSnapshot } from 'valtio';
 import dummyData from './dummydata';
 import { SketchCanvasRef } from 'rn-perfect-sketch-canvas';
+import {Text, TouchableOpacity } from 'react-native';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {app} from './firebaseconfig'
 
-
+const auth = getAuth(app);
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    console.log("Used signed in");
+    state.uid = user.uid;
+    state.username = user.displayName;
+    state.profilePicUrl = user.photoURL;
+    console.log(user);
+    // ...
+  } else {
+    // User is signed out
+    // ...
+    console.log("User signed out.");
+  }
+});
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator()
@@ -53,7 +71,19 @@ const MyProfileStack = () => {
     return (
         <Stack.Navigator initialRouteName={"MyProfileScreen"} screenOptions={screenOptions()}>
             <Stack.Screen name={'MyProfileScreen'} 
-            options={{headerTitle: 'My Profile'}}
+
+            options={({ navigation }) => ({
+                headerTitle: dummyData.username,
+                headerRight: () => (
+                  <TouchableOpacity
+                    style={{ marginRight: 10 }}
+                    onPress={() => navigation.navigate('EditProfileScreen')} // Navigate to the edit profile screen
+                  >
+                    <Ionicons name="ellipsis-horizontal" size={30} color="white" />
+                  </TouchableOpacity>
+                ),
+              })}
+
             children={()=> <MyProfile   username={dummyData.username} 
                                         profilePicture={dummyData.profilePicture}
                                         numFriends={dummyData.numFriends}
@@ -64,7 +94,7 @@ const MyProfileStack = () => {
             />
             <Stack.Screen name={'EditProfileScreen'}
                           options={{headerTitle: ''}}
-                          children = {() => <EditProfile />}
+                          children = {() => <EditProfile username={dummyData.username} profilePicture={dummyData.profilePicture}/>}
             />
             <Stack.Screen name={"FocusedSketchScreen"} component={FocusedSketch} options={{headerTitle: ''}}/>
         </Stack.Navigator>
@@ -122,18 +152,19 @@ export function TabNavigator() {
 export default function App() { 
 
     const snap = useSnapshot(state);
+    console.log(snap.uid);
     return (
         <>
-        {snap.isSignedIn ?  
+        {(snap.uid != null) ?  
             <NavigationContainer theme={{colors: {background: 'black'}}}>
                 <TabNavigator />
             </NavigationContainer>
         :           
             <NavigationContainer theme={{colors: {background: 'black'}}}>
-                <Stack.Navigator initialRouteName="PhoneNumberScreen" screenOptions={{headerTitle: 'doolee', headerTransparent: true, headerTintColor: 'white', 
+                <Stack.Navigator initialRouteName="SignIn" screenOptions={{headerTitle: 'doolee', headerTransparent: true, headerTintColor: 'white', 
                 headerTitleStyle: {fontSize: 28}}}>
-                    <Stack.Screen name="PhoneNumberScreen" component={PhoneNumberScreen} />
-                    <Stack.Screen name="PhoneVerificationScreen" component={PhoneVerificationScreen} />
+                    <Stack.Screen name="SignIn" component={SignIn} options={{headerLeft: null}}/>
+                    <Stack.Screen name="SignUp" component={SignUp} options={{headerLeft: null}}/>
                 </Stack.Navigator>
             </NavigationContainer>
         }

@@ -46,6 +46,7 @@ function Sketches({sketches}) {
                 snapToInterval={width}
                 pagingEnabled={true}
                 showsHorizontalScrollIndicator={false}
+                disableIntervalMomentum={true}
             />
         </View>  
     )

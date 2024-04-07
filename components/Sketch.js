@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
+import {View, Text, Image, StyleSheet, TouchableOpacity, useWindowDimensions, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import dummyData from '../dummydata';
 import { state } from '../state';
@@ -23,19 +23,22 @@ function Sketch(props) {
     };
 
     return (
-        <View style={[styles.postContainer, {width: width}]}>           
-            <TouchableOpacity onPress={handleUsernameClick} style={styles.authorContainer}>
-                <Image
-                    style={styles.profilePicture}
-                    source={{ uri: props.profilePicture}}
-                />
-                <Text style={styles.uploader}>{props.uploader}</Text> 
-                <Text style={styles.uploadTime}>{props.uploadAgoTime}</Text>     
-            </TouchableOpacity>                     
+        <View style={[styles.postContainer, {width: width}]}> 
             <Image
                 style={styles.sketch}
                 source={{ uri: props.sketch}}
-            />
+            />   
+            <TouchableOpacity onPress={handleUsernameClick} style={styles.authorContainer}>
+
+                <View style={{flexDirection: 'row', padding: 15}}>
+                    <Image
+                        style={styles.profilePicture}
+                        source={{ uri: props.profilePicture}}
+                    />
+                    <Text style={styles.uploader}>{props.uploader}</Text> 
+                    <Text style={styles.uploadTime}>{props.uploadAgoTime}</Text>     
+                </View>
+            </TouchableOpacity>                     
         </View>
     );
 }
@@ -45,12 +48,11 @@ const styles = StyleSheet.create({
       width: '90%',
       height: undefined,
       aspectRatio: 1,
-      borderWidth: 1,
       borderColor: 'white',
+      borderWidth: 1,
     },
     postContainer: {
         marginBottom: 15,
-        marginTop: 15,
         width: '100%',
         alignItems: 'center',
     },
@@ -60,28 +62,22 @@ const styles = StyleSheet.create({
         borderRadius: 50, 
         resizeMode: 'cover',
         borderWidth: 1,
-        borderColor: 'white',
+        borderColor: 'black',
+        marginRight: 5,
+        borderColor: 'white'
     },
     authorContainer: {
-        flexDirection: 'row',
         width: '100%',
-        marginRight: 'auto',
-        marginBottom: 5,
-        marginTop: 5,
+        justifyContent: 'center',
+        alignContent: 'center',
+        alignItems: 'center'
     },
     uploader: {
         marginLeft: 3, 
         paddingTop: 8, 
         fontSize: 18, 
-        color: 'white', 
-        justifyContent: 'flex-start'
-    },
-    likes: {
-        marginLeft: 3, 
-        paddingTop: 4, 
-        fontSize: 18, 
-        color: 'white', 
-        justifyContent: 'flex-start'
+        justifyContent: 'flex-start',
+        color: 'white'
     },
     uploadTime: {
         marginLeft: 3, 

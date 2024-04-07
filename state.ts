@@ -6,9 +6,12 @@ export const state = proxy({
   forceReloadToggle: true,
   isSignedIn: false,
   uploadedToday: false,
-  username: 'Jakeahuber',
+  username: '',
   zoomableCanvas: false,
   offsetX: 0,
   offsetY: 0,
-  scale: 1
+  scale: 1,
+  publicPosts: true,
+  uid: null,
+  profilePicUrl: '',
 });
