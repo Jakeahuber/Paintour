@@ -15,12 +15,11 @@ function Home(props) {
     const video = React.useRef(null);
     const [status, setStatus] = React.useState({});
     const canvasRef = useRef<SketchCanvasRef>(null);
-
     return(
         <>
             {snap.uploadedToday ?
                 <View style={{flex: 1, alignContent: 'center', justifyContent: 'center'}}>  
-                    <Sketches sketches={props.sketches} />
+                    <Sketches sketches={state.friendSketches} />
                 </View>
             :
                 <ScrollView contentContainerStyle={styles.scrollViewContainer}>

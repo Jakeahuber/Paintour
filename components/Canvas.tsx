@@ -8,17 +8,14 @@ import {
   Button,
   Text, 
   TouchableOpacity,
-  ScrollView
+  ScrollView,
+  Animated
 } from 'react-native';
- 
 import { SketchCanvas, SketchCanvasRef } from 'rn-perfect-sketch-canvas';
-
 import { useSnapshot } from 'valtio';
 import Header from './Header';
 import Toolbar from './Toolbar';
 import { state } from '../state';
-import { ReactNativeZoomableView } from 'react-native-zoomable-view';
-import { PanGestureHandler } from 'react-native-gesture-handler';
 
 const GetSketchCanvas = ({canvasRef}) => {
   const snap = useSnapshot(state);
@@ -51,6 +48,7 @@ export default function Canvas({ route }) {
 
   const { canvasRef } = route.params;
   const [prevWidth, setPrevWidth ] = useState(0);
+  const translateY = useRef(new Animated.Value(0)).current;
 
   const snap = useSnapshot(state);
 
@@ -58,11 +56,27 @@ export default function Canvas({ route }) {
     canvasRef.current?.resetCurrentPoints();
   };
 
+  const [isShifted, setIsShifted] = useState(false);
+
+  const shiftVertical = (value) => {
+    Animated.timing(
+      translateY,
+      {
+        toValue: value,
+        duration: 500,
+        useNativeDriver: true,
+      }
+    ).start();
+  };
+
   return (
+    
     <SafeAreaView style={styles.container}>
-      <View style={{flex: 1, alignItems: 'center'}}>
-        <View style={{width: '90%', alignItems: 'center'}}>
-          <Text style={{color: 'white', fontSize: 24, textAlign: 'center'}}>An astronaut floating in space with Earth in the background.</Text>
+      <View style={{flex: 1, alignItems: 'center'}}>    
+        <Animated.View style={{width: '100%', alignItems: 'center', transform: [{ translateY }] }}>
+        <View style={{ width: '90%', height: 85, alignItems: 'center'}}>
+          <Text style={{color: 'white', fontSize: 24, textAlign: 'center'}}>Today's Prompt:</Text>
+          <Text style={{color: 'white', fontSize: 20, textAlign: 'center'}}>A penguin trying to master the art of skateboarding on an icy slope.</Text>
         </View>
         <Header canvasRef={canvasRef}/>
         <View style={{width: '100%', zIndex: -1, marginTop: 10}}>
@@ -81,40 +95,15 @@ export default function Canvas({ route }) {
                 <GetSketchCanvas canvasRef={canvasRef}/>
               </View>   
             </ScrollView>
-          
         </View>
-        <Toolbar />
+        <Toolbar shiftVertical={shiftVertical}/>
+        </Animated.View>
+
       </View>
         
     </SafeAreaView>
   );
 }
-
-/*
-      {snap.zoomableCanvas ?   
-        <ReactNativeZoomableView
-          maxZoom={4}
-          minZoom={0.5}
-          zoomStep={0.5}
-          initialZoom={snap.scale}
-          bindToBorders={true}
-          panEnabled={true}
-          zoomEnabled={true}
-          onTransform={handleZoom}
-          initialOffsetX={snap.offsetX}
-          initialOffsetY={snap.offsetY}
-          panBoundaryPadding={0}
-          style={{height: 300, padding: 0}}
-        >
-          
-          <GetSketchCanvas canvasRef={canvasRef}/>
-        </ReactNativeZoomableView>
-      :
-        <View style={{alignItems: 'center', height: '100%', justifyContent: 'center'}}>
-          <GetSketchCanvas canvasRef={canvasRef}/>
-        </View>
-      }
-*/
 
 const styles = StyleSheet.create({
   container: {

@@ -1,10 +1,28 @@
 import { useState } from 'react';
 import { Button, Image, View, StyleSheet, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { state } from '../state';
+import { useSnapshot } from 'valtio';
+import { signOut, getAuth } from 'firebase/auth';
+import {app} from '../firebaseconfig';
+
+const auth = getAuth(app);
 
 const EditProfile = (props) => {
-  const [image, setImage] = useState(props.profilePicture);
+  const snap = useSnapshot(state);
+
+  const image = snap.profilePicture;
   const [uploadedImage, setUploadedImage] = useState(false);
+
+  const handleSignOut = async () => {
+    signOut(auth)
+    .then(() => {
+      console.log('User signed out successfully.');
+    })
+    .catch((error) => {
+      console.error('Error signing out:', error);
+    });
+  }
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -15,10 +33,8 @@ const EditProfile = (props) => {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      //setImage(result.assets[0].uri);
     }
   };
 
@@ -26,7 +42,7 @@ const EditProfile = (props) => {
     <View style={styles.container}>
       <Image source={{ uri: image }} style={styles.profilePicture} />
       <Button title="Change Profile Picture" onPress={pickImage} />
-      <Button title="Log Out" />
+      <Button title="Log Out" onPress={handleSignOut}/>
       <Button title="Save Changes" />
       <Text style={{color: 'white'}}>Other concern? Contact doolee@gmail.com.</Text>
     </View>

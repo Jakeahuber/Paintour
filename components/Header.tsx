@@ -11,6 +11,7 @@ interface Props {
 
 const Header: React.FC<Props> = ({ canvasRef }) => {
   const { height, width } = useWindowDimensions();
+  
   /**
    * Reset the canvas & draw state
    */
@@ -34,12 +35,36 @@ const Header: React.FC<Props> = ({ canvasRef }) => {
   };
 
   const upload = () => {
+    const url = "https://us-central1-sketch-c3044.cloudfunctions.net/uploadSketch";
     const image = canvasRef.current?.toBase64(0, 0.5);
-    if (image) {
-      console.log('SVG', image);
+    const sketchData = {
+      uid: state.uid,
+      username: state.username,
+      profilePicture: state.profilePicture,
+      image: image
     }
-    state.uploadedToday = true;
-    navigation.navigate('HomeScreen');
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(sketchData)
+    })
+    .then(response => {
+      if (!response.ok) {
+        console.log(response);
+        throw new Error('Network response was not ok');
+      }
+      console.log('Post request successful');
+      state.uploadedToday = true;
+      navigation.navigate('HomeScreen');
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+    //state.uploadedToday = true;
+    //navigation.navigate('HomeScreen');
   };
 
   const zoom = () => {

@@ -4,8 +4,11 @@ import ProfileStats from './ProfileStats';
 import { useNavigation } from '@react-navigation/native';
 import SketchGallery from './SketchGallery'
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useSnapshot } from 'valtio';
+import { state } from '../state';
 
 function MyProfile(props) {
+    const snap = useSnapshot(state);
 
     const navigation = useNavigation();
     const [eyeIconStyle, setEyeIconStyle] = useState("grid-outline");
@@ -18,14 +21,14 @@ function MyProfile(props) {
                     <View style={styles.userInfoContainer}>
                         <Image
                             style={styles.profilePicture}
-                            source={{ uri: props.profilePicture}}
+                            source={{ uri: snap.profilePicture}}
                         />
                     </View>
                     <View style={{marginTop: 15, width: '100%'}}>
                         <ProfileStats
-                            numFriends={props.numFriends}
-                            numSketches={props.numSketches}
-                            streak={props.streak}
+                            numFriends={snap.numFriends}
+                            numSketches={snap.numSketches}
+                            streak={snap.streak}
                         />
                     </View>
                     <View style={{flexDirection: 'row', paddingTop: 10, paddingBottom: 10, marginTop: 10, alignItems: 'center'}}>
@@ -46,7 +49,7 @@ function MyProfile(props) {
             <View style={{aspectRatio: 9/16}}>
             <FlatList
                 ListHeaderComponent={getProfileInfo}
-                ListFooterComponent={<SketchGallery sketches={props.sketches}/>}
+                ListFooterComponent={<SketchGallery sketches={snap.userSketches}/>}
             />    
             </View>
         </SafeAreaView>

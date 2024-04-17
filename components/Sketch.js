@@ -1,42 +1,29 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, TouchableOpacity, useWindowDimensions, ImageBackground } from 'react-native';
+import {View, Text, Image, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import dummyData from '../dummydata';
 import { state } from '../state';
 import { useSnapshot } from 'valtio';
 
 function Sketch(props) {
     const navigation = useNavigation();
     const snap = useSnapshot(state);
-    const { height, width } = useWindowDimensions();
-
+    const width = useWindowDimensions().width;
 
     const handleUsernameClick = () => {
-        if (props.uploader == snap.username) {
-            navigation.goBack();
-        }
-        else {
-            navigation.navigate('Profile', { username: dummyData.username2, profilePicture: 
-                dummyData.profilePicture2, numFriends: dummyData.numFriends2, numSketches: dummyData.numSketches2, 
-                streak: dummyData.streak2, sketches: dummyData.mySketches2});
-        }
+        if (props.uid == snap.uid) navigation.navigate('MyProfileScreen'); 
+        else navigation.navigate('Profile', { uid: props.uid }); 
     };
 
     return (
         <View style={[styles.postContainer, {width: width}]}> 
-            <Image
-                style={styles.sketch}
-                source={{ uri: props.sketch}}
-            />   
+            <View style={{backgroundColor: 'white'}}>
+                <Image style={styles.sketch} source={{ uri: props.image}}/>   
+            </View>
             <TouchableOpacity onPress={handleUsernameClick} style={styles.authorContainer}>
-
                 <View style={{flexDirection: 'row', padding: 15}}>
-                    <Image
-                        style={styles.profilePicture}
-                        source={{ uri: props.profilePicture}}
-                    />
-                    <Text style={styles.uploader}>{props.uploader}</Text> 
-                    <Text style={styles.uploadTime}>{props.uploadAgoTime}</Text>     
+                    <Image style={styles.profilePicture} source={{ uri: props.profilePicture}}/>
+                    <Text style={styles.uploader}>{props.username}</Text> 
+                    <Text style={styles.uploadTime}>{props.uploadTime}</Text>     
                 </View>
             </TouchableOpacity>                     
         </View>
@@ -52,9 +39,11 @@ const styles = StyleSheet.create({
       borderWidth: 1,
     },
     postContainer: {
-        marginBottom: 15,
         width: '100%',
         alignItems: 'center',
+        flex: 1,
+        justifyContent: 'center',
+        marginBottom: 25,
     },
     profilePicture: {
         width: 40, 

@@ -1,36 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableWithoutFeedback, Image, Keyboard, TouchableOpacity, Modal } from 'react-native';
+import { StyleSheet, View, Text, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
 import { Input, Button } from 'react-native-elements';
-import { initializeAuth, getAuth, createUserWithEmailAndPassword, getReactNativePersistence, signInWithEmailAndPassword  } from "firebase/auth";
-import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-import { initializeApp } from "firebase/app";
-import { FontAwesome } from '@expo/vector-icons';
+import { getAuth, createUserWithEmailAndPassword  } from "firebase/auth";
 import { useNavigation } from '@react-navigation/native';
+import ErrorModal from './ErrorModal';
 
-import { state } from '../state';
 import {app} from '../firebaseconfig'
 
 const auth = getAuth(app);
-
-const ErrorModal = ({ visible, message, onClose }) => {
-  return (
-    <Modal
-      visible={visible}
-      transparent={true}
-      animationType="fade"
-      onRequestClose={onClose}
-    >
-      <TouchableWithoutFeedback onPress={onClose}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.messageText}>{message}</Text>
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
-    </Modal>
-  );
-};
-
 
 const SignUp = () => {
   const [username, setUsername] = useState('');
@@ -41,18 +18,13 @@ const SignUp = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
 
-
   const signUp = () => {
-    //setError('Invalid email or password. Please try again.');
-    //setModalVisible(true);
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      // Signed in 
       const user = userCredential.user;
-      user.updateProfile({ // <-- Update Method here
+      user.updateProfile({
         displayName: username,
-        photoURL: "https://i.pinimg.com/236x/2a/d8/5a/2ad85ad72c5776fc2c3cfbfbe45b3906.jpg" // add a default profile picture
-
+        photoURL: "https://i.pinimg.com/236x/2a/d8/5a/2ad85ad72c5776fc2c3cfbfbe45b3906.jpg"
       }).catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -64,34 +36,15 @@ const SignUp = () => {
       const errorCode = error.code;
       const errorMessage = error.message;
       console.log(errorCode);
-      if (errorCode == 'auth/invalid-email') {
-        setError('Please enter a valid email address.');
-      }
-      else if (errorCode == 'auth/missing-password') {
-        setError('Please enter a password.')
-      }
-      else if (errorCode == 'auth/invalid-credential') {
-        setError('Invalid email address or password. Please try again.')
-      }
-      else if (errorCode == 'auth/invalid-email-verified') {
-        setError('The provided email is not verified.');
-      }
-      else if (errorCode == 'auth/email-already-exists') {
-        setError('The provided email is already in use by an existing user.')
-      }
-      else if (errorCode == 'auth/invalid-display-name') {
-        setError("The provided username is invalid.");
-      }
-      else if (errorCode == 'auth/weak-password') {
-        setError("Password must contain at least 6 characters.");
-      }
-
-      else {
-        setError('An unexpected error occurred.');
-      }
-
+      if (errorCode == 'auth/invalid-email') setError('Please enter a valid email address.');
+      else if (errorCode == 'auth/missing-password') setError('Please enter a password.')
+      else if (errorCode == 'auth/invalid-credential') setError('Invalid email address or password. Please try again.')
+      else if (errorCode == 'auth/invalid-email-verified') setError('The provided email is not verified.');
+      else if (errorCode == 'auth/email-already-exists') setError('The provided email is already in use by an existing user.')
+      else if (errorCode == 'auth/invalid-display-name') setError("The provided username is invalid.");
+      else if (errorCode == 'auth/weak-password') setError("Password must contain at least 6 characters.");
+      else setError('An unexpected error occurred.');
       setModalVisible(true);
-
     });
   }
 
@@ -199,25 +152,5 @@ const styles = StyleSheet.create({
   image: {
     width: 300,
     height: 300,
-  },
-  modalContainer: {
-    flex: 1,
-    alignItems: 'center',
-    paddingTop: 100,
-  },
-  modalContent: {
-    backgroundColor: 'red',
-    width: '100%',
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingTop: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  messageText: {
-    fontSize: 20,
-    marginBottom: 20,
-    color: 'white',
-    textAlign: 'center',
-  },
+  }
 });

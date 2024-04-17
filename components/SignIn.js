@@ -6,31 +6,12 @@ import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from "firebase/app";
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import ErrorModal from './ErrorModal';
 
 import { state } from '../state';
 import {app} from '../firebaseconfig'
 
 const auth = getAuth(app);
-
-const ErrorModal = ({ visible, message, onClose }) => {
-  return (
-    <Modal
-      visible={visible}
-      transparent={true}
-      animationType="fade"
-      onRequestClose={onClose}
-    >
-      <TouchableWithoutFeedback onPress={onClose}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.messageText}>{message}</Text>
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
-    </Modal>
-  );
-};
-
 
 const SignIn = () => {
   
@@ -48,6 +29,7 @@ const SignIn = () => {
     .then((userCredential) => {
       // Signed in 
       const user = userCredential.user;
+      console.log("User signed in");
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -164,25 +146,5 @@ const styles = StyleSheet.create({
   image: {
     width: 275,
     height: 275,
-  },
-  modalContainer: {
-    flex: 1,
-    alignItems: 'center',
-    paddingTop: 100,
-  },
-  modalContent: {
-    backgroundColor: 'red',
-    width: '100%',
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingTop: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  messageText: {
-    fontSize: 20,
-    marginBottom: 20,
-    color: 'white',
-    textAlign: 'center',
-  },
+  }
 });

@@ -1,24 +1,28 @@
+
 import React, {useRef} from "react";
-import {View, Text, StyleSheet, useWindowDimensions} from 'react-native';
+import {View, useWindowDimensions, Text} from 'react-native';
 import Sketch from './Sketch'
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import { FlatList } from 'react-native-gesture-handler';
+import { state } from '../state';
+import { useSnapshot } from 'valtio';
 
-function Sketches({sketches}) {
-
+function Sketches() {
+    const snap = useSnapshot(state);
     const flatListRef = useRef(null);
-    const { height, width } = useWindowDimensions();
-    
-    function displaySketch(sketch) {
+    const width = useWindowDimensions().width;
+
+    if (snap.numFriends == 0) {
         return (
-            <Sketch
-                profilePicture={sketch.profilePicture}
-                uploader={sketch.uploader}
-                uploadAgoTime={sketch.uploadAgoTime}
-                sketch={sketch.sketch}
-                liked={sketch.liked}
-                numLikes={sketch.numLikes}
-            />
+            <View>
+                <Text style={{color: 'white'}}>You don't have any friends :(</Text>
+                <Text style={{color: 'white'}}>Search For Friends</Text>
+            </View>
+        )
+    }
+
+    if (snap.friendSketches.length == 0) {
+        return (
+            <Text style={{color: 'white'}}>No Friends Have Posted :(</Text>
         )
     }
 
@@ -26,20 +30,19 @@ function Sketches({sketches}) {
         <View> 
             <FlatList
                 ref={flatListRef}
-                data={sketches}
+                data={snap.friendSketches}
                 renderItem={({item}) => {
                     return (
-                            <Sketch
-                                profilePicture={item.profilePicture}
-                                uploader={item.uploader}
-                                uploadAgoTime={item.uploadAgoTime}
-                                sketch={item.sketch}
-                                liked={item.liked}
-                                numLikes={item.numLikes}
-                            />
+                        <Sketch
+                            image={item.image}
+                            profilePicture={item.profilePicture}
+                            uid={item.uid}
+                            uploadTime={item.uploadTime}
+                            username={item.username}
+                        />
                     )
                 }}
-                horizontal={true}
+                horizontal={false}
                 keyExtractor={(item) => item.id}
                 snapToAlignment="center"
                 decelerationRate={"slow"}
@@ -51,24 +54,6 @@ function Sketches({sketches}) {
         </View>  
     )
 }
-
-const styles = StyleSheet.create({
-    leftButton: {
-      position: 'absolute',
-      left: 10,
-      top: '50%',
-      zIndex: 10,
-      // Style your left button
-    },
-    rightButton: {
-      position: 'absolute',
-      right: 10,
-      top: '50%',
-      zIndex: 10,
-      // Style your right button
-    },
-  });
-  
 
 export default Sketches;
 

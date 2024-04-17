@@ -8,7 +8,7 @@ import ColorPicker, { Panel1, Panel3, Swatches, Preview, OpacitySlider, HueSlide
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Slider} from '@miblanchard/react-native-slider';
 
-const Toolbar = () => {
+const Toolbar = ({shiftVertical }) => {
   const [showStrokes, setShowStrokes] = useState(false);
   const [brushIconStyle, setBrushIconStyle] = useState("brush-outline")
   const [paletteIconStyle, setPaletteIconStyle] = useState("color-palette-outline")
@@ -29,7 +29,8 @@ const Toolbar = () => {
   }; 
 
   const handleSliderChange = (value) => {
-    state.strokeWidth = value[0] * 50;
+    console.log(value);
+    state.strokeWidth = (value[0] + 0.01) * 50;
     setValue(value[0]);
   }
 
@@ -37,13 +38,14 @@ const Toolbar = () => {
     if (brushIconStyle == 'brush') {
       setBrushIconStyle("brush-outline");
       setBrushVisibility('none');
+      shiftVertical(0);
     }
     else {
       setBrushIconStyle("brush");
       setBrushVisibility("flex");
       setPaletteIconStyle("color-palette-outline");
       setPaletteVisibility("none");
-
+      shiftVertical(0);
     }
   }; 
 
@@ -51,11 +53,13 @@ const Toolbar = () => {
     if (paletteIconStyle == 'color-palette') {
       setPaletteIconStyle("color-palette-outline")
       setPaletteVisibility("none");
+      shiftVertical(0);
     }
     else {
       setBrushIconStyle("brush-outline")
       setPaletteIconStyle("color-palette")
       setPaletteVisibility("flex");
+      shiftVertical(-85);
       setBrushVisibility("none")
     }
   }; 
@@ -67,7 +71,7 @@ const Toolbar = () => {
           <Ionicons name={brushIconStyle} size={35} color="white" style={{marginRight: 50}} onPress={handleBrushPress}/>
           <Ionicons name={paletteIconStyle} size={35} color="white" onPress={handlePalettePress} />
         </View>
-        <View style={{alignItems: 'center', justifyContent: 'center', padding: 10 }}>
+        <View style={{alignItems: 'center', justifyContent: 'center', padding: 10, width: '100%' }}>
           
           <ColorPicker style={{ width: '70%', display: paletteVisibility, flexDirection: 'row'}} value={state.strokeColor} onComplete={handleColorChange}>
             <Panel1 style={{ flex: 1, marginRight: 20}}/>
@@ -110,6 +114,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     alignItems: 'stretch',
-    width: '90%'
+    width: '90%',
   }
 });
