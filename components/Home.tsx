@@ -1,5 +1,5 @@
 import React, {useRef} from "react";
-import {StyleSheet, ScrollView, View, Text, SafeAreaView } from 'react-native';
+import {StyleSheet, ScrollView, View, Text, SafeAreaView, Image} from 'react-native';
 import Sketches from './Sketches'
 import { state } from '../state';
 import { useSnapshot } from 'valtio';
@@ -15,11 +15,58 @@ function Home(props) {
     const video = React.useRef(null);
     const [status, setStatus] = React.useState({});
     const canvasRef = useRef<SketchCanvasRef>(null);
+
+    if (!snap.uploadedToday) {
+        return (
+            <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+                <View style={styles.container}>
+                    <View style={styles.content}>
+                        <Video
+                                ref={video}
+                                style={styles.image}
+                                source={require('../nofriends.mp4')}
+                                useNativeControls={false}
+                                resizeMode={ResizeMode.CONTAIN}
+                                isLooping={true}
+                                isMuted={true}
+                                shouldPlay={true} // toggle between true and false on page switches maybe
+                                onPlaybackStatusUpdate={status => setStatus(() => status)}
+                        />
+                        
+                        <Text style={{color: 'white', marginBottom: 20}}>You have not created a sketch within 24 hours :(</Text>
+                        <Button title="Create Sketch" onPress={() => navigation.navigate('Canvas', { canvasRef })} />
+                    </View>
+                </View>
+            </ScrollView>
+        )
+    }
+    else if (snap.numFriends == 0 && snap.uploadedToday) {
+        return (
+            <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+                <View style={styles.container}>
+                    <View style={styles.content}>
+                        <Image source={require('../nofriendsyet.gif')} style={styles.image}/>
+                        <Text style={{color: 'white', marginBottom: 20}}>You don't have any friends yet :(</Text>
+                        <Button title="Add Friends" onPress={() => navigation.navigate('Friends', { screen: 'FriendsScreen' })} />
+                    </View>
+                </View>
+            </ScrollView>
+        )
+    }
+    else {
+        return (
+            <View style={{flex: 1, alignContent: 'center', justifyContent: 'center'}}>  
+                <Sketches />
+            </View>
+        )
+    }
+
+    /*
     return(
         <>
             {snap.uploadedToday ?
                 <View style={{flex: 1, alignContent: 'center', justifyContent: 'center'}}>  
-                    <Sketches sketches={state.friendSketches} />
+                    <Sketches />
                 </View>
             :
                 <ScrollView contentContainerStyle={styles.scrollViewContainer}>
@@ -45,6 +92,7 @@ function Home(props) {
             }
         </>
     );
+    */
 }
 
 const styles = StyleSheet.create({

@@ -1,43 +1,18 @@
 import React from "react";
 import {View, Text, Image, StyleSheet, ScrollView, SafeAreaView, FlatList } from 'react-native';
 import ProfileStats from './ProfileStats';
-import SketchGallery from './SketchGallery';
+import getUser from '../getUser';
 
 function Profile({ route }) {
     const { uid } = route.params || {};
-
-    const [username, setUsername] = useState("");
-    const [numSketches, setNumSketches] = useState(-1);
-    const [streak, setStreak] = useState(-1);
-    const [profilePicture, setProfilePicture] = useState("");
-    const [numFriends, setNumFriends] = useState(-1);
-
-    const getUser = (uid) => {
-        const endpoint = "https://us-central1-sketch-c3044.cloudfunctions.net/getUser";
-        const url = `${endpoint}?uid=${uid}`;
-        fetch(url, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-        })
-        .then(response => response.json())
-        .then(data => {
-            setUsername(data.username);
-            setNumSketches(data.numSketches);
-            setStreak(data.streak);
-            setProfilePicture(data.profilePicture);
-            setNumFriends(data.numFriends);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    };
-
-    const sketches = [];
+    const userData = getUser(uid);
+    const username = userData.username;
+    const profilePicture = userData.profilePicture;
+    const streak = userData.streak;
+    const numSketches = userData.numSketches;
+    const numFriends = userData.numFriends;
 
     const getProfileInfo = () => {
-        getUser(uid);
         return (
             <ScrollView contentContainerStyle={styles.scrollViewContainer}>
                 <View style={styles.contentContainer}>
@@ -61,7 +36,6 @@ function Profile({ route }) {
             <View style={{aspectRatio: 9/16}}>
                 <FlatList
                     ListHeaderComponent={getProfileInfo}
-                    ListFooterComponent={<SketchGallery sketches={sketches}/>}
                 />    
             </View>
         </SafeAreaView>

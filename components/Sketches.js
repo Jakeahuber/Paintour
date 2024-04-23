@@ -11,15 +11,6 @@ function Sketches() {
     const flatListRef = useRef(null);
     const width = useWindowDimensions().width;
 
-    if (snap.numFriends == 0) {
-        return (
-            <View>
-                <Text style={{color: 'white'}}>You don't have any friends :(</Text>
-                <Text style={{color: 'white'}}>Search For Friends</Text>
-            </View>
-        )
-    }
-
     if (snap.friendSketches.length == 0) {
         return (
             <Text style={{color: 'white'}}>No Friends Have Posted :(</Text>

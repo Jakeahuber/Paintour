@@ -5,14 +5,21 @@ import { state } from '../state';
 import { useSnapshot } from 'valtio';
 import { signOut, getAuth } from 'firebase/auth';
 import {app} from '../firebaseconfig';
+import ErrorModal from './ErrorModal'
 
 const auth = getAuth(app);
 
 const EditProfile = (props) => {
   const snap = useSnapshot(state);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const image = snap.profilePicture;
   const [uploadedImage, setUploadedImage] = useState(false);
+  const [error, setError] = useState("");
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
 
   const handleSignOut = async () => {
     signOut(auth)
@@ -21,25 +28,46 @@ const EditProfile = (props) => {
     })
     .catch((error) => {
       console.error('Error signing out:', error);
+      setError("Could not sign user out.");
+      setModalVisible(true);
     });
   }
 
+  const uriToBase64 = async (uri) => {
+    try {
+      const response = await fetch(uri);
+      const blob = await response.blob();
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      return new Promise((resolve, reject) => {
+        reader.onloadend = () => {
+          resolve(reader.result);
+        };
+        reader.onerror = reject;
+      });
+    } catch (error) {
+      console.error('Could not upload image.', error);
+      setError("Could not upload image.");
+      setModalVisible(true);
+    }
+  }
+
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
     });
-
+    
     if (!result.canceled) {
-      //setImage(result.assets[0].uri);
+      const img = await uriToBase64(result.assets[0].uri);
     }
   };
 
   return (
     <View style={styles.container}>
+      <ErrorModal visible={modalVisible} message={error} onClose={closeModal} />
       <Image source={{ uri: image }} style={styles.profilePicture} />
       <Button title="Change Profile Picture" onPress={pickImage} />
       <Button title="Log Out" onPress={handleSignOut}/>

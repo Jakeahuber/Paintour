@@ -4,6 +4,8 @@ import type { SketchCanvasRef } from 'rn-perfect-sketch-canvas';
 import { state } from '../state';
 import {ParamListBase, useNavigation } from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import { getUserSketches } from '../getUserSketches';
+import {getUser} from '../getUser';
 
 interface Props {
   canvasRef: MutableRefObject<SketchCanvasRef | null>;
@@ -12,9 +14,6 @@ interface Props {
 const Header: React.FC<Props> = ({ canvasRef }) => {
   const { height, width } = useWindowDimensions();
   
-  /**
-   * Reset the canvas & draw state
-   */
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const [zoomText, setZoomText] = useState("Zoom");
   const [prevStrokeWidth, setPrevStrokeWidth] = useState(0);
@@ -34,7 +33,7 @@ const Header: React.FC<Props> = ({ canvasRef }) => {
     state.forceReloadToggle = !state.forceReloadToggle;
   };
 
-  const upload = () => {
+  async function upload() {
     const url = "https://us-central1-sketch-c3044.cloudfunctions.net/uploadSketch";
     const image = canvasRef.current?.toBase64(0, 0.5);
     const sketchData = {
@@ -43,7 +42,6 @@ const Header: React.FC<Props> = ({ canvasRef }) => {
       profilePicture: state.profilePicture,
       image: image
     }
-
     fetch(url, {
       method: 'POST',
       headers: {
@@ -51,24 +49,24 @@ const Header: React.FC<Props> = ({ canvasRef }) => {
       },
       body: JSON.stringify(sketchData)
     })
-    .then(response => {
+    .then(async response => {
       if (!response.ok) {
         console.log(response);
         throw new Error('Network response was not ok');
       }
-      console.log('Post request successful');
-      state.uploadedToday = true;
+      const userData = await getUser(state.uid); 
+      state.streak = userData.streak;
+      state.numSketches = userData.numSketches;
+      state.uploadedToday = userData.uploadedToday;
+      state.forceUserSketchesUpdate = !state.forceUserSketchesUpdate;
       navigation.navigate('HomeScreen');
     })
     .catch(error => {
       console.error('Error:', error);
     });
-    //state.uploadedToday = true;
-    //navigation.navigate('HomeScreen');
   };
 
   const zoom = () => {
-//    console.log(state.strokeWidth);
     if (zoomText == 'Zoom') {
       setZoomText("Draw");
       setPrevStrokeWidth(state.strokeWidth);

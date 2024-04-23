@@ -3,13 +3,13 @@ import {StyleSheet, FlatList, TouchableHighlight, Image, Dimensions, View} from 
 import { useNavigation } from '@react-navigation/native';
 
 const width = Dimensions.get('window').width;
-const actualImageHeight = 400;
-const actualImageWidth = 400;
+const actualImageHeight = 1020;
+const actualImageWidth = 1020;
 
 function SketchGallery(props) {
     const navigation = useNavigation();
     return (
-        <>
+        <View>
             <FlatList
                 style={styles.sketchGrid}
                 data={props.sketches}
@@ -33,14 +33,12 @@ function SketchGallery(props) {
                     </TouchableHighlight>
                 )}
             />
-        </>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     sketchContainer: {
-        flex: 1,
-        flexWrap:'wrap',
         flexDirection: 'row',
       },
     sketchGrid: {
@@ -48,7 +46,7 @@ const styles = StyleSheet.create({
         marginRight: 0,
     },
     sketch: {
-        height: actualImageHeight * (width / (3*actualImageWidth)),
+        aspectRatio: actualImageWidth / actualImageHeight, 
         width: width / 3,
         borderColor: 'black',
         borderWidth: 1,

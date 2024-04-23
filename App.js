@@ -13,18 +13,31 @@ import Canvas from './components/Canvas'
 import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
 import Profile from './components/Profile'
+import FriendsList from './components/FriendsList'
+import {getUser} from './getUser';
 import { state } from './state';
 import { useSnapshot } from 'valtio';
-import {TouchableOpacity } from 'react-native';
+import {TouchableOpacity, View, Text } from 'react-native';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {getUserSketches} from "./getUserSketches";
 import {app} from './firebaseconfig'
+import Requests from './components/Requests';
+import IconBadge from 'react-native-icon-badge';
 
 const auth = getAuth(app);
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async user => {
   if (user) {
-    getUser(user.uid);
-    getUserSketches(user.uid);
+    const userData = await getUser(user.uid);
+    state.uid = userData.uid;
+    state.username = userData.username;
+    state.profilePicture = userData.profilePicture;
+    state.streak = userData.streak;
+    state.numSketches = userData.numSketches;
+    state.numFriends = userData.numFriends;
+    state.uploadedToday = userData.uploadedToday; 
+    state.requests = [];
+    getUserSketches(user.uid, month, year);
     getFriendSketches(user.uid);
   } else {
     resetUser();
@@ -39,47 +52,6 @@ const resetUser = () => {
     state.numSketches = -1,
     state.numFriends = -1
 }
-
-const getUser = (uid) => {
-    const endpoint = "https://us-central1-sketch-c3044.cloudfunctions.net/getUser";
-    const url = `${endpoint}?uid=${uid}`;
-    fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    })
-    .then(response => response.json())
-    .then(data => {
-        state.uid = data.uid,
-        state.username = data.username,
-        state.profilePicture = data.profilePicture,
-        state.streak = data.streak,
-        state.numSketches = data.numSketches,
-        state.numFriends = data.numFriends
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-};
-
-const getUserSketches = (uid) => {
-    const endpoint = "https://us-central1-sketch-c3044.cloudfunctions.net/getSketchesByUID";
-    const url = `${endpoint}?uid=${uid}`;
-    fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    })
-    .then(response => response.json())
-    .then(data => {
-        state.userSketches = data
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-};
 
 const getFriendSketches = (uid) => {
     const endpoint = "https://us-central1-sketch-c3044.cloudfunctions.net/getFriendSketches";
@@ -133,17 +105,34 @@ const MyProfileStack = () => {
                             options={({ navigation }) => ({
                                 headerTitle: state.username,
                                 headerRight: () => (
-                                    <TouchableOpacity
-                                        style={{ marginRight: 10 }}
-                                        onPress={() => navigation.navigate('EditProfileScreen')}
-                                    >
-                                        <Ionicons name="ellipsis-horizontal" size={30} color="white" />
-                                    </TouchableOpacity>
+                                    <View style={{flexDirection: 'row'}}>
+                                        <TouchableOpacity
+                                        style={{ marginRight: 10}}
+                                        onPress={() => navigation.navigate('Requests')}
+                                        >
+                                        <IconBadge
+                                            MainElement={
+                                                <Ionicons name="notifications" size={30} color="white" />                                           
+                                            }
+                                            BadgeElement={
+                                                <Text style={{color: 'white'}}>{state.requests.length}</Text>
+                                            }
+                                        />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            style={{ marginRight: 10 }}
+                                            onPress={() => navigation.navigate('EditProfileScreen')}
+                                        >
+                                            <Ionicons name="ellipsis-horizontal" size={30} color="white" />
+                                        </TouchableOpacity>
+                                    </View>
                                 ),
                             })}
             />
             <Stack.Screen name={"EditProfileScreen"} component={EditProfile} options={{headerTitle: ''}}/>
+            <Stack.Screen name={"Requests"} component={Requests} options={{headerTitle: ''}} />
             <Stack.Screen name={"FocusedSketchScreen"} component={FocusedSketch} options={{headerTitle: ''}}/>
+            <Stack.Screen name={"FriendsList"} component={FriendsList} options={{headerTitle: ''}}/>
         </Stack.Navigator>
     ) 
 }
@@ -151,7 +140,7 @@ const MyProfileStack = () => {
 const FriendsStack = () => {
     return (
         <Stack.Navigator initialRouteName={"FriendsScreen"} screenOptions={screenOptions()}>
-            <Stack.Screen name={"FriendsScreen"} component={Friends} options={{headerTitle: 'Friends'}} />
+            <Stack.Screen name={"FriendsScreen"} component={Friends} options={{headerTitle: 'Find Friends'}} />
         </Stack.Navigator>
     )
 }

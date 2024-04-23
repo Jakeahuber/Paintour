@@ -12,6 +12,7 @@ export const state = proxy({
   scale: 1,
   publicPosts: true,
   promptHidden: false,
+  forceUserSketchesUpdate: false,
 
   uid: '',
   username: '',
@@ -19,6 +20,6 @@ export const state = proxy({
   numFriends: 0,
   numSketches: 0,
   streak: 0,
-  friendSketches: {},
-  userSketches: {},
+  friendSketches: [],
+  userSketches: [],
 });
