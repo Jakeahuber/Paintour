@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {StyleSheet, TouchableHighlight, Image, Dimensions, Text, View} from 'react-native';
+import {StyleSheet, TouchableHighlight, Image, Dimensions, Text, View, ActivityIndicator} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import {Calendar} from 'react-native-calendars';
 import {getUserSketches} from '../getUserSketches';
@@ -21,12 +21,15 @@ function CalendarImages(props) {
     const [currentSketches, setCurrentSketches] = useState({});
     
     useEffect(() => {
+        setLoading(true);
         const fetchData = async () => {
           try {
             const sketches = await getUserSketches(uid, currentMonth, currentYear);
             setCurrentSketches(sketches);
+            setLoading(false);
           } catch (error) {
             console.error('Error fetching sketches:', error);
+            setLoading(false);
           }
         };
         fetchData();
@@ -51,10 +54,12 @@ function CalendarImages(props) {
         setTimerId(newTimerId);
     }
 
+    const [loading, setLoading] = useState(false);
+
     return (
-        <View>
+        <View style={{position: "relative"}}>
             <Calendar
-                style={{height: 340, backgroundColor: 'black', color: 'white'}}
+                style={{position: "absolute", height: 340, width: "100%", backgroundColor: 'black', color: 'white'}}
                 dayComponent={({date, state}) => {
                         if (currentSketches && currentSketches.hasOwnProperty(date.day)) {
                             const item = currentSketches[date.day];
@@ -99,6 +104,14 @@ function CalendarImages(props) {
                 }}
                 onMonthChange={handleMonthChange}                
             />
+            <View style={{display: loading ? "flex" : "none",
+                          pointerEvents: "none", width: "100%", height: 340, 
+                          alignItems: "center", justifyContent: "center", 
+                          backgroundColor: "rgba(0, 0, 0, 0.5)"
+                          }}
+            >
+                <ActivityIndicator style={{position: "absolute"}} color={"white"} size={'large'} />
+            </View>
         </View>
     );
 }

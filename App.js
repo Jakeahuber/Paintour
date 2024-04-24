@@ -133,6 +133,7 @@ const MyProfileStack = () => {
             <Stack.Screen name={"Requests"} component={Requests} options={{headerTitle: ''}} />
             <Stack.Screen name={"FocusedSketchScreen"} component={FocusedSketch} options={{headerTitle: ''}}/>
             <Stack.Screen name={"FriendsList"} component={FriendsList} options={{headerTitle: ''}}/>
+            <Stack.Screen name={"Profile"} component={Profile} options={{headerTitle: ''}}/>
         </Stack.Navigator>
     ) 
 }
@@ -141,6 +142,7 @@ const FriendsStack = () => {
     return (
         <Stack.Navigator initialRouteName={"FriendsScreen"} screenOptions={screenOptions()}>
             <Stack.Screen name={"FriendsScreen"} component={Friends} options={{headerTitle: 'Find Friends'}} />
+            <Stack.Screen name={"Profile"} component={Profile} options={{headerTitle: ''}}/>
         </Stack.Navigator>
     )
 }

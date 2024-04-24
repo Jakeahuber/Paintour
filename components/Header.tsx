@@ -6,6 +6,7 @@ import {ParamListBase, useNavigation } from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import { getUserSketches } from '../getUserSketches';
 import {getUser} from '../getUser';
+import LoadingModal from './LoadingModal';
 
 interface Props {
   canvasRef: MutableRefObject<SketchCanvasRef | null>;
@@ -17,6 +18,7 @@ const Header: React.FC<Props> = ({ canvasRef }) => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const [zoomText, setZoomText] = useState("Zoom");
   const [prevStrokeWidth, setPrevStrokeWidth] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const reset = () => {
     canvasRef.current?.reset();
@@ -34,6 +36,7 @@ const Header: React.FC<Props> = ({ canvasRef }) => {
   };
 
   async function upload() {
+    setLoading(true);
     const url = "https://us-central1-sketch-c3044.cloudfunctions.net/uploadSketch";
     const image = canvasRef.current?.toBase64(0, 0.5);
     const sketchData = {
@@ -59,10 +62,12 @@ const Header: React.FC<Props> = ({ canvasRef }) => {
       state.numSketches = userData.numSketches;
       state.uploadedToday = userData.uploadedToday;
       state.forceUserSketchesUpdate = !state.forceUserSketchesUpdate;
+      setLoading(false);
       navigation.navigate('HomeScreen');
     })
     .catch(error => {
       console.error('Error:', error);
+      setLoading(false);
     });
   };
 
@@ -128,6 +133,7 @@ const Header: React.FC<Props> = ({ canvasRef }) => {
           <Text style={styles.buttonText}>Upload</Text>
         </TouchableOpacity>
       </View>
+      <LoadingModal visible={loading} />        
     </View>
   );
 };

@@ -1,17 +1,12 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import {View, Text, Image, StyleSheet, ScrollView, SafeAreaView, FlatList } from 'react-native';
 import ProfileStats from './ProfileStats';
-import getUser from '../getUser';
+import {getUser} from '../getUser';
 
 function Profile({ route }) {
-    const { uid } = route.params || {};
-    const userData = getUser(uid);
-    const username = userData.username;
-    const profilePicture = userData.profilePicture;
-    const streak = userData.streak;
-    const numSketches = userData.numSketches;
-    const numFriends = userData.numFriends;
 
+    const { userData } = route.params || {};
+      
     const getProfileInfo = () => {
         return (
             <ScrollView contentContainerStyle={styles.scrollViewContainer}>
@@ -19,12 +14,13 @@ function Profile({ route }) {
                     <View style={styles.userInfoContainer}>
                         <Image
                             style={styles.profilePicture}
-                            source={{ uri: profilePicture}}
+                            source={{ uri: userData.profilePicture}}
                         />
-                        <Text style={{marginLeft: 3, marginTop: 10, fontSize: 22, color: 'white'}}>{username}</Text>  
+                        <Text style={{marginLeft: 3, marginTop: 10, fontSize: 22, color: 'white'}}>{userData.username}</Text>  
                     </View>
                     <View style={{marginTop: 15, width: '100%'}}>
-                        <ProfileStats numFriends={numFriends} numSketches={numSketches} streak={streak}/>
+                        <ProfileStats numFriends={userData.numFriends} numSketches={userData.numSketches} streak={userData.streak}
+                                      clickableFriends={false}/>
                     </View>
                 </View>
             </ScrollView>    

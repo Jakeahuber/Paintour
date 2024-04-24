@@ -30,6 +30,7 @@ function MyProfile(props) {
                             numFriends={snap.numFriends}
                             numSketches={snap.numSketches}
                             streak={snap.streak}
+                            clickableFriends={true}
                         />
                     </View>
                 </View>
