@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableWithoutFeedback, Image, Keyboard, TouchableOpacity, Modal } from 'react-native';
 import { Input, Button } from 'react-native-elements';
-import { initializeAuth, getAuth, createUserWithEmailAndPassword, getReactNativePersistence, signInWithEmailAndPassword  } from "firebase/auth";
+import {app} from '../firebaseconfig'
+import {getAuth, signInWithCredential, GoogleAuthProvider} from "firebase/auth";
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from "firebase/app";
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import ErrorModal from './ErrorModal';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+  } from 'react-native-google-signin';
 
 import { state } from '../state';
-import {app} from '../firebaseconfig'
+import LoadingModal from './LoadingModal';
 
 const auth = getAuth(app);
 
@@ -21,10 +27,10 @@ const SignIn = () => {
   const [error, setError] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
-
+  
+  /*
   const signIn = () => {
-    //setError('Invalid email or password. Please try again.');
-    //setModalVisible(true);
+    setLoadModalVisible(true);
     signInWithEmailAndPassword(auth,  email, password)
     .then((userCredential) => {
       // Signed in 
@@ -50,11 +56,33 @@ const SignIn = () => {
       else {
         setError('An unexpected error occurred.');
       }
-
       setModalVisible(true);
-
     });
+    setLoadModalVisible(false);
   }
+  */
+ const signIn = () => {
+  console.log("enter");
+  const credential = signInWithCredential(auth, credential)
+  .then((result) => {
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const { user } = result;
+    const idToken = credential.idToken;
+    return { credential, idToken, user };
+  })
+  .catch((error) => {
+    // Handle Errors here.
+    // const errorCode = error.code
+    // const errorMessage = error.message
+    // The email of the user's account used.
+    // const {email} = error.customData
+    // The AuthCredential type that was used.
+    // const credential =
+    //    GoogleAuthProvider.credentialFromError(error)
+    // ...
+    console.log(error);
+  });
+ }
 
   const handleEmailChange = (input) => {
     setEmail(input);
@@ -75,6 +103,8 @@ const SignIn = () => {
   const handleSignUp = () => {
     navigation.navigate("SignUp");
   }
+
+  const [loadModalVisible, setLoadModalVisible] = useState(false);
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -127,6 +157,7 @@ const SignIn = () => {
             <TouchableOpacity onPress={handleSignUp}>
               <Text style={{color: 'white', marginTop: 15}}>New? Sign Up</Text>
             </TouchableOpacity>
+            <LoadingModal visible={loadModalVisible}/>
         </View>
     </TouchableWithoutFeedback>
   );

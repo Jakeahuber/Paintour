@@ -13,13 +13,15 @@ export const state = proxy({
   publicPosts: true,
   promptHidden: false,
   forceUserSketchesUpdate: false,
+  prompt: '',
 
   uid: '',
   username: '',
   profilePicture: '',
   numFriends: 0,
   numSketches: 0,
-  streak: 0,
+  numRequests: 0,
   friendSketches: [],
   userSketches: [],
+  requests: [],
 });

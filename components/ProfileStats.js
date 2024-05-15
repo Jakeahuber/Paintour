@@ -1,13 +1,23 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, {useState} from "react";
 import {View, Text, TouchableOpacity} from 'react-native';
+import { getFriends } from "../api/getFriends";
+import LoadingModal from "./LoadingModal";
 
 function ProfileStats(props) {
 
     const navigation = useNavigation();
+    const [modalVisible, setModalVisible] = useState(false);
 
-    const handleFriendsPress = () => {
-        navigation.navigate("FriendsList");
+    const handleFriendsPress = async () => {
+        setModalVisible(true);
+        try {
+            const friends = await getFriends();
+            navigation.navigate("MyFriends", {friends: friends});
+        } catch {
+            console.error("Could not get to the friends page.");
+        }
+        setModalVisible(false);
       }
 
     if (props.clickableFriends) {
@@ -24,11 +34,8 @@ function ProfileStats(props) {
                         <Text style={{justifyContent: 'flex-end',fontSize: 24, color: 'white'}}>{props.numSketches}</Text>
                         <Text style={{justifyContent: 'flex-start',fontSize: 14, color: 'white'}}>Sketches</Text>
                     </View>
-                    <View style={{flex:1, alignItems: 'center'}}>
-                        <Text style={{justifyContent: 'flex-end',fontSize: 24, color: 'white'}}>{props.streak}</Text>
-                        <Text style={{justifyContent: 'flex-start',fontSize: 14, color: 'white'}}>Day Streak</Text>
-                    </View>
                 </View>
+                <LoadingModal visible={modalVisible}/>
             </View>
         );       
     }
@@ -43,10 +50,6 @@ function ProfileStats(props) {
                 <View style={{flex:1, alignItems: 'center'}}>
                     <Text style={{justifyContent: 'flex-end',fontSize: 24, color: 'white'}}>{props.numSketches}</Text>
                     <Text style={{justifyContent: 'flex-start',fontSize: 14, color: 'white'}}>Sketches</Text>
-                </View>
-                <View style={{flex:1, alignItems: 'center'}}>
-                    <Text style={{justifyContent: 'flex-end',fontSize: 24, color: 'white'}}>{props.streak}</Text>
-                    <Text style={{justifyContent: 'flex-start',fontSize: 14, color: 'white'}}>Day Streak</Text>
                 </View>
             </View>
         </View>

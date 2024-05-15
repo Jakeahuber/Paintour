@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View, Text, Image, StyleSheet, ScrollView, SafeAreaView, TouchableHighlight, FlatList } from 'react-native';
+import {RefreshControl, View, Text, Image, StyleSheet, ScrollView, SafeAreaView, TouchableHighlight, FlatList } from 'react-native';
 import ProfileStats from './ProfileStats';
 import { useNavigation } from '@react-navigation/native';
 import SketchGallery from './SketchGallery'
@@ -7,6 +7,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSnapshot } from 'valtio';
 import { state } from '../state';
 import CalendarImages from './CalendarImages';
+import { getUser } from '../getUser';
 
 function MyProfile(props) {
     const snap = useSnapshot(state);
@@ -14,6 +15,22 @@ function MyProfile(props) {
     const navigation = useNavigation();
     const [eyeIconStyle, setEyeIconStyle] = useState("grid-outline");
     const [lockIconStyle, setLockIconStyle] = useState("lock-closed-outline");
+
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const onRefresh = React.useCallback(async () => {
+        setRefreshing(true);
+        const userData = await getUser(state.uid);
+        state.uid = userData.uid;
+        state.username = userData.username;
+        state.profilePicture = userData.profilePicture;
+        state.numSketches = userData.numSketches;
+        state.numFriends = userData.numFriends;
+        state.uploadedToday = userData.uploadedToday;
+        state.numRequests = userData.numRequests;
+        state.prompt = "A penguin trying to master the art of skateboarding on an icy slope.";
+        setRefreshing(false);
+      }, []);
 
     const getProfileInfo = () => {
         return (
@@ -29,7 +46,6 @@ function MyProfile(props) {
                         <ProfileStats
                             numFriends={snap.numFriends}
                             numSketches={snap.numSketches}
-                            streak={snap.streak}
                             clickableFriends={true}
                         />
                     </View>
@@ -42,6 +58,7 @@ function MyProfile(props) {
             <FlatList
                 ListHeaderComponent={getProfileInfo}
                 ListFooterComponent={<CalendarImages uid={state.uid}/>}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             />    
         </SafeAreaView>
     )

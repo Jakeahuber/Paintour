@@ -76,7 +76,7 @@ export default function Canvas({ route }) {
         <Animated.View style={{width: '100%', alignItems: 'center', transform: [{ translateY }] }}>
         <View style={{ width: '90%', height: 85, alignItems: 'center'}}>
           <Text style={{color: 'white', fontSize: 24, textAlign: 'center'}}>Today's Prompt:</Text>
-          <Text style={{color: 'white', fontSize: 20, textAlign: 'center'}}>A penguin trying to master the art of skateboarding on an icy slope.</Text>
+          <Text style={{color: 'white', fontSize: 20, textAlign: 'center'}}>{state.prompt}</Text>
         </View>
         <Header canvasRef={canvasRef}/>
         <View style={{width: '100%', zIndex: -1, marginTop: 10}}>

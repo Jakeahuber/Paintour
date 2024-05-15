@@ -58,7 +58,6 @@ const Header: React.FC<Props> = ({ canvasRef }) => {
         throw new Error('Network response was not ok');
       }
       const userData = await getUser(state.uid); 
-      state.streak = userData.streak;
       state.numSketches = userData.numSketches;
       state.uploadedToday = userData.uploadedToday;
       state.forceUserSketchesUpdate = !state.forceUserSketchesUpdate;

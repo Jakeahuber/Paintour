@@ -1,28 +1,30 @@
 import 'react-native-gesture-handler';
-import React from "react";
+import React, {useState} from "react";
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Home from './components/Home'
 import MyProfile from './components/MyProfile'
-import Friends from './components/Friends'
+import FindFriends from './components/FindFriends'
 import EditProfile from './components/EditProfile'
 import FocusedSketch from './components/FocusedSketch'
 import Canvas from './components/Canvas'
 import SignIn from './components/SignIn'
 import SignUp from './components/SignUp'
 import Profile from './components/Profile'
-import FriendsList from './components/FriendsList'
+import MyFriends from './components/MyFriends'
 import {getUser} from './getUser';
 import { state } from './state';
 import { useSnapshot } from 'valtio';
 import {TouchableOpacity, View, Text } from 'react-native';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import {getUserSketches} from "./getUserSketches";
+import {getFriendSketches} from "./getFriendSketches";
 import {app} from './firebaseconfig'
 import Requests from './components/Requests';
 import IconBadge from 'react-native-icon-badge';
+import { getRequests } from './api/getRequests';
+import LoadingModal from './components/LoadingModal';
 
 const auth = getAuth(app);
 
@@ -32,13 +34,12 @@ onAuthStateChanged(auth, async user => {
     state.uid = userData.uid;
     state.username = userData.username;
     state.profilePicture = userData.profilePicture;
-    state.streak = userData.streak;
     state.numSketches = userData.numSketches;
     state.numFriends = userData.numFriends;
-    state.uploadedToday = userData.uploadedToday; 
-    state.requests = [];
-    getUserSketches(user.uid, month, year);
-    getFriendSketches(user.uid);
+    state.uploadedToday = userData.uploadedToday;
+    state.numRequests = userData.numRequests;
+    state.prompt = "A penguin trying to master the art of skateboarding on an icy slope.";
+    await getFriendSketches(user.uid);
   } else {
     resetUser();
   }
@@ -46,30 +47,11 @@ onAuthStateChanged(auth, async user => {
 
 const resetUser = () => {
     state.uid = "",
-    state.username = "",
-    state.profilePicture = "",
-    state.streak = -1,
-    state.numSketches = -1,
-    state.numFriends = -1
-}
-
-const getFriendSketches = (uid) => {
-    const endpoint = "https://us-central1-sketch-c3044.cloudfunctions.net/getFriendSketches";
-    const url = `${endpoint}?uid=${uid}`;
-    fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    })
-    .then(response => response.json())
-    .then(data => {
-        state.friendSketches = data
-        console.log(data);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+    state.username = "DNE",
+    state.profilePicture = "https://firebasestorage.googleapis.com/v0/b/sketch-c3044.appspot.com/o/profilePictures%2Fdefaultprofile.png?alt=media&token=b825b2a3-dd2e-400b-ae60-31858a4ce864",
+    state.streak = 0,
+    state.numSketches = 0,
+    state.numFriends = 0
 }
 
 const Tab = createBottomTabNavigator();
@@ -98,6 +80,8 @@ const HomeStack = () => {
 }
 
 const MyProfileStack = () => {
+    const snap = useSnapshot(state);
+    const [modalVisible, setModalVisible] = useState(false);
     return (
         <Stack.Navigator initialRouteName={"MyProfileScreen"} screenOptions={screenOptions()}>
             <Stack.Screen   name={'MyProfileScreen'} 
@@ -108,14 +92,25 @@ const MyProfileStack = () => {
                                     <View style={{flexDirection: 'row'}}>
                                         <TouchableOpacity
                                         style={{ marginRight: 10}}
-                                        onPress={() => navigation.navigate('Requests')}
+                                        onPress={async () => {
+                                            setModalVisible(true);
+                                            try {
+                                                const requests = await getRequests();
+                                                state.requests = requests; 
+                                                navigation.navigate('Requests');
+                                            }
+                                            catch {
+                                                console.error("Could not get requests.")
+                                            }
+                                            setModalVisible(false);
+                                        }}
                                         >
                                         <IconBadge
                                             MainElement={
                                                 <Ionicons name="notifications" size={30} color="white" />                                           
                                             }
                                             BadgeElement={
-                                                <Text style={{color: 'white'}}>{state.requests.length}</Text>
+                                                <Text style={{color: 'white'}}>{snap.numRequests}</Text>
                                             }
                                         />
                                         </TouchableOpacity>
@@ -125,14 +120,15 @@ const MyProfileStack = () => {
                                         >
                                             <Ionicons name="ellipsis-horizontal" size={30} color="white" />
                                         </TouchableOpacity>
+                                        <LoadingModal visible={modalVisible} />
                                     </View>
                                 ),
                             })}
             />
-            <Stack.Screen name={"EditProfileScreen"} component={EditProfile} options={{headerTitle: ''}}/>
-            <Stack.Screen name={"Requests"} component={Requests} options={{headerTitle: ''}} />
+            <Stack.Screen name={"EditProfileScreen"} component={EditProfile} options={{headerTitle: snap.username, headerTitleAlign: 'center'}}/>
+            <Stack.Screen name={"Requests"} component={Requests} options={{headerTitle: 'Requests', headerTitleAlign: 'center'}} />
             <Stack.Screen name={"FocusedSketchScreen"} component={FocusedSketch} options={{headerTitle: ''}}/>
-            <Stack.Screen name={"FriendsList"} component={FriendsList} options={{headerTitle: ''}}/>
+            <Stack.Screen name={"MyFriends"} component={MyFriends} options={{headerTitle: 'My Friends', headerTitleAlign: 'center'}}/>
             <Stack.Screen name={"Profile"} component={Profile} options={{headerTitle: ''}}/>
         </Stack.Navigator>
     ) 
@@ -141,7 +137,7 @@ const MyProfileStack = () => {
 const FriendsStack = () => {
     return (
         <Stack.Navigator initialRouteName={"FriendsScreen"} screenOptions={screenOptions()}>
-            <Stack.Screen name={"FriendsScreen"} component={Friends} options={{headerTitle: 'Find Friends'}} />
+            <Stack.Screen name={"FriendsScreen"} component={FindFriends} options={{headerTitle: 'Find Friends'}} />
             <Stack.Screen name={"Profile"} component={Profile} options={{headerTitle: ''}}/>
         </Stack.Navigator>
     )

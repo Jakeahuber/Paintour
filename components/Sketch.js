@@ -1,18 +1,30 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, Image, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { state } from '../state';
+import {getUser} from '../getUser';
 import { useSnapshot } from 'valtio';
+import LoadingModal from './LoadingModal';
 
 function Sketch(props) {
     const navigation = useNavigation();
     const snap = useSnapshot(state);
-    const width = useWindowDimensions().width;
+    const {width, height} = useWindowDimensions();
 
-    const handleUsernameClick = () => {
+
+
+    const handleUsernameClick = async () => {
         if (props.uid == snap.uid) navigation.navigate('MyProfileScreen'); 
-        else navigation.navigate('Profile', { uid: props.uid }); 
+        else {
+            setModalVisible(true);
+            const uid = props.uid
+            const userData = await getUser(uid);
+            navigation.navigate('Profile', { userData: userData }); 
+            setModalVisible(false);
+        }
     };
+
+    const [modalVisible, setModalVisible] = useState(false);
 
     return (
         <View style={[styles.postContainer, {width: width}]}> 
@@ -25,7 +37,8 @@ function Sketch(props) {
                     <Text style={styles.uploader}>{props.username}</Text> 
                     <Text style={styles.uploadTime}>{props.uploadTime}</Text>     
                 </View>
-            </TouchableOpacity>                     
+            </TouchableOpacity>    
+            <LoadingModal visible={modalVisible} />                 
         </View>
     );
 }
@@ -43,7 +56,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1,
         justifyContent: 'center',
-        marginBottom: 25,
+        marginBottom: 130,
     },
     profilePicture: {
         width: 40, 

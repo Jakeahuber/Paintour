@@ -48,7 +48,6 @@ const SignUp = () => {
     });
   }
 
-
   const handleUsernameChange = (input) => {
     setUsername(input);
   };

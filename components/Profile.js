@@ -6,6 +6,8 @@ import {getUser} from '../getUser';
 function Profile({ route }) {
 
     const { userData } = route.params || {};
+    console.log(userData);
+    console.log("USERDATA ABOVE");
       
     const getProfileInfo = () => {
         return (
@@ -19,7 +21,7 @@ function Profile({ route }) {
                         <Text style={{marginLeft: 3, marginTop: 10, fontSize: 22, color: 'white'}}>{userData.username}</Text>  
                     </View>
                     <View style={{marginTop: 15, width: '100%'}}>
-                        <ProfileStats numFriends={userData.numFriends} numSketches={userData.numSketches} streak={userData.streak}
+                        <ProfileStats numFriends={userData.numFriends} numSketches={userData.numSketches}
                                       clickableFriends={false}/>
                     </View>
                 </View>
