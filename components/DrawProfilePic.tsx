@@ -16,7 +16,7 @@ import { useSnapshot } from 'valtio';
 import Header from './Header';
 import Toolbar from './Toolbar';
 import { state } from '../state';
-import uploadSketch from '../api/uploadSketch';
+import uploadProfilePicture from '../api/uploadProfilePicture';
 
 const GetSketchCanvas = ({canvasRef}) => {
   const snap = useSnapshot(state);
@@ -45,9 +45,9 @@ const GetSketchCanvas = ({canvasRef}) => {
 
 };
 
-export default function Canvas({ route }) {
+export default function DrawProfilePic({ route }) {
 
-  const { canvasRef } = route.params;
+    const canvasRef = useRef<SketchCanvasRef>(null);
   const [prevWidth, setPrevWidth ] = useState(0);
   const translateY = useRef(new Animated.Value(0)).current;
 
@@ -59,27 +59,14 @@ export default function Canvas({ route }) {
 
   const [isShifted, setIsShifted] = useState(false);
 
-  const shiftVertical = (value) => {
-    Animated.timing(
-      translateY,
-      {
-        toValue: value,
-        duration: 500,
-        useNativeDriver: true,
-      }
-    ).start();
-  };
+  const shiftVertical = (value) => {};
 
   return (
     
     <SafeAreaView style={styles.container}>
       <View style={{flex: 1, alignItems: 'center'}}>    
         <Animated.View style={{width: '100%', alignItems: 'center', transform: [{ translateY }] }}>
-        <View style={{ width: '90%', height: 85, alignItems: 'center'}}>
-          <Text style={{color: 'white', fontSize: 24, textAlign: 'center'}}>Today's Prompt:</Text>
-          <Text style={{color: 'white', fontSize: 20, textAlign: 'center'}}>{state.prompt}</Text>
-        </View>
-        <Header canvasRef={canvasRef} onUpload={uploadSketch} navigateOnUpload={"HomeScreen"}/>
+        <Header canvasRef={canvasRef} onUpload={uploadProfilePicture} navigateOnUpload={"EditProfileScreen"}/>
         <View style={{width: '100%', zIndex: -1, marginTop: 10}}>
           <ScrollView 
             bounces={false}

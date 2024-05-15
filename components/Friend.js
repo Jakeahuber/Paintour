@@ -47,7 +47,7 @@ const Friend = ({ username, numSketches, numFriends, profilePicture, friendStatu
                 style={{ flexDirection: "row", alignItems: 'center', width: '100%'}}>
                 <Image
                     source={{ uri: profilePicture }}
-                    style={{ height: 45, width: 45, borderRadius: 100, marginRight: 10 }}
+                    style={{ height: 45, width: 45, borderRadius: 100, marginRight: 10, backgroundColor: 'white' }}
                 />
                 <Text style={{ color: 'white', fontSize: 18 }}>
                     {username}

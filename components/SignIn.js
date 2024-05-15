@@ -2,17 +2,12 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableWithoutFeedback, Image, Keyboard, TouchableOpacity, Modal } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 import {app} from '../firebaseconfig'
-import {getAuth, signInWithCredential, GoogleAuthProvider} from "firebase/auth";
+import {getAuth, signInWithCredential, GoogleAuthProvider, signInWithEmailAndPassword, isSignInWithEmailLink} from "firebase/auth";
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { initializeApp } from "firebase/app";
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import ErrorModal from './ErrorModal';
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-  statusCodes,
-  } from 'react-native-google-signin';
 
 import { state } from '../state';
 import LoadingModal from './LoadingModal';
@@ -28,9 +23,9 @@ const SignIn = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
   
-  /*
   const signIn = () => {
     setLoadModalVisible(true);
+
     signInWithEmailAndPassword(auth,  email, password)
     .then((userCredential) => {
       // Signed in 
@@ -60,8 +55,26 @@ const SignIn = () => {
     });
     setLoadModalVisible(false);
   }
-  */
+
+  /*
  const signIn = () => {
+
+  try {
+    const result = await Expo.Google.logInAsync({
+      iosClientId: "Your Client ID",
+      scopes: ["profile", "email"]
+    })
+    if (result.type === "success") {
+      const credential = firebase.auth.GoogleAuthProvider.credential(result.idToken, result.accessToken);
+         firebase.auth().signInAndRetrieveDataWithCredential(credential).then(function(result){
+          console.log(result);
+         });
+        }
+      } catch (e) {
+        console.log("error", e)
+      }
+    }
+
   console.log("enter");
   const credential = signInWithCredential(auth, credential)
   .then((result) => {
@@ -83,6 +96,7 @@ const SignIn = () => {
     console.log(error);
   });
  }
+ */
 
   const handleEmailChange = (input) => {
     setEmail(input);

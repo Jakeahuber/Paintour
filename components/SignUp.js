@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableWithoutFeedback, Keyboard, TouchableOpacity } from 'react-native';
 import { Input, Button } from 'react-native-elements';
-import { getAuth, createUserWithEmailAndPassword  } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, sendSignInLinkToEmail   } from "firebase/auth";
 import { useNavigation } from '@react-navigation/native';
 import ErrorModal from './ErrorModal';
 
@@ -19,6 +19,8 @@ const SignUp = () => {
   const navigation = useNavigation();
 
   const signUp = () => {
+
+    /*
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;
@@ -46,6 +48,7 @@ const SignUp = () => {
       else setError('An unexpected error occurred.');
       setModalVisible(true);
     });
+    */
   }
 
   const handleUsernameChange = (input) => {

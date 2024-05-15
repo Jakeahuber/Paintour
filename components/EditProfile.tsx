@@ -8,24 +8,20 @@ import {app} from '../firebaseconfig';
 import * as FileSystem from 'expo-file-system';
 import ErrorModal from './ErrorModal'
 import VerifyClickModal from './VerifyClickModal';
+import uploadProfilePicture from '../api/uploadProfilePicture';
+import { useNavigation } from '@react-navigation/native';
 
 const auth = getAuth(app);
 
-const EditProfile = (props) => {
+const EditProfile = () => {
+  const navigation = useNavigation();
   const snap = useSnapshot(state);
   const [modalVisible, setModalVisible] = useState(false);
-
-  const [image, setImage] = useState(state.profilePicture);
-  const [uploadedImage, setUploadedImage] = useState(false);
   const [error, setError] = useState("");
 
   const closeModal = () => {
     setModalVisible(false);
   };
-
-  const saveChanges = async () => {
-    return;
-  }
 
   const handleSignOut = async () => {
     signOut(auth)
@@ -40,41 +36,8 @@ const EditProfile = (props) => {
     setSignOutModalVisible(false);
   }
 
-  const uriToBase64 = async (uri) => {
-    try {
-      const response = await fetch(uri);
-      const blob = await response.blob();
-      const reader = new FileReader();
-      reader.readAsDataURL(blob);
-      return new Promise((resolve, reject) => {
-        reader.onloadend = () => {
-          resolve(reader.result);
-        };
-        reader.onerror = reject;
-      });
-    } catch (error) {
-      console.error('Could not upload image.', error);
-      setError("Could not upload image.");
-      setModalVisible(true);
-    }
-  }
-
   const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-    
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-      console.log(result.assets[0]);
-      const base64 = await FileSystem.readAsStringAsync(result.assets[0].uri, {
-        encoding: FileSystem.EncodingType.Base64,
-      });
-      console.log(base64);
-    }
+    navigation.navigate("DrawProfilePic");
   };
 
   const [signOutModalVisible, setSignOutModalVisible] = useState(false);
@@ -82,15 +45,12 @@ const EditProfile = (props) => {
 
   return (
     <View style={styles.container}>
-      <Image source={{ uri: image }} style={styles.profilePicture} />
+      <Image source={{ uri: snap.profilePicture }} style={styles.profilePicture} />
       <TouchableOpacity onPress={pickImage} style={styles.button}>
-        <Text style={{color: 'white', fontSize: 15}}>Change Profile Picture</Text>
+        <Text style={{color: 'white', fontSize: 15}}>Draw New Profile Picture</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => setSignOutModalVisible(true)} style={styles.button}>
           <Text style={{color: 'white', fontSize: 15}}>Log Out</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={saveChanges} style={styles.button}>
-          <Text style={{color: 'white', fontSize: 15}}>Save Changes</Text>
         </TouchableOpacity>
       <Text style={{color: 'white', fontSize: 15, marginTop: 10, textAlign: "center"}}>For Any Other Concerns, Please Contact doolee@gmail.com.</Text>
       <ErrorModal visible={modalVisible} message={error} onClose={closeModal} />
@@ -120,7 +80,8 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     borderWidth: 1,
     borderColor: 'white',
-    marginBottom: 10
+    marginBottom: 10,
+    backgroundColor: 'white'
 },
 button: {
   backgroundColor: '#4681f4',

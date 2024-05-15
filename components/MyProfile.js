@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
         resizeMode: 'cover',
         borderWidth: 1,
         borderColor: 'white',
+        backgroundColor: 'white'
     },
     userInfoContainer: {
         width: '100%',

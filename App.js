@@ -25,6 +25,7 @@ import Requests from './components/Requests';
 import IconBadge from 'react-native-icon-badge';
 import { getRequests } from './api/getRequests';
 import LoadingModal from './components/LoadingModal';
+import DrawProfilePic from './components/DrawProfilePic';
 
 const auth = getAuth(app);
 
@@ -130,6 +131,8 @@ const MyProfileStack = () => {
             <Stack.Screen name={"FocusedSketchScreen"} component={FocusedSketch} options={{headerTitle: ''}}/>
             <Stack.Screen name={"MyFriends"} component={MyFriends} options={{headerTitle: 'My Friends', headerTitleAlign: 'center'}}/>
             <Stack.Screen name={"Profile"} component={Profile} options={{headerTitle: ''}}/>
+            <Stack.Screen name={"DrawProfilePic"} component={DrawProfilePic}  options={{gestureEnabled: false, headerTitle: 'Draw Profile Picture', headerTitleAlign: 'center',
+                                                                                        headerTitleStyle: {fontSize: 22}}}/>
         </Stack.Navigator>
     ) 
 }
