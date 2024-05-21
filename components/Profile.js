@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {View, Text, Image, StyleSheet, ScrollView, SafeAreaView, FlatList } from 'react-native';
 import ProfileStats from './ProfileStats';
-import {getUser} from '../getUser';
+import {getUser} from '../api/getUser';
 
 function Profile({ route }) {
 
@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
         resizeMode: 'cover',
         borderWidth: 1,
         borderColor: 'white',
+        backgroundColor: 'white'
     },
     userInfoContainer: {
         width: '100%',

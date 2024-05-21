@@ -12,7 +12,6 @@ export async function getFriends() {
         return friends; 
 
     } catch (error) {
-        console.error("Error fetching friends.");
         throw error;
     }
 };

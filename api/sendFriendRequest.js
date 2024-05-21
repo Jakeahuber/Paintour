@@ -10,7 +10,6 @@ export async function sendFriendRequest(requestedUid) {
         }
         return; 
     } catch (error) {
-        console.error("Error sending friend request.");
         throw error;
     }
 };

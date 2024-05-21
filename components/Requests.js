@@ -1,20 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import {View, FlatList, Text, StyleSheet, Image} from 'react-native';
-import LoadingModal from "./LoadingModal";
 import RequestedFriend from "./RequestedFriend";
 import { state } from "../state";
 import { useSnapshot } from "valtio";
 
 const Requests = () => {
 
-    const [loading, setLoading] = useState(false);
     const snap = useSnapshot(state);
 
     if (snap.requests.length == 0) {
         return (
             <View style={styles.container}>
                 <View style={styles.content}>
-                    <Image source={require('../nofriendsyet.gif')} style={styles.image}/>
+                    <Image source={require('../assets/nofriendsyet.gif')} style={styles.image}/>
                     <Text style={{color: 'white', marginBottom: 40, fontSize: 24}}>
                         You Have No Requests
                     </Text>
@@ -38,16 +36,14 @@ const Requests = () => {
                 )}
                 style={{width: '100%', height: '100%'}}
             />            
-            <LoadingModal visible={loading} />      
         </View>
     )
 }
 
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'black', // Set your background color
+        backgroundColor: 'black',
         alignItems: 'center',
     },
     content: {

@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -11,45 +11,28 @@ import EditProfile from './components/EditProfile'
 import FocusedSketch from './components/FocusedSketch'
 import Canvas from './components/Canvas'
 import SignIn from './components/SignIn'
-import SignUp from './components/SignUp'
 import Profile from './components/Profile'
 import MyFriends from './components/MyFriends'
-import {getUser} from './getUser';
+import {getUser} from './api/getUser';
 import { state } from './state';
 import { useSnapshot } from 'valtio';
 import {TouchableOpacity, View, Text } from 'react-native';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import {getFriendSketches} from "./getFriendSketches";
+import {getFriendSketches} from "./api/getFriendSketches";
 import {app} from './firebaseconfig'
 import Requests from './components/Requests';
 import IconBadge from 'react-native-icon-badge';
 import { getRequests } from './api/getRequests';
 import LoadingModal from './components/LoadingModal';
 import DrawProfilePic from './components/DrawProfilePic';
-
-const auth = getAuth(app);
-
-onAuthStateChanged(auth, async user => {
-  if (user) {
-    const userData = await getUser(user.uid);
-    state.uid = userData.uid;
-    state.username = userData.username;
-    state.profilePicture = userData.profilePicture;
-    state.numSketches = userData.numSketches;
-    state.numFriends = userData.numFriends;
-    state.uploadedToday = userData.uploadedToday;
-    state.numRequests = userData.numRequests;
-    state.prompt = "A penguin trying to master the art of skateboarding on an icy slope.";
-    await getFriendSketches(user.uid);
-  } else {
-    resetUser();
-  }
-});
+import ErrorModal from './components/ErrorModal';
+import { updateMyData } from './api/updateMyData';
+import SketchCanvas from './components/SketchCanvas';
 
 const resetUser = () => {
     state.uid = "",
     state.username = "DNE",
-    state.profilePicture = "https://firebasestorage.googleapis.com/v0/b/sketch-c3044.appspot.com/o/profilePictures%2Fdefaultprofile.png?alt=media&token=b825b2a3-dd2e-400b-ae60-31858a4ce864",
+    state.profilePicture = "https://firebasestorage.googleapis.com/v0/b/sketch-c3044.appspot.com/o/profilePictures%2Fdefaultprofile.jpg?alt=media&token=d45553bf-65c6-408b-a444-5ede28acc7fb",
     state.streak = 0,
     state.numSketches = 0,
     state.numFriends = 0
@@ -72,7 +55,7 @@ const screenOptions = () => {
 const HomeStack = () => {
     return (
         <Stack.Navigator initialRouteName={"HomeScreen"} screenOptions={screenOptions()}>
-            <Stack.Screen name={"HomeScreen"} component={Home} options={{headerTitle: 'doolee'}}/>
+            <Stack.Screen name={"HomeScreen"} component={Home} options={{headerTitle: 'Paintr'}}/>
             <Stack.Screen name={"Canvas"} component={Canvas} options={{headerTitle: '', gestureEnabled: false}}/>
             <Stack.Screen name={"Profile"} component={Profile} options={{headerTitle: ''}}/>
             <Stack.Screen name={"FocusedSketchScreen"} component={FocusedSketch} options={{headerTitle: ''}}/>
@@ -83,6 +66,13 @@ const HomeStack = () => {
 const MyProfileStack = () => {
     const snap = useSnapshot(state);
     const [modalVisible, setModalVisible] = useState(false);
+
+    const [message, setMessage] = useState("");
+    const [errorVisible, setErrorVisible] = useState(false);
+    const closeModal = () => {
+        setErrorVisible(false);
+    };
+
     return (
         <Stack.Navigator initialRouteName={"MyProfileScreen"} screenOptions={screenOptions()}>
             <Stack.Screen   name={'MyProfileScreen'} 
@@ -101,7 +91,8 @@ const MyProfileStack = () => {
                                                 navigation.navigate('Requests');
                                             }
                                             catch {
-                                                console.error("Could not get requests.")
+                                                setMessage("Could not load requests. Please try again later.");
+                                                setErrorVisible(true);
                                             }
                                             setModalVisible(false);
                                         }}
@@ -122,6 +113,7 @@ const MyProfileStack = () => {
                                             <Ionicons name="ellipsis-horizontal" size={30} color="white" />
                                         </TouchableOpacity>
                                         <LoadingModal visible={modalVisible} />
+                                        <ErrorModal visible={errorVisible} message={message} onClose={closeModal} />
                                     </View>
                                 ),
                             })}
@@ -131,7 +123,7 @@ const MyProfileStack = () => {
             <Stack.Screen name={"FocusedSketchScreen"} component={FocusedSketch} options={{headerTitle: ''}}/>
             <Stack.Screen name={"MyFriends"} component={MyFriends} options={{headerTitle: 'My Friends', headerTitleAlign: 'center'}}/>
             <Stack.Screen name={"Profile"} component={Profile} options={{headerTitle: ''}}/>
-            <Stack.Screen name={"DrawProfilePic"} component={DrawProfilePic}  options={{gestureEnabled: false, headerTitle: 'Draw Profile Picture', headerTitleAlign: 'center',
+            <Stack.Screen name={"DrawProfilePic"} component={Canvas}  options={{gestureEnabled: false, headerTitle: 'Draw Profile Picture', headerTitleAlign: 'center',
                                                                                         headerTitleStyle: {fontSize: 22}}}/>
         </Stack.Navigator>
     ) 
@@ -149,9 +141,8 @@ const FriendsStack = () => {
 const SignUpAndInStack = () => {
     return (
         <Stack.Navigator initialRouteName="SignIn" 
-                         screenOptions={{headerTitle: 'doolee', headerTransparent: true, headerTintColor: 'white', headerTitleStyle: {fontSize: 28}}}>
+                         screenOptions={{headerTitle: 'Paintr', headerTransparent: true, headerTintColor: 'white', headerTitleStyle: {fontSize: 28}}}>
             <Stack.Screen name="SignIn" component={SignIn} options={{headerLeft: null}}/>
-            <Stack.Screen name="SignUp" component={SignUp} options={{headerLeft: null}}/>
         </Stack.Navigator>
     )
 }
@@ -179,21 +170,45 @@ export function TabNavigator() {
             <Tab.Screen name={"Friends"} component={FriendsStack}/>
         </Tab.Navigator>
      )
-  }
+}
 
 export default function App() { 
+    const auth = getAuth(app);
+    const [message, setMessage] = useState("");
+    const [errorVisible, setErrorVisible] = useState(false);
+    const [signedIn, setSignedIn] = useState(false);
     const snap = useSnapshot(state);
+
+    const closeModal = () => {
+        setErrorVisible(false);
+    };
+
+    useEffect(() => {
+        const signIn = onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                try {
+                    const userData = await getUser(user.uid);
+                    updateMyData(userData);
+                    await getFriendSketches(user.uid);
+                    setSignedIn(true);
+                } catch (error) {
+                    setMessage("Could not fetch user data. Please try again later.");
+                    setErrorVisible(true);
+                }
+            } else {
+                resetUser();
+                setSignedIn(false);
+            }
+        });
+        return () => signIn();
+    }, [auth]);
+
     return (
         <>
-        {(snap.uid != '') ?  
-            <NavigationContainer theme={{colors: {background: 'black'}}}>
-                <TabNavigator />
+            <NavigationContainer theme={{ colors: { background: 'black' } }}>
+                {signedIn ? <TabNavigator /> : <SignUpAndInStack />}
             </NavigationContainer>
-        :           
-            <NavigationContainer theme={{colors: {background: 'black'}}}>
-                <SignUpAndInStack />
-            </NavigationContainer>
-        }
+            <ErrorModal visible={errorVisible} message={message} onClose={closeModal} />
         </>
-    )
+    );
 }

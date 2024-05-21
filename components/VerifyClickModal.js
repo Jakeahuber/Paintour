@@ -12,7 +12,7 @@ const VerifyClickModal = ({ modalVisible, message, onCancel, onConfirm, confirmT
       <View style={styles.overlay}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>{message}</Text>
+            <Text testID="messageText" style={styles.modalText}>{message}</Text>
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 style={[styles.button, styles.buttonClose]}

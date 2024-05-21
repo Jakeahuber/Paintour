@@ -1,4 +1,4 @@
-import { state } from './state';
+import { state } from '../state';
 
 export async function getFriendSketches(uid) {
     try {
@@ -6,11 +6,11 @@ export async function getFriendSketches(uid) {
         const url = `${endpoint}?uid=${uid}`;
         const response = await fetch(url);
         if (!response.ok) {
-            throw new Error("Error fetching user data.");
+            throw new Error("Could not fetch friends sketches.");
         }
         const friendSketches = await response.json();
         state.friendSketches = friendSketches;
     } catch (error) {
-        console.error("Error fetching user data.");
+        throw error;
     }
 }

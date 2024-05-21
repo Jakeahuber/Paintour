@@ -6,7 +6,6 @@ export async function handleFriendRequest(requestedUid, accepting) {
         const url = `${endpoint}?uid=${state.uid}&requestedUid=${requestedUid}&accepting=${accepting}`;
         const response = await fetch(url);
         if (!response.ok) {
-            console.log(response);
             throw new Error("Error fetching user data.");
         }
         const updatedUser = await response.json();
@@ -16,7 +15,6 @@ export async function handleFriendRequest(requestedUid, accepting) {
         return; 
 
     } catch (error) {
-        console.error("Error handling friend request.");
         throw error;
     }
 };

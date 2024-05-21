@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableWithoutFeedback, Modal, StyleSheet } from 'react-native';
+import { View, Text, TouchableWithoutFeedback, Modal, StyleSheet, Pressable } from 'react-native';
 
 const ErrorModal = ({ visible, message, onClose }) => {
     return (
@@ -9,13 +9,13 @@ const ErrorModal = ({ visible, message, onClose }) => {
         animationType="fade"
         onRequestClose={onClose}
         >
-        <TouchableWithoutFeedback onPress={onClose}>
+        <Pressable onPress={onClose}>
             <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
-                <Text style={styles.messageText}>{message}</Text>
+                <Text testID="errorMessage" style={styles.messageText}>{message}</Text>
             </View>
             </View>
-        </TouchableWithoutFeedback>
+        </Pressable>
         </Modal>
     );
 };
@@ -23,9 +23,9 @@ const ErrorModal = ({ visible, message, onClose }) => {
 
 const styles = StyleSheet.create({
     modalContainer: {
-      flex: 1,
       alignItems: 'center',
       paddingTop: 100,
+      height: '100%',
     },
     modalContent: {
       backgroundColor: 'red',

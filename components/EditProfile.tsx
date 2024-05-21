@@ -7,7 +7,7 @@ import { signOut, getAuth } from 'firebase/auth';
 import {app} from '../firebaseconfig';
 import * as FileSystem from 'expo-file-system';
 import ErrorModal from './ErrorModal'
-import VerifyClickModal from './VerifyClickModal';
+import VerifyClickModal from './VerifyClickModal.js';
 import uploadProfilePicture from '../api/uploadProfilePicture';
 import { useNavigation } from '@react-navigation/native';
 
@@ -35,24 +35,25 @@ const EditProfile = () => {
     });
     setSignOutModalVisible(false);
   }
-
+  
   const pickImage = async () => {
-    navigation.navigate("DrawProfilePic");
+    navigation.navigate("DrawProfilePic", {forDrawingProfilePic: true});
   };
 
   const [signOutModalVisible, setSignOutModalVisible] = useState(false);
 
+  console.log(snap.profilePicture); 
 
   return (
     <View style={styles.container}>
-      <Image source={{ uri: snap.profilePicture }} style={styles.profilePicture} />
+      <Image source={{ uri: snap.profilePicture }} style={styles.profilePicture} key={Date.now()}/>
       <TouchableOpacity onPress={pickImage} style={styles.button}>
         <Text style={{color: 'white', fontSize: 15}}>Draw New Profile Picture</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => setSignOutModalVisible(true)} style={styles.button}>
           <Text style={{color: 'white', fontSize: 15}}>Log Out</Text>
         </TouchableOpacity>
-      <Text style={{color: 'white', fontSize: 15, marginTop: 10, textAlign: "center"}}>For Any Other Concerns, Please Contact doolee@gmail.com.</Text>
+      <Text style={{color: 'white', fontSize: 15, marginTop: 10, textAlign: "center"}}>For Any Other Concerns, Please Contact app.paintr@gmail.com.</Text>
       <ErrorModal visible={modalVisible} message={error} onClose={closeModal} />
       <VerifyClickModal
         modalVisible={signOutModalVisible}

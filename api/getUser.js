@@ -1,4 +1,4 @@
-import { state } from './state';
+import { state } from '../state';
 
 export async function getUser(uid) {
     try {
@@ -12,6 +12,6 @@ export async function getUser(uid) {
         return userData; 
 
     } catch (error) {
-        console.error("Error fetching user data.");
+        throw error;
     }
 };

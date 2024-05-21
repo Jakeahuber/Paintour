@@ -4,51 +4,34 @@ import type { SketchCanvasRef } from 'rn-perfect-sketch-canvas';
 import { state } from '../state';
 import {ParamListBase, useNavigation } from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import { getUserSketches } from '../getUserSketches';
-import {getUser} from '../getUser';
+import { getUserSketches } from '../api/getUserSketches';
+import {getUser} from '../api/getUser';
 import LoadingModal from './LoadingModal';
+import ErrorModal from './ErrorModal';
 
-const Header = ({ canvasRef, onUpload, navigateOnUpload }) => {
-  const { height, width } = useWindowDimensions();
-  
+const Header = ({onUpload, navigateOnUpload, onUndo }) => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-  const [zoomText, setZoomText] = useState("Zoom");
-  const [prevStrokeWidth, setPrevStrokeWidth] = useState(0);
-  const [loading, setLoading] = useState(false);
-
   const reset = () => {
-    canvasRef.current?.reset();
+    //canvasRef.current?.reset();
     state.forceReloadToggle = !state.forceReloadToggle;
   };
 
   const undo = () => {
-    canvasRef.current?.undo();
-    state.forceReloadToggle = !state.forceReloadToggle;
+    //canvasRef.current?.undo();
+    onUndo();
+    //state.forceReloadToggle = !state.forceReloadToggle;
   };
 
   const redo = () => {
-    canvasRef.current?.redo();
+    //canvasRef.current?.redo();
     state.forceReloadToggle = !state.forceReloadToggle;
   };
 
-  const upload = async () => {
-    setLoading(true);
-    await onUpload(canvasRef);
-    navigation.navigate(navigateOnUpload);
-    setLoading(false);
-  };
-
-  const zoom = () => {
-    if (zoomText == 'Zoom') {
-      setZoomText("Draw");
-      setPrevStrokeWidth(state.strokeWidth);
-      state.strokeWidth = 0;
-    }
-    else {
-      setZoomText("Zoom");
-      state.strokeWidth = prevStrokeWidth;
-    }
-    state.zoomableCanvas = !state.zoomableCanvas;
+  async function upload() {
+    try {
+      await onUpload(/*canvasRef*/);
+      navigation.navigate(navigateOnUpload);
+    } catch (error) {}
   };
 
   return (
@@ -64,7 +47,7 @@ const Header = ({ canvasRef, onUpload, navigateOnUpload }) => {
         paddingRight: 25,
         paddingLeft: 25,
       }}
-    >
+    >     
       <View
         style={{
           flexDirection: 'row',
@@ -100,8 +83,7 @@ const Header = ({ canvasRef, onUpload, navigateOnUpload }) => {
           <Text style={styles.buttonText}>Upload</Text>
         </TouchableOpacity>
       </View>
-      <LoadingModal visible={loading} />        
-    </View>
+    </View> 
   );
 };
 

@@ -11,6 +11,8 @@ import ErrorModal from './ErrorModal';
 
 import { state } from '../state';
 import LoadingModal from './LoadingModal';
+import { getUser } from '../api/getUser';
+import { getFriendSketches } from '../api/getFriendSketches';
 
 const auth = getAuth(app);
 
@@ -27,9 +29,8 @@ const SignIn = () => {
     setLoadModalVisible(true);
 
     signInWithEmailAndPassword(auth,  email, password)
-    .then((userCredential) => {
-      // Signed in 
-      const user = userCredential.user;
+    .then(async (userCredential) => {
+      const user = userCredential.user;     
       console.log("User signed in");
     })
     .catch((error) => {
@@ -124,7 +125,7 @@ const SignIn = () => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.content}>
           <ErrorModal visible={modalVisible} message={error} onClose={closeModal} />
-          <Image source={require('../signup.gif')} style={styles.image}/>
+          <Image source={require('../assets/drawing.gif')} style={styles.image}/>
           <Input
             label=""
             placeholder="Enter your email address"

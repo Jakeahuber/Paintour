@@ -47,7 +47,7 @@ const GetSketchCanvas = ({canvasRef}) => {
 
 export default function DrawProfilePic({ route }) {
 
-    const canvasRef = useRef<SketchCanvasRef>(null);
+  const canvasRef = useRef<SketchCanvasRef>(null);
   const [prevWidth, setPrevWidth ] = useState(0);
   const translateY = useRef(new Animated.Value(0)).current;
 

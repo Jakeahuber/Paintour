@@ -12,7 +12,6 @@ export async function getRequests() {
         return requests; 
 
     } catch (error) {
-        console.error("Error fetching requests.");
         throw error;
     }
 };

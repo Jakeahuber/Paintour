@@ -7,7 +7,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSnapshot } from 'valtio';
 import { state } from '../state';
 import CalendarImages from './CalendarImages';
-import { getUser } from '../getUser';
+import { getUser } from '../api/getUser';
+import { updateMyData } from '../api/updateMyData';
+import ErrorModal from './ErrorModal';
 
 function MyProfile(props) {
     const snap = useSnapshot(state);
@@ -16,19 +18,26 @@ function MyProfile(props) {
     const [eyeIconStyle, setEyeIconStyle] = useState("grid-outline");
     const [lockIconStyle, setLockIconStyle] = useState("lock-closed-outline");
 
+    const [message, setMessage] = useState("");
+    const [errorVisible, setErrorVisible] = useState(false);
+    const closeModal = () => {
+        setErrorVisible(false);
+    };
+
+
     const [refreshing, setRefreshing] = React.useState(false);
 
     const onRefresh = React.useCallback(async () => {
         setRefreshing(true);
-        const userData = await getUser(state.uid);
-        state.uid = userData.uid;
-        state.username = userData.username;
-        state.profilePicture = userData.profilePicture;
-        state.numSketches = userData.numSketches;
-        state.numFriends = userData.numFriends;
-        state.uploadedToday = userData.uploadedToday;
-        state.numRequests = userData.numRequests;
-        state.prompt = "A penguin trying to master the art of skateboarding on an icy slope.";
+        try {
+            const userData = await getUser(state.uid);
+            updateMyData(userData);
+            state.forceCalendarImagesRerender = !state.forceCalendarImagesRerender;
+        }
+        catch (error) {
+            setMessage("There was a problem refreshing user data.");
+            setErrorVisible(true);
+        }
         setRefreshing(false);
       }, []);
 
@@ -40,6 +49,7 @@ function MyProfile(props) {
                         <Image
                             style={styles.profilePicture}
                             source={{ uri: snap.profilePicture}}
+                            key={Date.now()}
                         />
                     </View>
                     <View style={{marginTop: 15, width: '100%', flexDirection: 'row'}}>
@@ -60,6 +70,7 @@ function MyProfile(props) {
                 ListFooterComponent={<CalendarImages uid={state.uid}/>}
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             />    
+            <ErrorModal visible={errorVisible} message={message} onClose={closeModal} />
         </SafeAreaView>
     )
 }

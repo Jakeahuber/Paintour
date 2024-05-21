@@ -18,6 +18,7 @@ const Toolbar = ({shiftVertical }) => {
   const [value, setValue] = useState(0.2);
 
   const snap = useSnapshot(state);
+  console.log("rerender");
 
   const handleStrokeChange = (stroke: number) => {
     state.strokeWidth = stroke;
@@ -59,7 +60,7 @@ const Toolbar = ({shiftVertical }) => {
       setBrushIconStyle("brush-outline")
       setPaletteIconStyle("color-palette")
       setPaletteVisibility("flex");
-      shiftVertical(-85);
+      shiftVertical(-60);
       setBrushVisibility("none")
     }
   }; 

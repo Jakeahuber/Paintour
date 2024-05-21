@@ -4,7 +4,8 @@ import { SearchBar } from 'react-native-elements';
 import { TouchableOpacity } from "react-native-gesture-handler";
 import LoadingModal from "./LoadingModal";
 import Friend from "./Friend";
-import { searchUsers } from "../searchUsers";
+import { searchUsers } from "../api/searchUsers";
+import ErrorModal from "./ErrorModal";
 
 export default function FindFriends() {
     const [loading, setLoading] = useState(false);
@@ -15,6 +16,14 @@ export default function FindFriends() {
 
     const updateSearch = (search) => {
         setSearch(search);
+    };
+
+    
+    const [message, setMessage] = useState("");
+    const [errorVisible, setErrorVisible] = useState(false);
+
+    const closeModal = () => {
+        setErrorVisible(false);
     };
     
     const handleSearchPress = async (uid) => {
@@ -28,8 +37,9 @@ export default function FindFriends() {
           console.log(newSearchedUsers);
           setLoading(false); 
         } catch (error) {
-          console.error('Error sending friend request:', error);
-          setLoading(false);
+            setMessage("Search failed unexpectedly. Please try again later.");
+            setErrorVisible(true);
+            setLoading(false);
         }
     }
 
@@ -54,6 +64,7 @@ export default function FindFriends() {
             </View>
             <FlatList
                 data={searchedUsers}
+                keyExtractor={(item) => item.uid}
                 renderItem={({ item }) => (
                     <Friend
                         username={item.username}
@@ -61,11 +72,13 @@ export default function FindFriends() {
                         numFriends={item.numFriends}
                         profilePicture={item.profilePicture}
                         friendStatus={item.friendStatus}
+                        uid={item.uid}
                     />
                 )}
                 style={{width: '100%', height: '100%'}}
             />            
-            <LoadingModal visible={loading} />      
+            <LoadingModal visible={loading} />
+            <ErrorModal visible={errorVisible} message={message} onClose={closeModal} />      
         </View>
     )
 }

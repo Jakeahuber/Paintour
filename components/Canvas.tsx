@@ -1,65 +1,22 @@
-import * as React from 'react';
-import { useRef, useState} from 'react';
+import React, {useRef} from "react";
 import {
-  StyleSheet,
-  SafeAreaView,
   View,
-  useWindowDimensions,
-  Button,
   Text, 
-  TouchableOpacity,
-  ScrollView,
-  Animated
+  Animated,
 } from 'react-native';
-import { SketchCanvas, SketchCanvasRef } from 'rn-perfect-sketch-canvas';
 import { useSnapshot } from 'valtio';
-import Header from './Header';
-import Toolbar from './Toolbar';
 import { state } from '../state';
-import uploadSketch from '../api/uploadSketch';
-
-const GetSketchCanvas = ({canvasRef}) => {
-  const snap = useSnapshot(state);
-  const { height, width } = useWindowDimensions();
-  
-  return (
-    <View style={{
-      width: Math.min(height, width) - 50,
-      height: Math.min(height, width) - 50,
-      transform: snap.zoomableCanvas ? [] : [{ scale: snap.scale }],
-    }}>
-      <SketchCanvas
-        strokeColor={snap.strokeColor}
-        strokeWidth={snap.strokeWidth + (snap.forceReloadToggle ? 1e-10 : -1e-10)}
-        ref={canvasRef}
-        containerStyle={{
-          width: Math.min(height, width) - 50,
-          height: Math.min(height, width) - 50,
-          backgroundColor: 'white',
-          left: (snap.zoomableCanvas ? 0 : snap.offsetX),
-          top:  (snap.zoomableCanvas ? 0 : snap.offsetY),
-        }}
-      />
-    </View>
-  );
-
-};
+import Toolbar from "./Toolbar";
+import SketchCanvas from "./SketchCanvas";
 
 export default function Canvas({ route }) {
 
-  const { canvasRef } = route.params;
-  const [prevWidth, setPrevWidth ] = useState(0);
+  const { forDrawingProfilePic } = route.params || {};
+  const snap = useSnapshot(state);
   const translateY = useRef(new Animated.Value(0)).current;
 
-  const snap = useSnapshot(state);
-
-  const handleScrollStart = () => {
-    canvasRef.current?.resetCurrentPoints();
-  };
-
-  const [isShifted, setIsShifted] = useState(false);
-
   const shiftVertical = (value) => {
+    if (forDrawingProfilePic) return;
     Animated.timing(
       translateY,
       {
@@ -71,48 +28,23 @@ export default function Canvas({ route }) {
   };
 
   return (
-    
-    <SafeAreaView style={styles.container}>
-      <View style={{flex: 1, alignItems: 'center'}}>    
-        <Animated.View style={{width: '100%', alignItems: 'center', transform: [{ translateY }] }}>
-        <View style={{ width: '90%', height: 85, alignItems: 'center'}}>
-          <Text style={{color: 'white', fontSize: 24, textAlign: 'center'}}>Today's Prompt:</Text>
-          <Text style={{color: 'white', fontSize: 20, textAlign: 'center'}}>{state.prompt}</Text>
-        </View>
-        <Header canvasRef={canvasRef} onUpload={uploadSketch} navigateOnUpload={"HomeScreen"}/>
+    <View style={{flex: 1, height: '100%'}}>
+    <View style={{flex: 1, alignItems: 'center'}}>   
+      <Animated.View style={{width: '100%', alignItems: 'center', transform: [{ translateY }] }}> 
+        {forDrawingProfilePic ?
+          <></>
+          :
+          <View style={{ width: '90%', height: 60, alignItems: 'center'}}>
+            <Text style={{color: 'white', fontSize: 24, textAlign: 'center'}}>Today's Prompt:</Text>
+            <Text style={{color: 'white', fontSize: 24, textAlign: 'center'}}>{snap.prompt}</Text>
+          </View>
+        }
         <View style={{width: '100%', zIndex: -1, marginTop: 10}}>
-          <ScrollView 
-            bounces={false}
-            bouncesZoom={false}
-            maximumZoomScale={4}
-            minimumZoomScale={1}
-            showsHorizontalScrollIndicator={false}
-            showsVerticalScrollIndicator={false}
-            scrollEnabled={false} 
-            onScrollBeginDrag={handleScrollStart}
-            scrollEventThrottle={10}
-            >  
-              <View style={{alignItems: 'center', height: '100%', justifyContent: 'center'}}>
-                <GetSketchCanvas canvasRef={canvasRef}/>
-              </View>   
-            </ScrollView>
+          <SketchCanvas route={{params:{forDrawingProfilePic: forDrawingProfilePic}}}/>
         </View>
         <Toolbar shiftVertical={shiftVertical}/>
-        </Animated.View>
-
-      </View>
-        
-    </SafeAreaView>
+      </Animated.View>
+    </View>
+  </View>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
-  }
-});
+};

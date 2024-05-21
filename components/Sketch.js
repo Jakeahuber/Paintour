@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, Text, Image, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { state } from '../state';
-import {getUser} from '../getUser';
+import {getUser} from '../api/getUser';
 import { useSnapshot } from 'valtio';
 import LoadingModal from './LoadingModal';
 
@@ -10,7 +10,8 @@ function Sketch(props) {
     const navigation = useNavigation();
     const snap = useSnapshot(state);
     const {width, height} = useWindowDimensions();
-
+    
+    console.log(props.profilePicture);
 
 
     const handleUsernameClick = async () => {
@@ -29,7 +30,7 @@ function Sketch(props) {
     return (
         <View style={[styles.postContainer, {width: width}]}> 
             <View style={{backgroundColor: 'white'}}>
-                <Image style={styles.sketch} source={{ uri: props.image}}/>   
+                <Image style={styles.sketch} source={{ uri: props.image}} key={Date.now()}/>   
             </View>
             <TouchableOpacity onPress={handleUsernameClick} style={styles.authorContainer}>
                 <View style={{flexDirection: 'row', padding: 15}}>
@@ -66,7 +67,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'black',
         marginRight: 5,
-        borderColor: 'white'
+        borderColor: 'white',
+        backgroundColor: 'white'
     },
     authorContainer: {
         width: '100%',
