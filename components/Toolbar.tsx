@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text} from 'react-native';
-import { useSnapshot } from 'valtio';
-import constants from '../constants';
+import { StyleSheet, View} from 'react-native';
 import { state } from '../state';
-import Stroke from './Stroke';
-import ColorPicker, { Panel1, Panel3, Swatches, Preview, OpacitySlider, HueSlider } from 'reanimated-color-picker';
+import ColorPicker, { Panel1, HueSlider } from 'reanimated-color-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Slider} from '@miblanchard/react-native-slider';
 
 const Toolbar = ({shiftVertical }) => {
-  const [showStrokes, setShowStrokes] = useState(false);
   const [brushIconStyle, setBrushIconStyle] = useState("brush-outline")
   const [paletteIconStyle, setPaletteIconStyle] = useState("color-palette-outline")
   const [paletteVisibility, setPaletteVisibility] = useState("none");
@@ -17,20 +13,11 @@ const Toolbar = ({shiftVertical }) => {
 
   const [value, setValue] = useState(0.2);
 
-  const snap = useSnapshot(state);
-  console.log("rerender");
-
-  const handleStrokeChange = (stroke: number) => {
-    state.strokeWidth = stroke;
-    setShowStrokes(false);
-  };
-
   const handleColorChange = (color) => { 
     state.strokeColor = color['hex'];
   }; 
 
   const handleSliderChange = (value) => {
-    console.log(value);
     state.strokeWidth = (value[0] + 0.01) * 50;
     setValue(value[0]);
   }
@@ -89,13 +76,6 @@ const Toolbar = ({shiftVertical }) => {
     </>
   );
 };
-
-/*
-        <ColorPicker style={{ width: '55%'}} value='red' onComplete={onSelectColor}>
-          <Panel1 style={{marginBottom: 10}}/>
-          <HueSlider />
-        </ColorPicker>
-*/
 
 export default Toolbar;
 

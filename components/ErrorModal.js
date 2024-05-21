@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableWithoutFeedback, Modal, StyleSheet, Pressable } from 'react-native';
+import { View, Text, Modal, StyleSheet, Pressable } from 'react-native';
 
 const ErrorModal = ({ visible, message, onClose }) => {
     return (

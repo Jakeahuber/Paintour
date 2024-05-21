@@ -5,27 +5,30 @@ import { state } from '../state';
 import {getUser} from '../api/getUser';
 import { useSnapshot } from 'valtio';
 import LoadingModal from './LoadingModal';
+import ErrorModal from './ErrorModal';
 
 function Sketch(props) {
     const navigation = useNavigation();
     const snap = useSnapshot(state);
     const {width, height} = useWindowDimensions();
-    
-    console.log(props.profilePicture);
-
 
     const handleUsernameClick = async () => {
         if (props.uid == snap.uid) navigation.navigate('MyProfileScreen'); 
         else {
             setModalVisible(true);
-            const uid = props.uid
-            const userData = await getUser(uid);
-            navigation.navigate('Profile', { userData: userData }); 
+            try {
+                const uid = props.uid
+                const userData = await getUser(uid);
+                navigation.navigate('Profile', { userData: userData }); 
+            } catch (error) {
+                setErrorVisible(true);
+            }
             setModalVisible(false);
         }
     };
 
     const [modalVisible, setModalVisible] = useState(false);
+    const [errorVisible, setErrorVisible] = useState(false);
 
     return (
         <View style={[styles.postContainer, {width: width}]}> 
@@ -39,7 +42,8 @@ function Sketch(props) {
                     <Text style={styles.uploadTime}>{props.uploadTime}</Text>     
                 </View>
             </TouchableOpacity>    
-            <LoadingModal visible={modalVisible} />                 
+            <LoadingModal visible={modalVisible} />
+            <ErrorModal visible={errorVisible} onClose={() => {setErrorVisible(false)}} message={"Could not load user's page. Please try again later."}/>                 
         </View>
     );
 }

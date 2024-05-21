@@ -20,6 +20,7 @@ async function uploadSketch(base64) {
       });
 
       if (!response.ok) {
+        console.log(response);
         throw new Error('Network response was not ok');
       }
 

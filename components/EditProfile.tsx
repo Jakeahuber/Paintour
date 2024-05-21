@@ -1,14 +1,11 @@
 import { useState } from 'react';
-import { Button, Image, View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import { Image, View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { state } from '../state';
 import { useSnapshot } from 'valtio';
 import { signOut, getAuth } from 'firebase/auth';
 import {app} from '../firebaseconfig';
-import * as FileSystem from 'expo-file-system';
 import ErrorModal from './ErrorModal'
 import VerifyClickModal from './VerifyClickModal.js';
-import uploadProfilePicture from '../api/uploadProfilePicture';
 import { useNavigation } from '@react-navigation/native';
 
 const auth = getAuth(app);
@@ -25,9 +22,7 @@ const EditProfile = () => {
 
   const handleSignOut = async () => {
     signOut(auth)
-    .then(() => {
-      console.log('User signed out successfully.');
-    })
+    .then(() => {})
     .catch((error) => {
       console.error('Error signing out:', error);
       setError("Could not sign user out.");
@@ -36,18 +31,16 @@ const EditProfile = () => {
     setSignOutModalVisible(false);
   }
   
-  const pickImage = async () => {
+  const drawPfpPress = async () => {
     navigation.navigate("DrawProfilePic", {forDrawingProfilePic: true});
   };
 
   const [signOutModalVisible, setSignOutModalVisible] = useState(false);
 
-  console.log(snap.profilePicture); 
-
   return (
     <View style={styles.container}>
       <Image source={{ uri: snap.profilePicture }} style={styles.profilePicture} key={Date.now()}/>
-      <TouchableOpacity onPress={pickImage} style={styles.button}>
+      <TouchableOpacity onPress={drawPfpPress} style={styles.button}>
         <Text style={{color: 'white', fontSize: 15}}>Draw New Profile Picture</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => setSignOutModalVisible(true)} style={styles.button}>

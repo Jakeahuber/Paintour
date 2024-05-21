@@ -1,11 +1,10 @@
-import React, {useRef, useState, useCallback} from "react";
+import React, {useState, useCallback} from "react";
 import {StyleSheet, ScrollView, View, Text, Image, TouchableOpacity, RefreshControl} from 'react-native';
 import Sketches from './Sketches'
 import { state } from '../state';
 import { useSnapshot } from 'valtio';
 import { Button } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
-import { SketchCanvasRef } from 'rn-perfect-sketch-canvas';
 import { getUser } from "../api/getUser";
 import { updateMyData } from "../api/updateMyData";
 import ErrorModal from "./ErrorModal";
@@ -14,7 +13,6 @@ import { getFriendSketches } from "../api/getFriendSketches";
 function Home() {
     const navigation = useNavigation();
     const snap = useSnapshot(state);
-    const canvasRef = useRef<SketchCanvasRef>(null);
     const [errorModalVisible, setErrorModalVisible] = useState(false);
     const setModalInvisible = () => {
         setErrorModalVisible(false);
@@ -34,7 +32,7 @@ function Home() {
             setErrorModalVisible(true);
           }, 500);
         }
-      }, []);
+    }, []);
 
     if (!snap.uploadedToday) {
         return (
@@ -52,9 +50,7 @@ function Home() {
                         </Text>
                         <TouchableOpacity style={{backgroundColor: '#4681f4', paddingLeft: 15, paddingTop: 10, paddingBottom: 10, paddingRight: 15, borderRadius: 50}} 
                                           onPress={() => navigation.navigate("Canvas")}>
-                            <Text style={{color: 'white', fontSize: 16}}>
-                            Create Sketch
-                            </Text>                
+                            <Text style={{color: 'white', fontSize: 16}}>Create Sketch</Text>                
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -82,7 +78,7 @@ function Home() {
     }
     else {
         return (
-            <ScrollView contentContainerStyle={{flex: 1, alignContent: 'center', justifyContent: 'center'}}
+            <ScrollView contentContainerStyle={styles.scrollViewContainer}
                         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                         showsVerticalScrollIndicator={false}
                         horizontal={false}

@@ -1,14 +1,10 @@
-import React, { useState } from "react";
-import {View, FlatList, Text} from 'react-native';
-import LoadingModal from "./LoadingModal";
+import React from "react";
+import {View, FlatList} from 'react-native';
 import Friend from "./Friend";
 
 const MyFriends = ({ route }) => {
 
-  const { friends } = route.params;
-
-    console.log(friends);
-    const [loading, setLoading] = useState(false);
+    const { friends } = route.params;
 
     return(
         <View style={{alignItems: 'center', margin: 10}}>
@@ -25,7 +21,6 @@ const MyFriends = ({ route }) => {
                 )}
                 style={{width: '100%', height: '100%'}}
             />            
-            <LoadingModal visible={loading} />      
         </View>
     )
 }

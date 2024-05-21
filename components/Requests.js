@@ -1,11 +1,10 @@
 import React from "react";
 import {View, FlatList, Text, StyleSheet, Image} from 'react-native';
 import RequestedFriend from "./RequestedFriend";
-import { state } from "../state";
 import { useSnapshot } from "valtio";
+import { state } from "../state";
 
 const Requests = () => {
-
     const snap = useSnapshot(state);
 
     if (snap.requests.length == 0) {

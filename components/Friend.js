@@ -40,7 +40,6 @@ const Friend = ({ uid, username, numSketches, numFriends, profilePicture, friend
     }
 
     const buttonColor = friendStatus === 'Friends' ? '#33b249' : '#4681f4';
-    console.log(newFriendStatus);
     return(
         <View style={{ flexDirection: "row", width: '100%', paddingTop: 5, paddingBottom: 5}}>
             <View style={{ flex: 7 }}>

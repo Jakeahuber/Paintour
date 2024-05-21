@@ -1,4 +1,3 @@
-import 'react-native-gesture-handler';
 import React, {useState, useEffect} from "react";
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -24,10 +23,8 @@ import Requests from './components/Requests';
 import IconBadge from 'react-native-icon-badge';
 import { getRequests } from './api/getRequests';
 import LoadingModal from './components/LoadingModal';
-import DrawProfilePic from './components/DrawProfilePic';
 import ErrorModal from './components/ErrorModal';
 import { updateMyData } from './api/updateMyData';
-import SketchCanvas from './components/SketchCanvas';
 
 const resetUser = () => {
     state.uid = "",
@@ -87,7 +84,7 @@ const MyProfileStack = () => {
                                             setModalVisible(true);
                                             try {
                                                 const requests = await getRequests();
-                                                state.requests = requests; 
+                                                state.requests = requests;
                                                 navigation.navigate('Requests');
                                             }
                                             catch {
@@ -177,7 +174,6 @@ export default function App() {
     const [message, setMessage] = useState("");
     const [errorVisible, setErrorVisible] = useState(false);
     const [signedIn, setSignedIn] = useState(false);
-    const snap = useSnapshot(state);
 
     const closeModal = () => {
         setErrorVisible(false);

@@ -18,26 +18,18 @@ export default function FindFriends() {
         setSearch(search);
     };
 
-    
-    const [message, setMessage] = useState("");
     const [errorVisible, setErrorVisible] = useState(false);
 
-    const closeModal = () => {
-        setErrorVisible(false);
-    };
-    
-    const handleSearchPress = async (uid) => {
+    const handleSearchPress = async () => {
         try {
             if (search == "") {
                 return;
             }
-          setLoading(true); 
-          const newSearchedUsers = await searchUsers(search);
-          setSearchedUsers(newSearchedUsers);
-          console.log(newSearchedUsers);
-          setLoading(false); 
+            setLoading(true); 
+            const newSearchedUsers = await searchUsers(search);
+            setSearchedUsers(newSearchedUsers);
+            setLoading(false); 
         } catch (error) {
-            setMessage("Search failed unexpectedly. Please try again later.");
             setErrorVisible(true);
             setLoading(false);
         }
@@ -78,7 +70,7 @@ export default function FindFriends() {
                 style={{width: '100%', height: '100%'}}
             />            
             <LoadingModal visible={loading} />
-            <ErrorModal visible={errorVisible} message={message} onClose={closeModal} />      
+            <ErrorModal visible={errorVisible} message={"Search failed unexpectedly. Please try again later."} onClose={()=>{setErrorVisible(false)}} />      
         </View>
     )
 }

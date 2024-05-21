@@ -6,25 +6,21 @@ import LoadingModal from "./LoadingModal";
 import { state } from "../state";
 import Ionicons from 'react-native-vector-icons/Ionicons'; 
 import { handleFriendRequest } from "../api/handleFriendRequest";
+import ErrorModal from "./ErrorModal";
 
 const RequstedFriend = ({ uid, username, numSketches, numFriends, profilePicture }) => {
     const navigation = useNavigation();
     const [loading, setLoading] = useState(false);
 
-    const handleFriendPress = async (uid) => {
-        try {
-          setLoading(true); 
-          if (username == state.username) {
+    const handleFriendPress = async () => {
+        setLoading(true); 
+        if (username == state.username) {
             navigation.navigate('MyProfile');
-          }
-          else {
-            navigation.navigate('Profile', {userData: {username: username, numSketches: numSketches, numFriends: numFriends, profilePicture: profilePicture}});
-          }
-          setLoading(false); 
-        } catch (error) {
-          console.error('Error fetching user data:', error);
-          setLoading(false);
         }
+        else {
+            navigation.navigate('Profile', {userData: {username: username, numSketches: numSketches, numFriends: numFriends, profilePicture: profilePicture}});
+        }
+        setLoading(false); 
     }
     
     const handleAccept = async () => {
@@ -32,7 +28,7 @@ const RequstedFriend = ({ uid, username, numSketches, numFriends, profilePicture
         try {
             await handleFriendRequest(uid, true);
         } catch (error) {
-          console.error('Error handling friend request:', error);
+            setErrorVisible(true);
         }
         setLoading(false);
     }
@@ -42,10 +38,12 @@ const RequstedFriend = ({ uid, username, numSketches, numFriends, profilePicture
         try {
             await handleFriendRequest(uid, false);
         } catch (error) {
-          console.error('Error handling friend request:', error);
+          setErrorVisible(true);
         }
         setLoading(false);
     }
+
+    const [errorVisible, setErrorVisible] = useState(false);
 
     return(
         <View style={{ flexDirection: "row", width: '100%', paddingTop: 5, paddingBottom: 5}}>
@@ -75,7 +73,8 @@ const RequstedFriend = ({ uid, username, numSketches, numFriends, profilePicture
                     <Ionicons name="close" size={24} color="white" />
                 </TouchableOpacity>
             </View>
-            <LoadingModal visible={loading} />      
+            <LoadingModal visible={loading} /> 
+            <ErrorModal visible={errorVisible} onClose={() => {setErrorVisible(false)}} message={"Could not handle friend request. Please try again later."}/>     
         </View>          
     )
 }

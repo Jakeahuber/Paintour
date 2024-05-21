@@ -7,29 +7,20 @@ import {
     useTouchHandler,
     useCanvasRef
   } from "@shopify/react-native-skia";
-  import React, { useCallback, useState, useRef } from "react";
+  import React, { useCallback, useState } from "react";
   import {
     StyleSheet,
-    SafeAreaView,
     View,
-    useWindowDimensions,
-    Button,
     Text, 
     TouchableOpacity,
     ScrollView,
-    Animated,
-    Modal
   } from 'react-native';
-  import { useSnapshot } from 'valtio';
-  import { state } from '../state';
+import { state } from '../state';
 import uploadSketch from "../api/uploadSketch";
 import LoadingModal from "./LoadingModal";
 import ErrorModal from "./ErrorModal";
 import { useNavigation } from "@react-navigation/native";
-import Toolbar from "./Toolbar";
 import uploadProfilePicture from "../api/uploadProfilePicture";
-
-
 
 export default function SketchCanvas({route}) {
   const { forDrawingProfilePic } = route.params || {};
@@ -41,13 +32,13 @@ export default function SketchCanvas({route}) {
       timestamp: number;
   }
     const ref = useCanvasRef();
-    const snap = useSnapshot(state);
     const [paths, setPaths] = useState<PathObject[]>([]);
     const [removedPaths, setRemovedPaths] = useState([]);
     const navigation = useNavigation();
       
     const [isDrawing, setIsDrawing] = useState(true);
 
+    // handles the start of zoom
     const handleScrollStart = () => {
       if (paths.length >= 2) {
         const path1 = paths[paths.length - 1];
@@ -128,11 +119,11 @@ export default function SketchCanvas({route}) {
           );
           if (forDrawingProfilePic) {
             await uploadProfilePicture(base64);
-            navigation.navigate("EditProfileScreen");
+            navigation.goBack();
           }
           else {
             await uploadSketch(base64);
-            navigation.navigate("home");
+            navigation.goBack();
           }
           return;
         } catch (error) {
@@ -140,6 +131,7 @@ export default function SketchCanvas({route}) {
           setTimeout(() => {
             setVisible(true);
           }, 300);      
+          console.log(error);
           throw error;
         }
     }
@@ -203,45 +195,45 @@ export default function SketchCanvas({route}) {
         paddingRight: 25,
         paddingLeft: 25,
       }}
-    >     
-      <View
-        style={{
-          flexDirection: 'row',
-        }}
-      >
-        <TouchableOpacity
-          activeOpacity={0.6}
-          onPress={undo}
-          style={[styles.button, { marginRight: 10 }]}
+      >     
+        <View
+          style={{
+            flexDirection: 'row',
+          }}
         >
-          <Text style={styles.buttonText}>Undo</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={undo}
+            style={[styles.button, { marginRight: 10 }]}
+          >
+            <Text style={styles.buttonText}>Undo</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={redo}
-          activeOpacity={0.6}
-          style={[styles.button, { marginRight: 10 }]}
-        >
-          <Text style={styles.buttonText}>Redo</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={reset}
-          activeOpacity={0.6}
-          style={[styles.button, { marginRight: 10 }]}
-        >
-          <Text style={styles.buttonText}>Reset</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={0.6}
-          onPress={upload}
-          style={[styles.upload, { marginRight: 10 }]}
-        >
-          <Text style={styles.buttonText}>Upload</Text>
-        </TouchableOpacity>
-      </View>
-    <LoadingModal visible={loading} /> 
-    <ErrorModal visible={visible} message={"Could not upload sketch. Please try again later."} onClose={() => {setVisible(false)}} />
-    </View> 
+          <TouchableOpacity
+            onPress={redo}
+            activeOpacity={0.6}
+            style={[styles.button, { marginRight: 10 }]}
+          >
+            <Text style={styles.buttonText}>Redo</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={reset}
+            activeOpacity={0.6}
+            style={[styles.button, { marginRight: 10 }]}
+          >
+            <Text style={styles.buttonText}>Reset</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={upload}
+            style={[styles.upload, { marginRight: 10 }]}
+          >
+            <Text style={styles.buttonText}>Upload</Text>
+          </TouchableOpacity>
+        </View>
+        <LoadingModal visible={loading} /> 
+        <ErrorModal visible={visible} message={"Could not upload sketch. Please try again later."} onClose={() => {setVisible(false)}} />
+      </View> 
       <ScrollView 
       bounces={false}
       bouncesZoom={false}
@@ -256,7 +248,7 @@ export default function SketchCanvas({route}) {
       style={{width: '100%'}}
       contentContainerStyle={{alignItems:'center'}}
       >  
-        <View style={{alignItems: 'center', height: '100%', width: '90%', backgroundColor: 'white'}}>
+        <View style={{alignItems: 'center', height: 350, width: 350, backgroundColor: 'white'}}>
           <Canvas style={styles.containerr} onTouch={touchHandler} ref={ref}>
             {paths.map((pathObject, index) => (
               <Path

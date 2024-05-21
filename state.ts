@@ -1,7 +1,7 @@
 import { proxy } from 'valtio';
 
 export const state = proxy({
-  strokeColor: 'red',
+  strokeColor: 'black',
   strokeWidth: 8,
   forceReloadToggle: true,
   zoomableCanvas: false,

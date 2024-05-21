@@ -1,15 +1,11 @@
 import React, {useState, useEffect} from "react";
-import {StyleSheet, TouchableHighlight, Image, Dimensions, Text, View, ActivityIndicator} from 'react-native';
+import {TouchableHighlight, Image, Text, View} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import {Calendar} from 'react-native-calendars';
 import { getSketchesByYear } from "../api/getSketchesByYear";
 import { state } from "../state";
 import { useSnapshot } from "valtio";
 import ErrorModal from "./ErrorModal";
-
-const width = Dimensions.get('window').width;
-const actualImageHeight = 1020;
-const actualImageWidth = 1020;
 
 function CalendarImages() {    
     const snap = useSnapshot(state);
@@ -90,21 +86,5 @@ function CalendarImages() {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    sketchContainer: {
-        flexDirection: 'row',
-      },
-    sketchGrid: {
-        marginLeft: 0,
-        marginRight: 0,
-    },
-    sketch: {
-        aspectRatio: actualImageWidth / actualImageHeight, 
-        width: width / 3,
-        borderColor: 'black',
-        borderWidth: 1,
-    },
-});
 
 export default CalendarImages;
