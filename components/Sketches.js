@@ -26,28 +26,29 @@ export default function Sketches() {
   }
 
   return(
-    <View style={{alignItems: 'center', margin: 10, flex: 1}}>
-        <View style={{marginBottom: 50}}>
-            <Text style={{ color: 'white', textAlign: 'center', fontSize: 24 }}>Today's Prompt:</Text>
-            <Text style={{ color: 'white', textAlign: 'center', fontSize: 20 }}>{snap.prompt}</Text>
+    <View>
+        <View style={{marginBottom: 20}}>
+            <Text style={{ color: 'white', textAlign: 'center', fontSize: 22 }}>Today's Prompt:</Text>
+            <Text style={{ color: 'white', textAlign: 'center', fontSize: 28 }}>{snap.prompt}</Text>
         </View>
         <FlatList
             data={snap.friendSketches}
             keyExtractor={(item) => item.uid}
             renderItem={({ item }) => (
                 <Sketch
-                image={item.image}
-                profilePicture={item.profilePicture}
-                uid={item.uid}
-                uploadTime={item.uploadTime}
-                username={item.username}
+                  image={item.image}
+                  profilePicture={item.profilePicture}
+                  uid={item.uid}
+                  uploadTime={item.uploadTime}
+                  username={item.username}
                 />
             )}
-            style={{width: '100%', height: '100%'}}
             horizontal={true}
             snapToAlignment="center"
+            decelerationRate={"slow"}
             snapToInterval={width}
             showsHorizontalScrollIndicator={false}
+            disableIntervalMomentum={false}
         />            
     </View>
   )

@@ -16,6 +16,7 @@ const MyFriends = ({ route }) => {
                         numSketches={item.numSketches}
                         numFriends={item.numFriends}
                         profilePicture={item.profilePicture}
+                        uid={item.uid}
                         friendStatus={"Friends"}
                     />
                 )}

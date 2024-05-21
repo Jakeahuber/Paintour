@@ -19,7 +19,7 @@ const Friend = ({ uid, username, numSketches, numFriends, profilePicture, friend
         navigation.navigate('MyProfile');
       }
       else {
-        navigation.navigate('Profile', {userData: {username: username, numSketches: numSketches, numFriends: numFriends, profilePicture: profilePicture}});
+        navigation.navigate('Profile', {userData: {username: username, numSketches: numSketches, numFriends: numFriends, profilePicture: profilePicture, uid: uid}});
       }
       setLoading(false); 
     }

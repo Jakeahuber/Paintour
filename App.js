@@ -25,6 +25,8 @@ import { getRequests } from './api/getRequests';
 import LoadingModal from './components/LoadingModal';
 import ErrorModal from './components/ErrorModal';
 import { updateMyData } from './api/updateMyData';
+import { reportUser } from "./api/reportUser";
+import InfoModal from "./components/InfoModal";
 
 const resetUser = () => {
     state.uid = "",
@@ -50,11 +52,50 @@ const screenOptions = () => {
     };
 };
 const HomeStack = () => {
+    const [modalVisible, setModalVisible] = useState(false);
+    const [message, setMessage] = useState("");
+    const [errorVisible, setErrorVisible] = useState(false);
+    const closeModal = () => {
+        setErrorVisible(false);
+    };
+    const [infoVisible, setInfoVisible] = useState(false);
+
+    const ReportUserHeader = () => {
+        return (
+            <View>
+            <TouchableOpacity
+            style={{ marginRight: 20}}
+            onPress={async () => {
+                setModalVisible(true);
+                try {
+                    await reportUser(state.currentProfileUid);
+                    setTimeout(() => {
+                        setInfoVisible(true);
+                      }, 300);  
+                }
+                catch {
+                    setMessage("Could not report user. Please try again later.");
+                    setTimeout(() => {
+                        setErrorVisible(true);
+                      }, 300);      
+                }
+                setModalVisible(false);
+            }}
+            >
+                <Text style={{color: 'white', fontSize: 18}}>Report</Text>
+            </TouchableOpacity>
+            <LoadingModal visible={modalVisible} />
+            <ErrorModal visible={errorVisible} message={message} onClose={closeModal} />
+            <InfoModal visible={infoVisible} message={"Reported User."} onClose={() => {setInfoVisible(false)}}/>
+            </View>
+        )
+    }
+
     return (
         <Stack.Navigator initialRouteName={"HomeScreen"} screenOptions={screenOptions()}>
             <Stack.Screen name={"HomeScreen"} component={Home} options={{headerTitle: 'Paintr'}}/>
             <Stack.Screen name={"Canvas"} component={Canvas} options={{headerTitle: '', gestureEnabled: false}}/>
-            <Stack.Screen name={"Profile"} component={Profile} options={{headerTitle: ''}}/>
+            <Stack.Screen name={"Profile"} component={Profile} options={{headerTitle: '', headerRight: ReportUserHeader}}/>
             <Stack.Screen name={"FocusedSketchScreen"} component={FocusedSketch} options={{headerTitle: ''}}/>
         </Stack.Navigator>
     )
@@ -69,6 +110,38 @@ const MyProfileStack = () => {
     const closeModal = () => {
         setErrorVisible(false);
     };
+    const [infoVisible, setInfoVisible] = useState(false);
+
+    const ReportUserHeader = () => {
+        return (
+            <View>
+            <TouchableOpacity
+            style={{ marginRight: 20}}
+            onPress={async () => {
+                setModalVisible(true);
+                try {
+                    await reportUser(state.currentProfileUid);
+                    setTimeout(() => {
+                        setInfoVisible(true);
+                      }, 300);  
+                }
+                catch {
+                    setMessage("Could not report user. Please try again later.");
+                    setTimeout(() => {
+                        setErrorVisible(true);
+                      }, 300);      
+                }
+                setModalVisible(false);
+            }}
+            >
+                <Text style={{color: 'white', fontSize: 18}}>Report</Text>
+            </TouchableOpacity>
+            <LoadingModal visible={modalVisible} />
+            <ErrorModal visible={errorVisible} message={message} onClose={closeModal} />
+            <InfoModal visible={infoVisible} message={"Reported User."} onClose={() => {setInfoVisible(false)}}/>
+            </View>
+        )
+    }
 
     return (
         <Stack.Navigator initialRouteName={"MyProfileScreen"} screenOptions={screenOptions()}>
@@ -89,7 +162,9 @@ const MyProfileStack = () => {
                                             }
                                             catch {
                                                 setMessage("Could not load requests. Please try again later.");
-                                                setErrorVisible(true);
+                                                setTimeout(() => {
+                                                    setErrorVisible(true);
+                                                  }, 300); 
                                             }
                                             setModalVisible(false);
                                         }}
@@ -119,7 +194,7 @@ const MyProfileStack = () => {
             <Stack.Screen name={"Requests"} component={Requests} options={{headerTitle: 'Requests', headerTitleAlign: 'center'}} />
             <Stack.Screen name={"FocusedSketchScreen"} component={FocusedSketch} options={{headerTitle: ''}}/>
             <Stack.Screen name={"MyFriends"} component={MyFriends} options={{headerTitle: 'My Friends', headerTitleAlign: 'center'}}/>
-            <Stack.Screen name={"Profile"} component={Profile} options={{headerTitle: ''}}/>
+            <Stack.Screen name={"Profile"} component={Profile} options={{headerTitle: '', headerRight: ReportUserHeader}}/>
             <Stack.Screen name={"DrawProfilePic"} component={Canvas}  options={{gestureEnabled: false, headerTitle: 'Draw Profile Picture', headerTitleAlign: 'center',
                                                                                         headerTitleStyle: {fontSize: 22}}}/>
         </Stack.Navigator>
@@ -127,10 +202,49 @@ const MyProfileStack = () => {
 }
 
 const FriendsStack = () => {
+    const [modalVisible, setModalVisible] = useState(false);
+    const [message, setMessage] = useState("");
+    const [errorVisible, setErrorVisible] = useState(false);
+    const closeModal = () => {
+        setErrorVisible(false);
+    };
+    const [infoVisible, setInfoVisible] = useState(false);
+
+    const ReportUserHeader = () => {
+        return (
+            <View>
+            <TouchableOpacity
+            style={{ marginRight: 20}}
+            onPress={async () => {
+                setModalVisible(true);
+                try {
+                    await reportUser(state.currentProfileUid);
+                    setTimeout(() => {
+                        setInfoVisible(true);
+                      }, 300);  
+                }
+                catch {
+                    setMessage("Could not report user. Please try again later.");
+                    setTimeout(() => {
+                        setErrorVisible(true);
+                      }, 300);      
+                }
+                setModalVisible(false);
+            }}
+            >
+                <Text style={{color: 'white', fontSize: 18}}>Report</Text>
+            </TouchableOpacity>
+            <LoadingModal visible={modalVisible} />
+            <ErrorModal visible={errorVisible} message={message} onClose={closeModal} />
+            <InfoModal visible={infoVisible} message={"Reported User."} onClose={() => {setInfoVisible(false)}}/>
+            </View>
+        )
+    }
+
     return (
         <Stack.Navigator initialRouteName={"FriendsScreen"} screenOptions={screenOptions()}>
             <Stack.Screen name={"FriendsScreen"} component={FindFriends} options={{headerTitle: 'Find Friends'}} />
-            <Stack.Screen name={"Profile"} component={Profile} options={{headerTitle: ''}}/>
+            <Stack.Screen name={"Profile"} component={Profile} options={{headerTitle: '', headerRight: ReportUserHeader}}/>
         </Stack.Navigator>
     )
 }

@@ -78,7 +78,7 @@ function Home() {
     }
     else {
         return (
-            <ScrollView contentContainerStyle={styles.scrollViewContainer}
+            <ScrollView contentContainerStyle={{marginTop: 20}}
                         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                         showsVerticalScrollIndicator={false}
                         horizontal={false}

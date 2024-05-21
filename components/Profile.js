@@ -2,12 +2,12 @@ import React, {useState, useEffect} from "react";
 import {View, Text, Image, StyleSheet, ScrollView, SafeAreaView, FlatList } from 'react-native';
 import ProfileStats from './ProfileStats';
 import {getUser} from '../api/getUser';
+import { state } from "../state";
 
 function Profile({ route }) {
 
     const { userData } = route.params || {};
-    console.log(userData);
-    console.log("USERDATA ABOVE");
+    state.currentProfileUid = userData.uid;
       
     const getProfileInfo = () => {
         return (

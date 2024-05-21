@@ -33,7 +33,7 @@ function Sketch(props) {
     return (
         <View style={[styles.postContainer, {width: width}]}> 
             <View style={{backgroundColor: 'white'}}>
-                <Image style={styles.sketch} source={{ uri: props.image}} key={Date.now()}/>   
+                <Image style={styles.sketch} source={{ uri: props.image}} />   
             </View>
             <TouchableOpacity onPress={handleUsernameClick} style={styles.authorContainer}>
                 <View style={{flexDirection: 'row', padding: 15}}>
@@ -59,9 +59,7 @@ const styles = StyleSheet.create({
     postContainer: {
         width: '100%',
         alignItems: 'center',
-        flex: 1,
         justifyContent: 'center',
-        marginBottom: 130,
     },
     profilePicture: {
         width: 40, 
@@ -78,7 +76,7 @@ const styles = StyleSheet.create({
         width: '100%',
         justifyContent: 'center',
         alignContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     uploader: {
         marginLeft: 3, 
