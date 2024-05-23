@@ -1,5 +1,5 @@
 import React from "react";
-import {View, FlatList, Text, StyleSheet, Image} from 'react-native';
+import {View, FlatList, Text, StyleSheet, Image, Platform} from 'react-native';
 import RequestedFriend from "./RequestedFriend";
 import { useSnapshot } from "valtio";
 import { state } from "../state";
@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'black',
         alignItems: 'center',
+        marginTop: Platform.isPad ? -100 : -20,
     },
     content: {
         flex: 1,
@@ -52,8 +53,8 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     image: {
-        width: 300,
-        height: 300,
+        width: Platform.isPad ? 425 : 300,
+        height: Platform.isPad ? 425 : 300,
     }
 });
 

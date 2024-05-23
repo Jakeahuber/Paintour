@@ -5,7 +5,7 @@ import Sketch from './Sketch'
 function FocusedSketch({route}) {
     const { profilePicture, username, uploadTime, image, prompt, uid } = route.params;
     return (
-            <View>
+            <View style={{alignItems: 'center', flex: 1, marginTop: 30}}>
                 <View >
                     <View style={{marginBottom: 20}}>
                         <Text style={{ color: 'white', textAlign: 'center', fontSize: 22 }}>Prompt:</Text>

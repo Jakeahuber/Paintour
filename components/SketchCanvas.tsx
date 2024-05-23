@@ -14,6 +14,7 @@ import {
     Text, 
     TouchableOpacity,
     ScrollView,
+    Platform
   } from 'react-native';
 import { state } from '../state';
 import uploadSketch from "../api/uploadSketch";
@@ -182,25 +183,16 @@ export default function SketchCanvas({route}) {
     );
   
     return (
-      <>
+      <View style={{alignItems:'center', width: '100%'}} >
       <View
       style={{
         height: 50,
         width: '100%',
-        paddingHorizontal: 12,
         flexDirection: 'row',
         justifyContent: 'space-between',
         backgroundColor: 'black',
-        alignItems: 'center',
-        paddingRight: 25,
-        paddingLeft: 25,
       }}
       >     
-        <View
-          style={{
-            flexDirection: 'row',
-          }}
-        >
           <TouchableOpacity
             activeOpacity={0.6}
             onPress={undo}
@@ -230,7 +222,6 @@ export default function SketchCanvas({route}) {
           >
             <Text style={styles.buttonText}>Upload</Text>
           </TouchableOpacity>
-        </View>
         <LoadingModal visible={loading} /> 
         <ErrorModal visible={visible} message={"Could not upload sketch. Please try again later."} onClose={() => {setVisible(false)}} />
       </View> 
@@ -248,7 +239,7 @@ export default function SketchCanvas({route}) {
       style={{width: '100%'}}
       contentContainerStyle={{alignItems:'center'}}
       >  
-        <View style={{alignItems: 'center', height: 350, width: 350, backgroundColor: 'white'}}>
+        <View style={{alignItems: 'center', width: '100%', aspectRatio: 1, backgroundColor: 'white'}}>
           <Canvas style={styles.containerr} onTouch={touchHandler} ref={ref}>
             {paths.map((pathObject, index) => (
               <Path
@@ -262,7 +253,7 @@ export default function SketchCanvas({route}) {
         </Canvas>
         </View>   
       </ScrollView>
-      </>
+      </View>
     );
   };
   
@@ -272,7 +263,7 @@ export default function SketchCanvas({route}) {
       aspectRatio: 1,
     },
     button: {
-      paddingHorizontal: 20,
+      paddingHorizontal: Platform.isPad ? 40 : 20,
       backgroundColor: 'white',
       height: 40,
       borderRadius: 10,
@@ -280,7 +271,7 @@ export default function SketchCanvas({route}) {
       alignItems: 'center',
     },
     upload: {
-      paddingHorizontal: 20,
+      paddingHorizontal: Platform.isPad ? 40 : 20,
       backgroundColor: '#E0E0E0',
       height: 40,
       borderRadius: 10,

@@ -1,5 +1,5 @@
 import React, {useState, useCallback} from "react";
-import {StyleSheet, ScrollView, View, Text, Image, TouchableOpacity, RefreshControl} from 'react-native';
+import {StyleSheet, ScrollView, View, Text, Image, TouchableOpacity, RefreshControl, Platform} from 'react-native';
 import Sketches from './Sketches'
 import { state } from '../state';
 import { useSnapshot } from 'valtio';
@@ -9,10 +9,13 @@ import { getUser } from "../api/getUser";
 import { updateMyData } from "../api/updateMyData";
 import ErrorModal from "./ErrorModal";
 import { getFriendSketches } from "../api/getFriendSketches";
+import { getAuth } from "firebase/auth";
+import {app} from "../firebaseconfig";
 
 function Home() {
     const navigation = useNavigation();
     const snap = useSnapshot(state);
+    const auth = getAuth(app);
     const [errorModalVisible, setErrorModalVisible] = useState(false);
     const setModalInvisible = () => {
         setErrorModalVisible(false);
@@ -22,9 +25,10 @@ function Home() {
     const onRefresh = useCallback(async () => {
         setRefreshing(true);
         try {
-          const userData = await getUser(state.uid);
+          
+          const userData = await getUser(auth.currentUser.uid);
           updateMyData(userData);
-          await getFriendSketches(state.uid);
+          await getFriendSketches();
           setRefreshing(false);
         } catch (error) {
           setRefreshing(false);
@@ -45,7 +49,7 @@ function Home() {
                 <View style={styles.container}>
                     <View style={styles.content}>
                         <Image source={require('../assets/drawing.gif')} style={styles.image}/>
-                        <Text testID="noSketchToday" style={{color: 'white', marginBottom: 20, fontSize: 22, textAlign: 'center'}}>
+                        <Text style={{color: 'white', marginBottom: 20, fontSize: 22, textAlign: 'center'}}>
                         You have not created a sketch today!
                         </Text>
                         <TouchableOpacity style={{backgroundColor: '#4681f4', paddingLeft: 15, paddingTop: 10, paddingBottom: 10, paddingRight: 15, borderRadius: 50}} 
@@ -78,7 +82,7 @@ function Home() {
     }
     else {
         return (
-            <ScrollView contentContainerStyle={{marginTop: 20}}
+            <ScrollView contentContainerStyle={{marginTop: 30}}
                         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                         showsVerticalScrollIndicator={false}
                         horizontal={false}
@@ -92,7 +96,9 @@ function Home() {
 const styles = StyleSheet.create({
     scrollViewContainer: {
         flexGrow: 1, 
-        alignItems: 'center'
+        justifyContent: 'center',
+        marginTop: Platform.isPad ? -100 : -50,
+
     },
     container: {
         flex: 1,
@@ -106,8 +112,8 @@ const styles = StyleSheet.create({
         marginTop: -50
     },
     image: {
-        width: 300,
-        height: 300,
+        width: Platform.isPad ? 425 : 300,
+        height: Platform.isPad ? 425 : 300,
     }
 });
 

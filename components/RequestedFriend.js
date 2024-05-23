@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {View, Text, Image} from 'react-native';
+import {View, Text, Image, StyleSheet, Platform} from 'react-native';
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import LoadingModal from "./LoadingModal";
@@ -52,9 +52,10 @@ const RequstedFriend = ({ uid, username, numSketches, numFriends, profilePicture
                 style={{ flexDirection: "row", alignItems: 'center', width: '100%'}}>
                 <Image
                     source={{ uri: profilePicture }}
-                    style={{ height: 45, width: 45, borderRadius: 100, marginRight: 10, backgroundColor: 'white' }}
+                    style={styles.image}
                 />
-                <Text style={{ color: 'white', fontSize: 18 }}>
+                
+                <Text style={styles.text}>
                     {username}
                 </Text>
                 </TouchableOpacity>
@@ -78,5 +79,19 @@ const RequstedFriend = ({ uid, username, numSketches, numFriends, profilePicture
         </View>          
     )
 }
+
+const styles = StyleSheet.create({
+    image: {
+        height: Platform.isPad ? 55 : 45,
+        width: Platform.isPad ? 55 : 45,
+        borderRadius: 100,
+        marginRight: 10,
+        backgroundColor: 'white' 
+    },
+    text: {
+        color: 'white',
+        fontSize: Platform.isPad? 20 : 16,
+    }
+});
 
 export default RequstedFriend;

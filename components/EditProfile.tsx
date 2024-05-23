@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Image, View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { Image, View, StyleSheet, Text, TouchableOpacity, Platform } from 'react-native';
 import { state } from '../state';
 import { useSnapshot } from 'valtio';
 import { signOut, getAuth } from 'firebase/auth';
@@ -68,9 +68,9 @@ const styles = StyleSheet.create({
     marginTop: 40
   },
   profilePicture: {
-    width: 125, 
-    height: 125, 
-    borderRadius: 125 / 2, 
+    width: Platform.isPad ? 150: 125, 
+    height: Platform.isPad ? 150: 125, 
+    borderRadius: Platform.isPad ? 150/2 : 125/2,  
     resizeMode: 'cover',
     borderWidth: 1,
     borderColor: 'white',

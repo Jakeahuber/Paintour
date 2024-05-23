@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {View, Text, Image, StyleSheet, ScrollView, SafeAreaView, FlatList } from 'react-native';
+import {View, Text, Image, StyleSheet, ScrollView, SafeAreaView, FlatList, Platform } from 'react-native';
 import ProfileStats from './ProfileStats';
 import {getUser} from '../api/getUser';
 import { state } from "../state";
@@ -51,9 +51,9 @@ const styles = StyleSheet.create({
         marginBottom: 20
     },
     profilePicture: {
-        width: 125, 
-        height: 125, 
-        borderRadius: 125 / 2, 
+        width: Platform.isPad ? 150: 125, 
+        height: Platform.isPad ? 150: 125, 
+        borderRadius: Platform.isPad ? 150/2 : 125/2,  
         resizeMode: 'cover',
         borderWidth: 1,
         borderColor: 'white',

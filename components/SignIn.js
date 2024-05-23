@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableWithoutFeedback, Image, Keyboard, TouchableOpacity, Modal } from 'react-native';
+import { StyleSheet, View, Text, TouchableWithoutFeedback, Image, Keyboard, TouchableOpacity, Modal, useWindowDimensions } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 import {app} from '../firebaseconfig'
 import {getAuth, signInWithCredential, GoogleAuthProvider, signInWithEmailAndPassword, isSignInWithEmailLink} from "firebase/auth";
@@ -24,6 +24,7 @@ const SignIn = () => {
   const [error, setError] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
+  const {height, width} = useWindowDimensions();
   
   const signIn = () => {
     setLoadModalVisible(true);
@@ -125,7 +126,7 @@ const SignIn = () => {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.content}>
           <ErrorModal visible={modalVisible} message={error} onClose={closeModal} />
-          <Image source={require('../assets/drawing.gif')} style={styles.image}/>
+          <Image source={require('../assets/drawing.gif')} style={{width: Math.min(width, height) * 0.5, height: Math.min(width, height) * 0.5}}/>
           <Input
             label=""
             placeholder="Enter your email address"
@@ -189,8 +190,4 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 100
   },
-  image: {
-    width: 275,
-    height: 275,
-  }
 });

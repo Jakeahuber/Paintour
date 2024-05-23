@@ -29,7 +29,6 @@ import { reportUser } from "./api/reportUser";
 import InfoModal from "./components/InfoModal";
 
 const resetUser = () => {
-    state.uid = "",
     state.username = "DNE",
     state.profilePicture = "https://firebasestorage.googleapis.com/v0/b/sketch-c3044.appspot.com/o/profilePictures%2Fdefaultprofile.jpg?alt=media&token=d45553bf-65c6-408b-a444-5ede28acc7fb",
     state.streak = 0,

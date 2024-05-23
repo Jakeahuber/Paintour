@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {View, Text, FlatList} from 'react-native';
+import {View, Text, FlatList, StyleSheet, Platform} from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import { TouchableOpacity } from "react-native-gesture-handler";
 import LoadingModal from "./LoadingModal";
@@ -48,7 +48,7 @@ export default function FindFriends() {
                 />
                 <View style={{flex: 3, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}>
                     <TouchableOpacity style={{backgroundColor: '#4681f4', paddingLeft: 15, paddingTop: 10, paddingBottom: 10, paddingRight: 15, borderRadius: 50}} onPress={handleSearchPress}>
-                        <Text style={{color: 'white', fontSize: 16}}>
+                        <Text style={styles.text}>
                         Search
                         </Text>                
                     </TouchableOpacity>
@@ -74,3 +74,10 @@ export default function FindFriends() {
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    text: {
+        color: 'white',
+        fontSize: Platform.isPad? 20 : 16,
+    }
+});

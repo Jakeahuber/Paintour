@@ -1,16 +1,18 @@
 import { getUser } from "./getUser";
 import { state } from "../state";
+import { getAuth } from "firebase/auth";
+import {app} from '../firebaseconfig'
 
 async function uploadSketch(base64) {
-    const url = `https://us-central1-sketch-c3044.cloudfunctions.net/uploadSketch?uid=${state.uid}`;
-    const sketchData = {
-      uid: state.uid,
-      username: state.username,
-      profilePicture: state.profilePicture,
-      image: base64
-    }
-
     try {
+      const auth = getAuth(app);
+      const url = `https://us-central1-sketch-c3044.cloudfunctions.net/uploadSketch?uid=${auth.currentUser.uid}`;
+      const sketchData = {
+        uid: auth.currentUser.uid,
+        username: state.username,
+        profilePicture: state.profilePicture,
+        image: base64
+      }
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -20,11 +22,10 @@ async function uploadSketch(base64) {
       });
 
       if (!response.ok) {
-        console.log(response);
         throw new Error('Network response was not ok');
       }
 
-      const userData = await getUser(state.uid); 
+      const userData = await getUser(auth.currentUser.uid); 
       state.numSketches = userData.numSketches;
       state.uploadedToday = userData.uploadedToday;
       state.forceUserSketchesUpdate = !state.forceUserSketchesUpdate;

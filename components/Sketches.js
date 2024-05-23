@@ -3,12 +3,12 @@ import Sketch from './Sketch'
 import { state } from '../state';
 import { useSnapshot } from 'valtio';
 
-import {useWindowDimensions, View, Text, Image, FlatList, StyleSheet} from 'react-native';
+import {useWindowDimensions, View, Text, Image, FlatList, StyleSheet, Platform} from 'react-native';
 
 export default function Sketches() {
 
   const snap = useSnapshot(state);
-  const width = useWindowDimensions().width;
+  const {width, height} = useWindowDimensions();
 
   if (snap.friendSketches.length == 0) {
       return (
@@ -28,8 +28,8 @@ export default function Sketches() {
   return(
     <View>
         <View style={{marginBottom: 20}}>
-            <Text style={{ color: 'white', textAlign: 'center', fontSize: 22 }}>Today's Prompt:</Text>
-            <Text style={{ color: 'white', textAlign: 'center', fontSize: 28 }}>{snap.prompt}</Text>
+            <Text style={{ color: 'white', textAlign: 'center', fontSize: Platform.isPad ? 30 : 22 }}>Today's Prompt:</Text>
+            <Text style={{ color: 'white', textAlign: 'center', fontSize: Platform.isPad ? 38 : 28 }}>{snap.prompt}</Text>
         </View>
         <FlatList
             data={snap.friendSketches}
@@ -46,7 +46,7 @@ export default function Sketches() {
             horizontal={true}
             snapToAlignment="center"
             decelerationRate={"slow"}
-            snapToInterval={width}
+            snapToInterval={Math.min(width, height)}
             showsHorizontalScrollIndicator={false}
             disableIntervalMomentum={false}
         />            
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
       padding: 16,
   },
   image: {
-      width: 300,
-      height: 300,
+    width: Platform.isPad ? 425 : 300,
+    height: Platform.isPad ? 425 : 300,
   }
 });

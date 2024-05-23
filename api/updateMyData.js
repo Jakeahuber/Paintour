@@ -1,7 +1,6 @@
 import { state } from '../state';
 
 export async function updateMyData(userData) {
-    state.uid = userData.uid;
     state.username = userData.username;
     state.profilePicture = userData.profilePicture;
     state.numSketches = userData.numSketches;

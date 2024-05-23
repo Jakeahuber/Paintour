@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, Text, Image, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native';
+import {View, Text, Image, StyleSheet, TouchableOpacity, useWindowDimensions, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { state } from '../state';
 import {getUser} from '../api/getUser';
@@ -26,14 +26,13 @@ function Sketch(props) {
             setModalVisible(false);
         }
     };
-
     const [modalVisible, setModalVisible] = useState(false);
     const [errorVisible, setErrorVisible] = useState(false);
 
     return (
-        <View style={[styles.postContainer, {width: width}]}> 
+        <View style={[styles.postContainer, {width: Math.min(width, height)}]}> 
             <View style={{backgroundColor: 'white'}}>
-                <Image style={styles.sketch} source={{ uri: props.image}} />   
+                <Image style={[styles.sketch, {width: Platform.isPad ? Math.min(width, height) * 0.7 : Math.min(width, height) * 0.9}]} source={{ uri: props.image}} />   
             </View>
             <TouchableOpacity onPress={handleUsernameClick} style={styles.authorContainer}>
                 <View style={{flexDirection: 'row', padding: 15}}>
@@ -50,20 +49,17 @@ function Sketch(props) {
 
 const styles = StyleSheet.create({
     sketch: {
-      width: '90%',
-      height: undefined,
       aspectRatio: 1,
       borderColor: 'white',
       borderWidth: 1,
     },
     postContainer: {
-        width: '100%',
         alignItems: 'center',
         justifyContent: 'center',
     },
     profilePicture: {
-        width: 40, 
-        height: 40, 
+        width: Platform.isPad ? 60 : 40, 
+        height: Platform.isPad ? 60 : 40, 
         borderRadius: 50, 
         resizeMode: 'cover',
         borderWidth: 1,
@@ -80,15 +76,15 @@ const styles = StyleSheet.create({
     },
     uploader: {
         marginLeft: 3, 
-        paddingTop: 8, 
-        fontSize: 18, 
+        paddingTop: Platform.isPad ? 18 : 8, 
+        fontSize: Platform.isPad ? 24 : 18, 
         justifyContent: 'flex-start',
         color: 'white'
     },
     uploadTime: {
         marginLeft: 3, 
-        fontSize: 14, 
-        paddingTop: 12, 
+        fontSize: Platform.isPad ? 19 : 14, 
+        paddingTop: Platform.isPad ? 22.5 : 12, 
         justifyContent: 'flex-end', 
         color: '#b5b5b5'
     }

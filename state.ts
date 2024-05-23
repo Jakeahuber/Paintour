@@ -14,7 +14,6 @@ export const state = proxy({
   forceCalendarImagesRerender: false,
   currentProfileUid: '',
 
-  uid: '',
   username: '',
   profilePicture: '',
   numFriends: 0,

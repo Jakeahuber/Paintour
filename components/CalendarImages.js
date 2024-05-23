@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {TouchableHighlight, Image, Text, View} from 'react-native';
+import {TouchableHighlight, Image, Text, View, Platform} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import {Calendar} from 'react-native-calendars';
 import { getSketchesByYear } from "../api/getSketchesByYear";
@@ -14,11 +14,12 @@ function CalendarImages() {
     const currentDateEST = new Date(currentDateUTC.getTime() - (5 * 60 * 60 * 1000));
     const [currentYear, setCurrentYear] = useState(currentDateEST.getFullYear());
     const [currentSketches, setCurrentSketches] = useState({});
+    const imageSize = Platform.isPad ? 75 : 50;
     
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const currentSketches = await getSketchesByYear(state.uid, currentYear);
+            const currentSketches = await getSketchesByYear(currentYear);
             setCurrentSketches(currentSketches);
           } catch (error) {
             setCurrentSketches([]);
@@ -38,7 +39,7 @@ function CalendarImages() {
     return (
         <View style={{position: "relative"}}>
             <Calendar
-                style={{position: "absolute", height: 340, width: "100%", backgroundColor: 'black', color: 'white'}}
+                style={{position: "absolute", width: "100%", backgroundColor: 'black', color: 'white'}}
                 dayComponent={({date, state}) => {
                         if (currentSketches && currentSketches.hasOwnProperty(date.month) && currentSketches[date.month] && currentSketches[date.month].hasOwnProperty(date.day)) {
                             const item = currentSketches[date.month][date.day];
@@ -58,7 +59,7 @@ function CalendarImages() {
                                     <View style={{backgroundColor: 'black', justifyContent: 'center', alignItems: 'center'}}>
                                         <Image
                                         source={{uri: item.image}}
-                                        style={{width: 50, height: 50, opacity: 0.6, position: 'relative', borderRadius: 10, backgroundColor: 'white'}}/>      
+                                        style={{width: imageSize, height: imageSize, opacity: 0.6, position: 'relative', borderRadius: 10, backgroundColor: 'white'}}/>      
                                         <Text style={{position: 'absolute', color: 'white', fontSize: 20}}>{date.day}</Text>          
                                     </View>
                                 </TouchableHighlight>
@@ -67,7 +68,7 @@ function CalendarImages() {
                         else {
                             return (
                                 <View style={{backgroundColor: 'black', justifyContent: 'center', alignItems: 'center'}}>
-                                    <View style={{width: 50, height: 50, opacity: 0.65, position: 'relative', borderRadius: 10}}/>      
+                                    <View style={{width: imageSize, height: imageSize, opacity: 0.65, position: 'relative', borderRadius: 10}}/>      
                                     <Text style={{position: 'absolute', color: 'white', fontSize: 20}}>{date.day}</Text>          
                                 </View>
                             );

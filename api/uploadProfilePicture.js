@@ -1,9 +1,11 @@
-import { state } from "../state";
 import { updateMyData } from "./updateMyData";
+import { getAuth } from "firebase/auth";
+import {app} from '../firebaseconfig'
 
 async function uploadProfilePicture(base64) {
-  const url = `https://us-central1-sketch-c3044.cloudfunctions.net/uploadProfilePicture?uid=${state.uid}`;
   try {
+    const auth = getAuth(app);
+    const url = `https://us-central1-sketch-c3044.cloudfunctions.net/uploadProfilePicture?uid=${auth.currentUser.uid}`;
     const response = await fetch(url, {
       method: 'POST',
       headers: {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View} from 'react-native';
+import { StyleSheet, View, Platform} from 'react-native';
 import { state } from '../state';
 import ColorPicker, { Panel1, HueSlider } from 'reanimated-color-picker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -61,7 +61,7 @@ const Toolbar = ({shiftVertical }) => {
         </View>
         <View style={{alignItems: 'center', justifyContent: 'center', padding: 10, width: '100%' }}>
           
-          <ColorPicker style={{ width: '70%', display: paletteVisibility, flexDirection: 'row'}} value={state.strokeColor} onComplete={handleColorChange}>
+          <ColorPicker style={{ width: Platform.isPad ? '50%' : '70%', display: paletteVisibility, flexDirection: 'row'}} value={state.strokeColor} onComplete={handleColorChange}>
             <Panel1 style={{ flex: 1, marginRight: 20}}/>
             <HueSlider vertical />
           </ColorPicker>
@@ -92,9 +92,7 @@ const styles = StyleSheet.create({
     marginRight: 0,
   },
   sliderContainer: {
-    marginLeft: 10,
-    marginRight: 10,
     alignItems: 'stretch',
-    width: '90%',
+    width: '100%',
   }
 });

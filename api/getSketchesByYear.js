@@ -1,6 +1,10 @@
-export async function getSketchesByYear(uid, year) {
+import { getAuth } from "firebase/auth";
+import {app} from '../firebaseconfig'
+
+export async function getSketchesByYear(year) {
     try {
-        const url = `https://us-central1-sketch-c3044.cloudfunctions.net/getUserSketchesByYear?uid=${uid}&year=${year}`;
+        const auth = getAuth(app);
+        const url = `https://us-central1-sketch-c3044.cloudfunctions.net/getUserSketchesByYear?uid=${auth.currentUser.uid}&year=${year}`;
         const response = await fetch(url);
         if (!response.ok) {
             throw new Error("Error getting user sketches.");

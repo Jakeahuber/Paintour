@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "DailySketch",
-    "slug": "DailySketch",
+    "name": "Paintr",
+    "slug": "Paintr",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.DailySketch"
+      "package": "com.anonymous.Paintr"
     },
     "web": {
       "favicon": "./assets/favicon.png"
