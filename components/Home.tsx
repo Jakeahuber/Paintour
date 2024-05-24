@@ -80,6 +80,17 @@ function Home() {
             </ScrollView>
         )
     }
+    else if (snap.friendSketches.length == 0) {
+        return (
+            <ScrollView contentContainerStyle={styles.scrollViewContainer}
+                        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                        showsVerticalScrollIndicator={false}
+                        horizontal={false}
+            >
+                <Sketches />
+            </ScrollView>
+        )
+    }
     else {
         return (
             <ScrollView contentContainerStyle={{marginTop: 30}}

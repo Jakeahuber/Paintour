@@ -291,7 +291,7 @@ export default function App() {
     const closeModal = () => {
         setErrorVisible(false);
     };
-
+    console.log(auth);
     useEffect(() => {
         const signIn = onAuthStateChanged(auth, async (user) => {
             if (user) {

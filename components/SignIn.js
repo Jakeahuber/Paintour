@@ -1,183 +1,87 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableWithoutFeedback, Image, Keyboard, TouchableOpacity, Modal, useWindowDimensions } from 'react-native';
-import { Input, Button } from 'react-native-elements';
-import {app} from '../firebaseconfig'
-import {getAuth, signInWithCredential, GoogleAuthProvider, signInWithEmailAndPassword, isSignInWithEmailLink} from "firebase/auth";
-import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-import { initializeApp } from "firebase/app";
-import { FontAwesome } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect } from 'react';
+import {View,StyleSheet,Image,useWindowDimensions, Text} from 'react-native';
+import {app} from '../firebaseconfig';
+import {getAuth, signInWithCredential, GoogleAuthProvider} from "firebase/auth";
 import ErrorModal from './ErrorModal';
-
-import { state } from '../state';
 import LoadingModal from './LoadingModal';
-import { getUser } from '../api/getUser';
-import { getFriendSketches } from '../api/getFriendSketches';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 
 const auth = getAuth(app);
 
 const SignIn = () => {
-  
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState("");
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [error, setError] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
-  const navigation = useNavigation();
+
   const {height, width} = useWindowDimensions();
-  
-  const signIn = () => {
-    setLoadModalVisible(true);
+  const [errorVisible, setErrorVisible] = useState(false);
+  const [loadingVisible, setLoadingVisible] = useState(false);
 
-    signInWithEmailAndPassword(auth,  email, password)
-    .then(async (userCredential) => {
-      const user = userCredential.user;     
-      console.log("User signed in");
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.log(errorCode);
-      if (errorCode == 'auth/invalid-email') {
-        setError('Please enter a valid email address.');
-      }
-      else if (errorCode == 'auth/missing-password') {
-        setError('Please enter a password.')
-      }
-      else if (errorCode == 'auth/invalid-credential') {
-        setError('Invalid email address or password. Please try again.')
-      }
-      else if (errorCode == 'auth/invalid-email-verified') {
-        setError('Email is not verified.');
-      }
-      else {
-        setError('An unexpected error occurred.');
-      }
-      setModalVisible(true);
-    });
-    setLoadModalVisible(false);
-  }
-
-  /*
- const signIn = () => {
-
-  try {
-    const result = await Expo.Google.logInAsync({
-      iosClientId: "Your Client ID",
-      scopes: ["profile", "email"]
-    })
-    if (result.type === "success") {
-      const credential = firebase.auth.GoogleAuthProvider.credential(result.idToken, result.accessToken);
-         firebase.auth().signInAndRetrieveDataWithCredential(credential).then(function(result){
-          console.log(result);
-         });
+  const signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      await GoogleSignin.signIn();
+      setLoadingVisible(true);
+      const {accessToken ,idToken} = await GoogleSignin.getTokens();
+      const credential = GoogleAuthProvider.credential(idToken, accessToken);
+      await signInWithCredential(auth, credential);
+    } catch (error) {
+      console.log(error);
+      if (isErrorWithCode(error)) {
+        switch (error.code) {
+          case statusCodes.SIGN_IN_CANCELLED:
+            // user cancelled the login flow
+            break;
+          case statusCodes.IN_PROGRESS:
+            // operation (eg. sign in) already in progress
+            break;
+          case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+            // play services not available or outdated
+            break;
+          default:
+          // some other error happened
         }
-      } catch (e) {
-        console.log("error", e)
+      } else {
+        // an error that's not related to google sign in occurred
       }
     }
-
-  console.log("enter");
-  const credential = signInWithCredential(auth, credential)
-  .then((result) => {
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    const { user } = result;
-    const idToken = credential.idToken;
-    return { credential, idToken, user };
-  })
-  .catch((error) => {
-    // Handle Errors here.
-    // const errorCode = error.code
-    // const errorMessage = error.message
-    // The email of the user's account used.
-    // const {email} = error.customData
-    // The AuthCredential type that was used.
-    // const credential =
-    //    GoogleAuthProvider.credentialFromError(error)
-    // ...
-    console.log(error);
-  });
- }
- */
-
-  const handleEmailChange = (input) => {
-    setEmail(input);
-  };
-  
-  const handlePasswordChange = (input) => {
-    setPassword(input);
+    setLoadingVisible(false);
   };
 
-  const togglePasswordVisibility = () => {
-    setIsPasswordVisible((prev) => !prev);
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId:
+        '741911403223-cbo7gju2phsjjqquhvh79tqi6q9d3t1j.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+    });
+  }, []);
+
+  const signOut = async () => {
+    try {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+      setloggedIn(false);
+      setuserInfo([]);
+    } catch (error) {
+      console.error(error);
+    }
   };
-
-  const closeModal = () => {
-    setModalVisible(false);
-  };
-
-  const handleSignUp = () => {
-    navigation.navigate("SignUp");
-  }
-
-  const [loadModalVisible, setLoadModalVisible] = useState(false);
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <View style={styles.content}>
-          <ErrorModal visible={modalVisible} message={error} onClose={closeModal} />
-          <Image source={require('../assets/drawing.gif')} style={{width: Math.min(width, height) * 0.5, height: Math.min(width, height) * 0.5}}/>
-          <Input
-            label=""
-            placeholder="Enter your email address"
-            value={email}
-            onChangeText={handleEmailChange}
-            leftIcon={{ type: 'font-awesome', name: 'envelope', color: 'white', marginHorizontal: 5 }}
-            inputStyle={{color: 'white'}}
-            labelStyle={{color: 'white'}}
-          />
-          <Input
-            label=""
-            placeholder="Enter your password"
-            value={password}
-            onChangeText={handlePasswordChange}
-            leftIcon={{ type: 'font-awesome', name: 'lock', color: 'white', marginHorizontal: 10 }}
-            rightIcon={
-              <TouchableOpacity onPress={togglePasswordVisibility}>
-                <Text style={{color: 'white', fontSize: 16}}>
-                  {isPasswordVisible ? 'Hide' : 'Show'}
-                </Text>
-              </TouchableOpacity>
-            }
-            inputStyle={{color: 'white'}}
-            labelStyle={{color: 'white'}}
-            secureTextEntry={!isPasswordVisible} 
-          />
-          <Button
-              title="Sign In"
-              onPress={signIn}
-              titleStyle={{ fontWeight: '700', color: 'black' }}
-              buttonStyle={{
-                backgroundColor: 'rgba(244, 244, 244, 1)',
-                borderColor: 'transparent',
-                borderWidth: 0,
-                borderRadius: 5,
-              }}
-              containerStyle={{
-                width: 200,
-                height: 45,
-                marginHorizontal: 50,
-                marginVertical: 10,
-              }}
-            />
-            <TouchableOpacity onPress={handleSignUp}>
-              <Text style={{color: 'white', marginTop: 15}}>New? Sign Up</Text>
-            </TouchableOpacity>
-            <LoadingModal visible={loadModalVisible}/>
-        </View>
-    </TouchableWithoutFeedback>
+      <View style={styles.content}>
+        <ErrorModal visible={errorVisible} message={"TODO"} onClose={()=>{setErrorVisible(false)}} />
+        <Image source={require('../assets/drawing.gif')} style={{width: Math.min(width, height) * 0.9,
+                                                                 height: Math.min(width, height) * 0.9}}/>
+        <Text style={{fontSize: 24, color: 'white', marginBottom: 20}}>Get started for free!</Text>
+        <GoogleSigninButton
+  size={GoogleSigninButton.Size.Wide}
+  color={GoogleSigninButton.Color.Light}
+          onPress={signIn}
+        />
+        <LoadingModal visible={loadingVisible}/>
+      </View>
   );
-};
+}
 
 export default SignIn;
 
@@ -188,6 +92,7 @@ const styles = StyleSheet.create({
   content: {
     alignItems: 'center',
     flex: 1,
-    paddingTop: 100
+    justifyContent: 'center',
+    marginTop: -100
   },
 });
