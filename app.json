@@ -19,16 +19,6 @@
       "googleServicesFile": "./GoogleService-Info.plist",
       "bundleIdentifier": "com.PaintrApp.Paintr"
     },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.PaintrApp.Paintr"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
     "plugins": [
       "@react-native-firebase/app",
       "@react-native-firebase/auth",

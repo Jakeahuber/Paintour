@@ -7,44 +7,48 @@ import LoadingModal from './LoadingModal';
 import {
   GoogleSignin,
   GoogleSigninButton,
-  statusCodes,
 } from '@react-native-google-signin/google-signin';
+import { useNavigation } from '@react-navigation/native';
+import { getUser } from '../api/getUser';
 
 const auth = getAuth(app);
 
 const SignIn = () => {
 
+  const navigation = useNavigation();
+
   const {height, width} = useWindowDimensions();
   const [errorVisible, setErrorVisible] = useState(false);
   const [loadingVisible, setLoadingVisible] = useState(false);
+
+  const emailHasAccount = async () => {
+    const userNotCreatedMsg = "A User with this UID does not exist.";
+    try {
+      await getUser(auth.currentUser.uid);
+    } catch (error) {
+      if (error.message === userNotCreatedMsg) {
+          return false;
+      }
+    }
+    return true;
+  }
 
   const signIn = async () => {
     try {
       await GoogleSignin.hasPlayServices();
       await GoogleSignin.signIn();
       setLoadingVisible(true);
-      const {accessToken ,idToken} = await GoogleSignin.getTokens();
+      const {accessToken, idToken} = await GoogleSignin.getTokens();
       const credential = GoogleAuthProvider.credential(idToken, accessToken);
       await signInWithCredential(auth, credential);
-    } catch (error) {
-      console.log(error);
-      if (isErrorWithCode(error)) {
-        switch (error.code) {
-          case statusCodes.SIGN_IN_CANCELLED:
-            // user cancelled the login flow
-            break;
-          case statusCodes.IN_PROGRESS:
-            // operation (eg. sign in) already in progress
-            break;
-          case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
-            // play services not available or outdated
-            break;
-          default:
-          // some other error happened
-        }
-      } else {
-        // an error that's not related to google sign in occurred
+      const hasAccount = await emailHasAccount();
+      if (!hasAccount) {
+        navigation.navigate("SignUp");
       }
+    } catch (error) {
+      setTimeout(() => {
+        setErrorVisible(true)
+      }, 500)
     }
     setLoadingVisible(false);
   };
@@ -52,29 +56,18 @@ const SignIn = () => {
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
-        '741911403223-cbo7gju2phsjjqquhvh79tqi6q9d3t1j.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+        '741911403223-cbo7gju2phsjjqquhvh79tqi6q9d3t1j.apps.googleusercontent.com',
     });
   }, []);
 
-  const signOut = async () => {
-    try {
-      await GoogleSignin.revokeAccess();
-      await GoogleSignin.signOut();
-      setloggedIn(false);
-      setuserInfo([]);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
       <View style={styles.content}>
-        <ErrorModal visible={errorVisible} message={"TODO"} onClose={()=>{setErrorVisible(false)}} />
+        <ErrorModal visible={errorVisible} message={"Could not sign user in."} onClose={()=>{setErrorVisible(false)}} />
         <Image source={require('../assets/drawing.gif')} style={{width: Math.min(width, height) * 0.9,
                                                                  height: Math.min(width, height) * 0.9}}/>
-        <Text style={{fontSize: 24, color: 'white', marginBottom: 20}}>Get started for free!</Text>
+        <Text style={{fontSize: 24, color: 'white', marginBottom: 20}}>Start Drawing Today!</Text>
         <GoogleSigninButton
-  size={GoogleSigninButton.Size.Wide}
+  size={GoogleSigninButton.Size.Standard}
   color={GoogleSigninButton.Color.Light}
           onPress={signIn}
         />
@@ -87,7 +80,7 @@ export default SignIn;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'black', // Set your background color
+    backgroundColor: 'black',
   },
   content: {
     alignItems: 'center',

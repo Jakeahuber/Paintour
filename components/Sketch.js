@@ -6,14 +6,18 @@ import {getUser} from '../api/getUser';
 import { useSnapshot } from 'valtio';
 import LoadingModal from './LoadingModal';
 import ErrorModal from './ErrorModal';
+import { getAuth } from "firebase/auth";
+import {app} from '../firebaseconfig'
 
 function Sketch(props) {
+    
     const navigation = useNavigation();
     const snap = useSnapshot(state);
     const {width, height} = useWindowDimensions();
 
     const handleUsernameClick = async () => {
-        if (props.uid == snap.uid) navigation.navigate('MyProfileScreen'); 
+        const auth = getAuth(app);
+        if (props.uid == auth.currentUser.uid) navigation.navigate('MyProfileScreen');
         else {
             setModalVisible(true);
             try {

@@ -13,6 +13,7 @@ export const state = proxy({
   prompt: '',
   forceCalendarImagesRerender: false,
   currentProfileUid: '',
+  forceUserReload: false,
 
   username: '',
   profilePicture: '',

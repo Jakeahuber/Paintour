@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -27,6 +27,7 @@ import ErrorModal from './components/ErrorModal';
 import { updateMyData } from './api/updateMyData';
 import { reportUser } from "./api/reportUser";
 import InfoModal from "./components/InfoModal";
+import SignUp from "./components/SignUp";
 
 const resetUser = () => {
     state.username = "DNE",
@@ -250,9 +251,10 @@ const FriendsStack = () => {
 
 const SignUpAndInStack = () => {
     return (
-        <Stack.Navigator initialRouteName="SignIn" 
-                         screenOptions={{headerTitle: 'Paintr', headerTransparent: true, headerTintColor: 'white', headerTitleStyle: {fontSize: 28}}}>
-            <Stack.Screen name="SignIn" component={SignIn} options={{headerLeft: null}}/>
+        <Stack.Navigator initialRouteName={"SignIn"} 
+                            screenOptions={{headerTitle: 'Paintr', headerTransparent: true, headerTintColor: 'white', headerTitleStyle: {fontSize: 28}}}>
+            <Stack.Screen name={"SignIn"} component={SignIn} options={{headerLeft: null}}/>
+            <Stack.Screen name={"SignUp"} component={SignUp} options={{headerLeft: null}}/>
         </Stack.Navigator>
     )
 }
@@ -287,11 +289,12 @@ export default function App() {
     const [message, setMessage] = useState("");
     const [errorVisible, setErrorVisible] = useState(false);
     const [signedIn, setSignedIn] = useState(false);
+    const snap = useSnapshot(state);
 
     const closeModal = () => {
         setErrorVisible(false);
     };
-    console.log(auth);
+
     useEffect(() => {
         const signIn = onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -301,8 +304,15 @@ export default function App() {
                     await getFriendSketches(user.uid);
                     setSignedIn(true);
                 } catch (error) {
-                    setMessage("Could not fetch user data. Please try again later.");
-                    setErrorVisible(true);
+                    const userNotCreatedMsg = "A User with this UID does not exist.";
+                    if (error.message === userNotCreatedMsg) {
+                        // the user does not exist. Do nothing, as signIn should handle this.
+                        return;
+                    }
+                    else {
+                        setMessage("Could not fetch user data. Please try again later.");
+                        setErrorVisible(true);
+                    }
                 }
             } else {
                 resetUser();
@@ -310,7 +320,7 @@ export default function App() {
             }
         });
         return () => signIn();
-    }, [auth]);
+    }, [auth, snap.forceUserReload]);
 
     return (
         <>

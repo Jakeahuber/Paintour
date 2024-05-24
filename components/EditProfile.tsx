@@ -7,6 +7,7 @@ import {app} from '../firebaseconfig';
 import ErrorModal from './ErrorModal'
 import VerifyClickModal from './VerifyClickModal.js';
 import { useNavigation } from '@react-navigation/native';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 const auth = getAuth(app);
 
@@ -21,10 +22,11 @@ const EditProfile = () => {
   };
 
   const handleSignOut = async () => {
+    await GoogleSignin.revokeAccess();
+    await GoogleSignin.signOut();
     signOut(auth)
     .then(() => {})
     .catch((error) => {
-      console.error('Error signing out:', error);
       setError("Could not sign user out.");
       setModalVisible(true);
     });
