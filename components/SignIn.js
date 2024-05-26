@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {View,StyleSheet,Image,useWindowDimensions, Text} from 'react-native';
+import {View,StyleSheet,Image,useWindowDimensions, Text, Platform} from 'react-native';
 import {app} from '../firebaseconfig';
 import {getAuth, signInWithCredential, GoogleAuthProvider} from "firebase/auth";
 import ErrorModal from './ErrorModal';
@@ -7,6 +7,7 @@ import LoadingModal from './LoadingModal';
 import {
   GoogleSignin,
   GoogleSigninButton,
+  statusCodes
 } from '@react-native-google-signin/google-signin';
 import { useNavigation } from '@react-navigation/native';
 import { getUser } from '../api/getUser';
@@ -46,9 +47,13 @@ const SignIn = () => {
         navigation.navigate("SignUp");
       }
     } catch (error) {
-      setTimeout(() => {
-        setErrorVisible(true)
-      }, 500)
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+      } else {
+        setTimeout(() => {
+          setErrorVisible(true)
+        }, 500)
+      }
     }
     setLoadingVisible(false);
   };
@@ -63,8 +68,8 @@ const SignIn = () => {
   return (
       <View style={styles.content}>
         <ErrorModal visible={errorVisible} message={"Could not sign user in."} onClose={()=>{setErrorVisible(false)}} />
-        <Image source={require('../assets/drawing.gif')} style={{width: Math.min(width, height) * 0.9,
-                                                                 height: Math.min(width, height) * 0.9}}/>
+        <Image source={require('../assets/drawing.gif')} style={{width: Platform.isPad ? Math.min(width, height) * 0.6 : Math.min(width, height) * 0.9,
+                                                                 height: Platform.isPad ? Math.min(width, height) * 0.6 : Math.min(width, height) * 0.9}}/>
         <Text style={{fontSize: 24, color: 'white', marginBottom: 20}}>Start Drawing Today!</Text>
         <GoogleSigninButton
   size={GoogleSigninButton.Size.Standard}

@@ -4,9 +4,14 @@ import {app} from '../firebaseconfig'
 export async function sendFriendRequest(requestedUid) {
     try {
         const auth = getAuth(app);
-        const endpoint = "https://us-central1-sketch-c3044.cloudfunctions.net/sendFriendRequest";
-        const url = `${endpoint}?uid=${auth.currentUser.uid}&requestedUid=${requestedUid}`;
-        const response = await fetch(url);
+        const endpoint = "https://us-central1-sketch-c3044.cloudfunctions.net/app/sendFriendRequest";
+        const url = `${endpoint}?requestedUid=${requestedUid}`;
+        const token = await auth.currentUser.getIdToken();
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }); 
         if (!response.ok) {
             throw new Error("Error fetching user data.");
         }

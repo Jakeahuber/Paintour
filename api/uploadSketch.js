@@ -6,21 +6,20 @@ import {app} from '../firebaseconfig'
 async function uploadSketch(base64) {
     try {
       const auth = getAuth(app);
-      const url = `https://us-central1-sketch-c3044.cloudfunctions.net/uploadSketch?uid=${auth.currentUser.uid}`;
+      const url = `https://us-central1-sketch-c3044.cloudfunctions.net/app/uploadSketch`;
       const sketchData = {
-        uid: auth.currentUser.uid,
-        username: state.username,
-        profilePicture: state.profilePicture,
         image: base64
       }
+      const token = await auth.currentUser.getIdToken();
       const response = await fetch(url, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(sketchData)
       });
-
+      console.log(await response.text());
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }

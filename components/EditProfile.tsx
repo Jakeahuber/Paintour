@@ -22,8 +22,12 @@ const EditProfile = () => {
   };
 
   const handleSignOut = async () => {
-    await GoogleSignin.revokeAccess();
-    await GoogleSignin.signOut();
+    try {
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+    } catch (error) {
+      console.log(error);
+    }
     signOut(auth)
     .then(() => {})
     .catch((error) => {
@@ -41,7 +45,7 @@ const EditProfile = () => {
 
   return (
     <View style={styles.container}>
-      <Image source={{ uri: snap.profilePicture }} style={styles.profilePicture} key={Date.now()}/>
+      <Image source={{ uri: snap.profilePicture }} style={styles.profilePicture} />
       <TouchableOpacity onPress={drawPfpPress} style={styles.button}>
         <Text style={{color: 'white', fontSize: 15}}>Draw New Profile Picture</Text>
       </TouchableOpacity>
@@ -73,7 +77,6 @@ const styles = StyleSheet.create({
     width: Platform.isPad ? 150: 125, 
     height: Platform.isPad ? 150: 125, 
     borderRadius: Platform.isPad ? 150/2 : 125/2,  
-    resizeMode: 'cover',
     borderWidth: 1,
     borderColor: 'white',
     marginBottom: 10,

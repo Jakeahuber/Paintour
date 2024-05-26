@@ -4,9 +4,14 @@ import {app} from '../firebaseconfig'
 export async function reportUser(uid) {
     try {
         const auth = getAuth(app);
-        const endpoint = "https://us-central1-sketch-c3044.cloudfunctions.net/reportUser";
-        const url = `${endpoint}?uid=${uid}&reportingUid=${auth.currentUser.uid}`;
-        const response = await fetch(url);
+        const endpoint = "https://us-central1-sketch-c3044.cloudfunctions.net/app/reportUser";
+        const url = `${endpoint}?toReport=${uid}`;
+        const token = await auth.currentUser.getIdToken();
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }); 
         if (!response.ok) {
             console.log("errro");
             throw new Error("Error reporting user.");

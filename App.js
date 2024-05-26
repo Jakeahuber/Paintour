@@ -28,6 +28,7 @@ import { updateMyData } from './api/updateMyData';
 import { reportUser } from "./api/reportUser";
 import InfoModal from "./components/InfoModal";
 import SignUp from "./components/SignUp";
+import LoadingPage from "./components/LoadingPage";
 
 const resetUser = () => {
     state.username = "DNE",
@@ -259,6 +260,15 @@ const SignUpAndInStack = () => {
     )
 }
 
+const LoadingStack = () => {
+    return (
+        <Stack.Navigator initialRouteName={"LoadingPage"} 
+                            screenOptions={{headerTitle: '', headerTransparent: true, headerTintColor: 'white', headerTitleStyle: {fontSize: 28}}}>
+            <Stack.Screen name={"LoadingPage"} component={LoadingPage} options={{headerLeft: null}}/>
+        </Stack.Navigator>
+    )
+}
+
 export function TabNavigator() {
     return (
         <Tab.Navigator initialRouteName={"Home"} screenOptions={({route}) => ({
@@ -290,6 +300,7 @@ export default function App() {
     const [errorVisible, setErrorVisible] = useState(false);
     const [signedIn, setSignedIn] = useState(false);
     const snap = useSnapshot(state);
+    const [loading, setLoading] = useState(true);
 
     const closeModal = () => {
         setErrorVisible(false);
@@ -303,6 +314,7 @@ export default function App() {
                     updateMyData(userData);
                     await getFriendSketches(user.uid);
                     setSignedIn(true);
+                    setLoading(false);
                 } catch (error) {
                     const userNotCreatedMsg = "A User with this UID does not exist.";
                     if (error.message === userNotCreatedMsg) {
@@ -311,12 +323,15 @@ export default function App() {
                     }
                     else {
                         setMessage("Could not fetch user data. Please try again later.");
-                        setErrorVisible(true);
+                        setTimeout(() => {
+                            setErrorVisible(true);
+                        }, 500)
                     }
                 }
             } else {
                 resetUser();
                 setSignedIn(false);
+                setLoading(false);
             }
         });
         return () => signIn();
@@ -325,7 +340,7 @@ export default function App() {
     return (
         <>
             <NavigationContainer theme={{ colors: { background: 'black' } }}>
-                {signedIn ? <TabNavigator /> : <SignUpAndInStack />}
+                {loading ? <LoadingStack /> : signedIn ? <TabNavigator /> : <SignUpAndInStack />}
             </NavigationContainer>
             <ErrorModal visible={errorVisible} message={message} onClose={closeModal} />
         </>

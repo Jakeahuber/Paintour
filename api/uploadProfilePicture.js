@@ -5,11 +5,13 @@ import {app} from '../firebaseconfig'
 async function uploadProfilePicture(base64) {
   try {
     const auth = getAuth(app);
-    const url = `https://us-central1-sketch-c3044.cloudfunctions.net/uploadProfilePicture?uid=${auth.currentUser.uid}`;
+    const url = `https://us-central1-sketch-c3044.cloudfunctions.net/app/uploadProfilePicture`;
+    const token = await auth.currentUser.getIdToken();
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify({"image": base64})
     });

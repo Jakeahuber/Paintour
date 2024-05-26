@@ -72,7 +72,7 @@ function Home() {
                 <View style={styles.container}>
                     <View style={styles.content}>
                         <Image source={require('../assets/nofriendsyet.gif')} style={styles.image}/>
-                        <Text style={{color: 'white', marginBottom: 20}}>You don't have any friends yet :(</Text>
+                        <Text style={{fontSize: 22, color: 'white', marginBottom: 20}}>You don't have any friends yet!</Text>
                         <Button title="Add Friends" onPress={() => navigation.navigate('Friends', { screen: 'FriendsScreen' })} />
                     </View>
                 </View>

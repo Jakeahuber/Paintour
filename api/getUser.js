@@ -4,9 +4,14 @@ import {app} from '../firebaseconfig'
 export async function getUser(uid) {
     try {
         const auth = getAuth(app);
-        const endpoint = "https://us-central1-sketch-c3044.cloudfunctions.net/getUser";
-        const url = `${endpoint}?requestingUid=${uid}&uid=${auth.currentUser.uid}`;
-        const response = await fetch(url);
+        const endpoint = "https://us-central1-sketch-c3044.cloudfunctions.net/app/getUser";
+        const url = `${endpoint}?requestingUid=${uid}`;
+        const token = await auth.currentUser.getIdToken();
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }); 
         if (!response.ok) {
             if (response.status == 400) {
                 const errorData = await response.text();
