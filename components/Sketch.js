@@ -25,7 +25,9 @@ function Sketch(props) {
                 const userData = await getUser(uid);
                 navigation.navigate('Profile', { userData: userData }); 
             } catch (error) {
-                setErrorVisible(true);
+                setTimeout(() => {
+                    setErrorVisible(true);
+                }, 500);
             }
             setModalVisible(false);
         }

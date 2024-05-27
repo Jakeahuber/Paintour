@@ -26,7 +26,7 @@ const EditProfile = () => {
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
     } catch (error) {
-      console.log(error);
+      
     }
     signOut(auth)
     .then(() => {})

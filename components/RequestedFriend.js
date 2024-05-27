@@ -28,7 +28,9 @@ const RequstedFriend = ({ uid, username, numSketches, numFriends, profilePicture
         try {
             await handleFriendRequest(uid, true);
         } catch (error) {
-            setErrorVisible(true);
+            setTimeout(() => {
+                setErrorVisible(true);
+            }, 500);
         }
         setLoading(false);
     }
@@ -38,7 +40,9 @@ const RequstedFriend = ({ uid, username, numSketches, numFriends, profilePicture
         try {
             await handleFriendRequest(uid, false);
         } catch (error) {
-          setErrorVisible(true);
+            setTimeout(() => {
+                setErrorVisible(true);
+            }, 500);        
         }
         setLoading(false);
     }

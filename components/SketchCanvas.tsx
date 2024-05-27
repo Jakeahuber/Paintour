@@ -132,7 +132,6 @@ export default function SketchCanvas({route}) {
           setTimeout(() => {
             setVisible(true);
           }, 300);      
-          console.log(error);
           throw error;
         }
     }

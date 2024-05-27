@@ -13,7 +13,6 @@ export async function reportUser(uid) {
             }
         }); 
         if (!response.ok) {
-            console.log("errro");
             throw new Error("Error reporting user.");
         }
         return; 

@@ -13,7 +13,7 @@ import {app} from "../firebaseconfig";
 function MyProfile() {
     const snap = useSnapshot(state);
     const auth = getAuth(app);
-
+    
     const [errorVisible, setErrorVisible] = useState(false);
     const [refreshing, setRefreshing] = React.useState(false);
 
@@ -25,7 +25,9 @@ function MyProfile() {
             state.forceCalendarImagesRerender = !state.forceCalendarImagesRerender;
         }
         catch (error) {
-            setErrorVisible(true);
+            setTimeout(() => {
+                setErrorVisible(true);
+            }, 500);
         }
         setRefreshing(false);
     }, []);
@@ -40,7 +42,7 @@ function MyProfile() {
                             source={{ uri: snap.profilePicture}}
                         />
                     </View>
-                    <View style={{marginTop: 15, width: '100%', flexDirection: 'row'}}>
+                    <View style={{width: '100%', flexDirection: 'row'}}>
                         <ProfileStats
                             numFriends={snap.numFriends}
                             numSketches={snap.numSketches}
@@ -52,14 +54,14 @@ function MyProfile() {
         );
     };
     return (
-        <SafeAreaView style={{flex: 1, alignItems: 'center'}}>  
+        <View style={{flex: 1, alignItems: 'center'}}>  
             <FlatList
                 ListHeaderComponent={getProfileInfo}
                 ListFooterComponent={<CalendarImages/>}
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             />    
             <ErrorModal visible={errorVisible} message={"There was a problem refreshing user data."} onClose={() => {setErrorVisible(false)}} />
-        </SafeAreaView>
+        </View>
     )
 }
 
@@ -83,7 +85,6 @@ const styles = StyleSheet.create({
     },
     userInfoContainer: {
         width: '100%',
-        marginTop: 20,
         alignItems: 'center',
     },
 });

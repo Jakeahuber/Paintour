@@ -30,7 +30,9 @@ export default function FindFriends() {
             setSearchedUsers(newSearchedUsers);
             setLoading(false); 
         } catch (error) {
-            setErrorVisible(true);
+            setTimeout(() => {
+                setErrorVisible(true);
+            }, 500);
             setLoading(false);
         }
     }

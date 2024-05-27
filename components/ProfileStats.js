@@ -3,11 +3,13 @@ import React, {useState} from "react";
 import {View, Text, TouchableOpacity, Platform} from 'react-native';
 import { getFriends } from "../api/getFriends";
 import LoadingModal from "./LoadingModal";
+import ErrorModal from "./ErrorModal";
 
 function ProfileStats(props) {
 
     const navigation = useNavigation();
     const [modalVisible, setModalVisible] = useState(false);
+    const [errorVisible, setErrorVisible] = useState(false);
 
     const fontSize = Platform.isPad ? 28 : 24;
     const helperFontSize = Platform.isPad ? 16: 14
@@ -17,10 +19,13 @@ function ProfileStats(props) {
         try {
             const friends = await getFriends();
             navigation.navigate("MyFriends", {friends: friends});
+            setModalVisible(false);
         } catch {
-            console.error("Could not get to the friends page.");
+            setModalVisible(false);
+            setTimeout(() => {
+                setErrorVisible(true)
+            }, 500);
         }
-        setModalVisible(false);
       }
 
     if (props.clickableFriends) {
@@ -39,6 +44,7 @@ function ProfileStats(props) {
                     </View>
                 </View>
                 <LoadingModal visible={modalVisible}/>
+                <ErrorModal visible={errorVisible} message={"Could not load friends. Please try again later."} onClose={() => {setErrorVisible(false)}}/>
             </View>
         );       
     }

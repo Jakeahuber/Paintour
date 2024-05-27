@@ -35,7 +35,9 @@ const Friend = ({ uid, username, numSketches, numFriends, profilePicture, friend
           setLoading(false); 
         } catch (error) {
           setLoading(false);
-          setErrorVisible(true);
+          setTimeout(() => {
+            setErrorVisible(true);
+          }, 500);
         }
     }
 

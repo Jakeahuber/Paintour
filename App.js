@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -32,7 +32,7 @@ import LoadingPage from "./components/LoadingPage";
 
 const resetUser = () => {
     state.username = "DNE",
-    state.profilePicture = "https://firebasestorage.googleapis.com/v0/b/sketch-c3044.appspot.com/o/profilePictures%2Fdefaultprofile.jpg?alt=media&token=d45553bf-65c6-408b-a444-5ede28acc7fb",
+    state.profilePicture = "",
     state.streak = 0,
     state.numSketches = 0,
     state.numFriends = 0
@@ -149,7 +149,7 @@ const MyProfileStack = () => {
             <Stack.Screen   name={'MyProfileScreen'} 
                             component={MyProfile}
                             options={({ navigation }) => ({
-                                headerTitle: state.username,
+                                headerTitle: snap.username,
                                 headerRight: () => (
                                     <View style={{flexDirection: 'row'}}>
                                         <TouchableOpacity

@@ -19,7 +19,6 @@ async function uploadSketch(base64) {
         },
         body: JSON.stringify(sketchData)
       });
-      console.log(await response.text());
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }

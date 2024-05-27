@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {TouchableHighlight, Image, Text, View, Platform} from 'react-native';
+import {TouchableHighlight, Image, Text, View, Platform, useWindowDimensions} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import {Calendar} from 'react-native-calendars';
 import { getSketchesByYear } from "../api/getSketchesByYear";
@@ -14,8 +14,8 @@ function CalendarImages() {
     const currentDateEST = new Date(currentDateUTC.getTime() - (5 * 60 * 60 * 1000));
     const [currentYear, setCurrentYear] = useState(currentDateEST.getFullYear());
     const [currentSketches, setCurrentSketches] = useState({});
-    const imageSize = Platform.isPad ? 75 : 50;
-    
+    const {height, width} = useWindowDimensions();
+    const imageSize = height == 667 ? 37 : Platform.isPad ? 75 : 50;
     useEffect(() => {
         const fetchData = async () => {
           try {
@@ -23,7 +23,9 @@ function CalendarImages() {
             setCurrentSketches(currentSketches);
           } catch (error) {
             setCurrentSketches([]);
-            setErrorModalVisible(true);
+            setTimeout(() => {
+                setErrorModalVisible(true);
+            }, 500);
           }
         };
         fetchData();
