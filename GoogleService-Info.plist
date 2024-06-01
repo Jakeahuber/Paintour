@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>741911403223-cbo7gju2phsjjqquhvh79tqi6q9d3t1j.apps.googleusercontent.com</string>
+	<string>741911403223-gjqnhv6dp4j4o8v7e2nmqt3b33h185sv.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.741911403223-cbo7gju2phsjjqquhvh79tqi6q9d3t1j</string>
+	<string>com.googleusercontent.apps.741911403223-gjqnhv6dp4j4o8v7e2nmqt3b33h185sv</string>
 	<key>API_KEY</key>
 	<string>AIzaSyAG3wthn6H17p4edvkWk1ZPV05_a5hlZw0</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.PaintrApp.Paintr</string>
+	<string>com.PaintourApp.Paintour</string>
 	<key>PROJECT_ID</key>
 	<string>sketch-c3044</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,7 +29,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:741911403223:ios:51a58edf7d369c65c8ee92</string>
+	<string>1:741911403223:ios:c5a9cea6fa34cdd4c8ee92</string>
 	<key>DATABASE_URL</key>
 	<string>https://sketch-c3044-default-rtdb.firebaseio.com</string>
 </dict>

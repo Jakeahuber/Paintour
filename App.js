@@ -94,7 +94,7 @@ const HomeStack = () => {
 
     return (
         <Stack.Navigator initialRouteName={"HomeScreen"} screenOptions={screenOptions()}>
-            <Stack.Screen name={"HomeScreen"} component={Home} options={{headerTitle: 'Paintr'}}/>
+            <Stack.Screen name={"HomeScreen"} component={Home} options={{headerTitle: 'Paintour'}}/>
             <Stack.Screen name={"Canvas"} component={Canvas} options={{headerTitle: '', gestureEnabled: false}}/>
             <Stack.Screen name={"Profile"} component={Profile} options={{headerTitle: '', headerRight: ReportUserHeader}}/>
             <Stack.Screen name={"FocusedSketchScreen"} component={FocusedSketch} options={{headerTitle: ''}}/>
@@ -253,7 +253,7 @@ const FriendsStack = () => {
 const SignUpAndInStack = () => {
     return (
         <Stack.Navigator initialRouteName={"SignIn"} 
-                            screenOptions={{headerTitle: 'Paintr', headerTransparent: true, headerTintColor: 'white', headerTitleStyle: {fontSize: 28}}}>
+                            screenOptions={{headerTitle: 'Paintour', headerTransparent: true, headerTintColor: 'white', headerTitleStyle: {fontSize: 28}}}>
             <Stack.Screen name={"SignIn"} component={SignIn} options={{headerLeft: null}}/>
             <Stack.Screen name={"SignUp"} component={SignUp} options={{headerLeft: null}}/>
         </Stack.Navigator>

@@ -52,7 +52,7 @@ const EditProfile = () => {
       <TouchableOpacity onPress={() => setSignOutModalVisible(true)} style={styles.button}>
           <Text style={{color: 'white', fontSize: 15}}>Log Out</Text>
         </TouchableOpacity>
-      <Text style={{color: 'white', fontSize: 15, marginTop: 10, textAlign: "center"}}>For Any Other Concerns, Please Contact app.paintr@gmail.com.</Text>
+      <Text style={{color: 'white', fontSize: 15, marginTop: 10, textAlign: "center"}}>For Any Other Concerns, Please Contact paintour.app@gmail.com.</Text>
       <ErrorModal visible={modalVisible} message={error} onClose={closeModal} />
       <VerifyClickModal
         modalVisible={signOutModalVisible}
