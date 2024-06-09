@@ -5,7 +5,7 @@ Paintour is an iOS application where users draw a new prompt every 24 hours and 
 With Google
 
 ## Draw the Daily Prompt
-![ezgif-7-26df86ffda](https://github.com/Jakeahuber/Paintour/assets/68114979/df6639d3-271c-4029-b9eb-eb82e704269e)
+![ezgif-7-26df86ffda](https://github.com/Jakeahuber/Paintour/assets/68114979/df6639d3-271c-4029-b9eb-eb82e704269e){ width=50% }
 ## Find Friends
 
 ## Handle Friend Requests
