@@ -16,7 +16,7 @@ Paintour is an iOS application where users draw a new prompt every 24 hours and 
 ## <p align="center">Edit Profile</p>
 
 ## Why Make Paintour?
-Growing up, I loved to draw and animate, specifically cartoony stuff. And when I initially got into Computer Science, one of my goals was to find a way to integrate software with art. Paintour helped me accomplish this goal. Not only is the app drawing focused, it also includes drawing and animations on the UI that I made. 
+Growing up, I loved to draw and animate. And when I initially got into Computer Science, one of my goals was to find a way to integrate software with art. Paintour helped me accomplish this goal. Not only is the app drawing focused, it also includes drawing and animations on the UI that I made. 
 
 ## How To Use
 Send an email to paintour.app@gmail.com for a TestFlight invite! 
