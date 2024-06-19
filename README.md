@@ -3,6 +3,8 @@ Paintour is an iOS application where users draw a new prompt every 24 hours and 
 
 ##
 
+## <p align="center">View Friend Sketches</p><p align="center"><img src="https://github.com/Jakeahuber/Paintour/assets/68114979/71b2ab7a-e82f-4742-a21f-cffbc3f7cad4" width="300"></p>
+
 ##  <p align="center">Sign Up/In With Google</p> <p align="center"><img src="https://github.com/Jakeahuber/Paintour/assets/68114979/1ab74c46-2c6f-48ce-9ab6-e31acfd8130d" width="300"></p>
 
 ##  <p align="center">Draw And Upload The Daily Prompt</p> <p align="center"><img src="https://github.com/Jakeahuber/Paintour/assets/68114979/62448573-2ede-44f7-8ed9-fb82f94752e8" width="300"></p>
@@ -10,8 +12,6 @@ Paintour is an iOS application where users draw a new prompt every 24 hours and 
 ## <p align="center">Find Friends</p> <p align="center"><img src="https://github.com/Jakeahuber/Paintour/assets/68114979/80cd2e08-5a03-4bd1-b4b9-d35cffb8f919" width="300"></p>
 
 ## <p align="center">Handle Friend Requests</p> <p align="center"><img src="https://github.com/Jakeahuber/Paintour/assets/68114979/772071d9-2899-4400-8fac-8d13a069e906" width="300"></p>
-
-## <p align="center">View Friend Sketches</p><p align="center"><img src="https://github.com/Jakeahuber/Paintour/assets/68114979/71b2ab7a-e82f-4742-a21f-cffbc3f7cad4" width="300"></p>
 
 ## <p align="center">Edit Profile</p><p align="center"><img src="https://github.com/Jakeahuber/Paintour/assets/68114979/c6d17231-8af6-4ca6-a2b9-3db14add08ff" width="300"></p>
 
